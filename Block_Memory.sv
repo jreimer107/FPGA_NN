@@ -24,23 +24,23 @@ module Block_Memory(iclk, irst_n, iInstAddr, iDataAddr, dataWrite, iData,
 input iclk, irst_n;
 input dataWrite;
 input [15:0] iInstrAddr, iDataAddr, iNodeAddr;
-output [15:0] oInstr, oData;
 
+output [23:0] oInstr;
+output [15:0] oData;
 output [15:0] oNodes [15:0];
 
-reg [15:0] memory [2048:0];
+reg [23:0] imem [512:0] /* synthesis ram_init_file = "instructions.mif" */;
+reg [15:0] dmem [2048:0];
 
-always_ff @(posedge clk, negedge rst) begin
-	if (!irst_n)
-		memory <= '{default:0};
-	else begin
-		if (dataWrite)
-			memory[iDataAddr] <= iData;
+always_ff @(posedge clk, negedge rst)
+	if (!irst_n) begin
+		dmem <= '{default:0};
 	end
-end
+	else if (dataWrite)
+		dmem[iDataAddr[10:0]] <= iData;
 
-assign oInstr = memory[iInstAddr];
-assign oData = memory[iDataAddr];
-assign oNodes = memory[iNodeAddr + 16:iNodeAddr];
+assign oInstr = imem[iInstAddr[8:0]];
+assign oData = dmem[iDataAddr[10:0]];
+assign oNodes = dmem[iNodeAddr[10:0] + 16:iNodeAddr[10:0]];
 
 endmodule
