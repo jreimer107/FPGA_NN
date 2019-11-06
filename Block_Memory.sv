@@ -18,29 +18,30 @@
  * @output oData is the fetched data.
  * @output oNodes are the 16 fetched nodes.
 */
-module Block_Memory(iclk, irst_n, iInstAddr, iDataAddr, dataWrite, iData,
+module Block_Memory(iclk, irst_n, iInstAddr, iDataAddr, idataWrite, iData,
 	iNodeAddr, oInstr, oData, oNodes);
 
 input iclk, irst_n;
-input dataWrite;
-input [15:0] iInstrAddr, iDataAddr, iNodeAddr;
+input idataWrite;
+input [15:0] iInstAddr, iDataAddr, iNodeAddr, iData;
 
 output [23:0] oInstr;
 output [15:0] oData;
 output [15:0] oNodes [15:0];
 
-reg [23:0] imem [512:0] /* synthesis ram_init_file = "instructions.mif" */;
+romtest_bb imem(.address(iInstAddr[7:0]), .clock(iclk), .q(oInstr));
 reg [15:0] dmem [2048:0];
 
-always_ff @(posedge clk, negedge rst)
+always_ff @(posedge iclk, negedge irst_n)
 	if (!irst_n) begin
 		dmem <= '{default:0};
 	end
-	else if (dataWrite)
+	else if (idataWrite)
 		dmem[iDataAddr[10:0]] <= iData;
 
-assign oInstr = imem[iInstAddr[8:0]];
+
+// assign oInstr = imem[iInstAddr[8:0]];
 assign oData = dmem[iDataAddr[10:0]];
-assign oNodes = dmem[iNodeAddr[10:0] + 16:iNodeAddr[10:0]];
+assign oNodes = dmem[iNodeAddr[10:0]+:16];
 
 endmodule

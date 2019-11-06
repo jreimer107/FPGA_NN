@@ -1,0 +1,81 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/ECE_STUDENT/Downloads/New folder
+vBlock_Memory
+Z0 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
+!s110 1572998281
+!i10b 1
+!s100 b1D@=:OG<TI8C4aMJDSdT3
+I>i<03IPX9kKLZfi5??2M@1
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+!s105 Block_Memory_sv_unit
+S1
+Z2 dC:/Users/ECE_STUDENT/Documents/FPGA_NN
+w1572998197
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv
+L0 21
+Z3 OV;L;10.5b;63
+r1
+!s85 0
+31
+!s108 1572998281.000000
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv|
+!i113 1
+Z4 o-work work -sv
+Z5 tCvgOpt 0
+n@block_@memory
+vBMem_tb
+R0
+!s110 1572997188
+!i10b 1
+!s100 dm9gOeaI@b]Y`JJzhfWI]0
+Ialg:[5?:I]I?`CVbUI8;E0
+R1
+!s105 BMem_tb_sv_unit
+S1
+R2
+w1572997183
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv
+L0 1
+R3
+r1
+!s85 0
+31
+!s108 1572997188.000000
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv|
+!i113 1
+R4
+R5
+n@b@mem_tb
+vromtest
+!s110 1572998126
+!i10b 1
+!s100 ZEk@o9^>HT=lgQcY9kSXb2
+IP[FR839?m8OFdYkFWYZ4c2
+R1
+R2
+w1572997869
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v
+L0 34
+R3
+r1
+!s85 0
+31
+!s108 1572998126.000000
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v|
+!i113 1
+o-work work
+R5
