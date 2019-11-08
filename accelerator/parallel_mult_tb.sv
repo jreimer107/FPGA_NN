@@ -1,14 +1,14 @@
-module Mult_tb;
+module parallel_mult_tb;
 
 
 reg clk , rst ; 
 reg [7:0] weight_sample;
-reg [7:0][7:0] input_neuron;
-wire [7:0][7:0] out;
+reg [15:0][7:0] input_neuron;
+wire [7:0] out;
 integer i;
 
 
-parallel_mult pm0(.clk(clk), .rst (rst), .input_neuron(input_neuron), .weight_bits(weight_sample), .output_neuron(out));
+parallel_mult pm0(.clk(clk), .rst (rst), .input_neuron(input_neuron), .weight_bits(weight_sample), .FinalOut(out));
 
 
 initial
@@ -19,9 +19,9 @@ rst = 0;
 #10
 rst = 1;
 
-for(i=0;i<=7;i=i+1)
+for(i=0;i<=15;i=i+1)
 begin
-    input_neuron[i][7:0] <= i;
+    input_neuron[i][7:0] <= i[7:0] + 8'b1001111;
     if(i%2 == 0)
         weight_sample[i] = 1'b1;
     else

@@ -35,8 +35,8 @@ always @(posedge clk) begin
 				integer_rounding = partial_out[14:11] ;
 
 			output_reg <= {partial_out[15], integer_rounding[3:0], partial_out [5:3]};
-			//partial_out <=0;
-			//counter <=0;
+			partial_out <=0;
+			counter <=0;
 		end
 		else
 		begin
