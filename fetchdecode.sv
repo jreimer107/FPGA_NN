@@ -16,12 +16,18 @@
  * @output oInstrAddr is the address of the instruction to fetch. AKA the PC.
  * @output oData1 is the contents of the first source register.
  * @output oData2 is the contents of the second source register.
+ * @output oImm is the sign-extended immediate value
  */
-module fetchdecode(iclk, irst_n, iInstr, oInstrAddr, iWriteBack, iWriteBackReg,
-	iWriteBackData, iNVZ, oData1, oData2);
+module fetchdecode(iclk, irst_n, iInstr, iWriteReg, iWriteRegAddr, iWriteRegData, iMemtoReg, 			iBustoReg, iNVZ, oInstrAddr, oData1, oData2, oImm, oWriteReg, 	oWriteRegAddr, 			oMemtoReg, oBustoReg, oMemRead, oMemWrite, oBusWrite, oOpcode, oALUSrc, oSr1, oSr2);
 
 localparam Branch = 5'b01000;
 localparam BranchRegister = 5'b01001;
+localparam ImmL = 5'b01000;
+localparam ImmH = 5'b01001;
+localparam Load = 5'b01010;
+localparam Store = 5'b01011;
+localparam DbLoad = 5'b01100;
+localparam DbStore = 5'b01101;
 
 input iclk, irst_n;
 
@@ -30,50 +36,107 @@ input [15:0] iInstr;
 output [15:0] oInstrAddr;
 
 // Writeback, from MEM/WB phase
-input iWriteBack;
-input [3:0] iWriteBackReg;
-input [15:0] iWriteBackData;
+input iWriteReg;
+input iMemtoReg;
+input iBustoReg;
+input [3:0] iWriteRegAddr;
+input [15:0] iWriteData;
 
 // Condition codes, from EX phase
 input [2:0] iNVZ;
 
 // Register Data
-output [15:0] oData1, oData2;
+output reg [15:0] oData1, oData2;
+
+output reg [4:0] oOpcode;
+
+// Register Imm
+output reg [15:0] oImm;
+
+output reg oMemtoReg;
+output reg oBustoReg;
+output reg oMemRead;
+output reg oMemWrite;
+output reg oALUSrc;
+
+// WriteBack registers for execute stage
+output oWriteBack;
+output [3:0] oWriteBackReg;
 
 // Instruction components. Immediate is not used here.
 wire [4:0] opcode = iInstr[4:0];
-wire [3:0] dest = iInstr[8:5]; 
 wire [3:0] sr1 = iInstr[12:9];
 wire [3:0] sr2 = iInstr[16:13];
-wire [7:0] imm = iInstr[20:13];
 wire [2:0] condition = iInstr[23:21];
 
 // Evaluate condition result based on NVZ and current code.
 wire conditionResult;
-wire branch = opcode == Branch || opcode == BranchRegister;
+wire branch = opcode == Branch;
 CCodeEval cce(.C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
 
 // PC register
 reg [15:0] PC;
-always_ff @(posedge iclk, negedge irst_n)
-	if (!irst_n)
+always @(posedge iclk or negedge irst_n)
+	if (!irst_n) 
+	begin
 		PC <= 0;
-	else
+		oImm <= 0;
+		oData1 <= 0;
+		oData2 <= 0;
+		oOpcode <= 0;
+	end
+	else	
+	begin
 		PC <= (branch & conditionResult) ? PC + 3*(imm + 1) : PC + 3;
+		oImm <= ((opcode == ImmL) | (opcode == ImmH)) ? {{8{1'b0}}, iInstr[20:13]} : {{8{iInstr[20]}}, iInstr[20:13]};
+		oData1 <= registers[sr1];
+		oData2 <= registers[sr2];
+		oOpcode <= opcode;
+		oSr1 <= sr1;
+		oSr2 <= sr2;
+	end
 
 assign oInstrAddr = PC;
 
-// Register File
-reg [15:0] registers [15:0];
-always @(posedge iclk, negedge irst_n)
-	if (!irst_n)
-		registers <= '{default:0};
-	else begin
-		if (iWriteBack)
-			registers[iWriteBackReg] <= iWriteBackData;
+always @(posedge iclk or negedge irst_n)
+	if(!irst_n) 
+	begin
+		oWriteReg <= 0;
+		oWriteRegAddr <= 0;
+		oMemtoReg <= 0;
+		oBustoReg <= 0;
+		oBusWrite <= 0;
+		oMemRead <= 0;
+		oMemWrite <= 0;
+		oALUSrc <= 0;
+	end
+	else 
+	begin
+		oWriteReeg <= (opcode == Store) ? 0 : 1;
+		oWriteRegAddr <= (opcode == Store) ? 0 : iInstr[8:5];
+		oMemtoReg <= (opcode == Load) ? 1 : 0;
+		oBustoReg <= (opcode == DbLoad) ? 1 : 0;
+		oBusWrite <= (opcode == DbStore) ? 1 : 0; 
+		oMemRead <= (opcode == Load) ? 1 : 0;
+		oMemWrite <= (opcode == Store) ? 1 : 0;
+		case(opcode) 
+		begin
+			Load: oALUSrc <= 1;
+			Store: oALUSrc <= 1;
+			DbLoad: oALUSrc <= 1;
+			DbStore: oALUSrc <= 1;
+			default: oALUSrc <= 0;	
+		end
 	end
 
-// Register data
-assign oData1 = registers[sr1];
-assign oData2 = registers[sr2];
+// Register File
+reg [15:0] registers [15:0];
+always @(posedge iclk or negedge irst_n)
+	if (!irst_n)
+		registers <= '{default:0};
+	else 
+	begin
+		if (iWriteReg | iMemtoReg | iBustoReg)
+			registers[iWriteRegAddr] <= iWriteData;
+	end
 
