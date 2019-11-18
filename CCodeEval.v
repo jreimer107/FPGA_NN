@@ -12,7 +12,7 @@
 */
 module CCodeEval(C, NVZ, cond_true);
 	input [2:0] C, NVZ;
-	output cond_true;
+	output reg cond_true;
 	wire N, V, Z;
 	assign {N,V,Z} = NVZ;
 

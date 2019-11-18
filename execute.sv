@@ -40,7 +40,7 @@ module execute (
 
     ForwardUnit U_ForwardUnit(
         .exmemregwrite(mem_regwrite_in),
-        .exmemregrd(mem_regwraddr),
+        .exmemregrd(mem_regwraddr_in),
         .idexregrs(ex_regrdaddr2_in),
         .idexregrt(ex_regrdaddr1_in),
         .idexmemwrite(ex_memwrite_in),

@@ -1,10 +1,17 @@
 module cpu (
-    input clk,    // Clock
-    input rst_n,  // Asynchronous reset active low
-    output [15:0]pc
+    input clk,                   // Clock
+    input rst_n,                 // Asynchronous reset active low
+	input [15:0] mem_data_in,    // load data from data BRAM
+	input [15:0] bus_data_in,    // data from accelerator
+    output [15:0] bus_data_out,  // data to accelerator
+	output mem_data_en,          // enable BRAM for read/write
+	output mem_data_wr,          // write enable to BRAM
+	output [15:0] mem_data_addr, // read/write address to BRAM
+	output [15:0] mem_data_out  // store data to BRAM
 );
  
     wire [15:0] instr_addr;
+	wire [23:0] instr;
 
     // ex
     wire [15:0] ex_reg1_data;
@@ -21,20 +28,18 @@ module cpu (
     wire ex_buswrite;
     wire [4:0] ex_opcode;
     wire ex_alusrc;
-    wire nvz;
+    wire [2:0] nvz;
 
     // mem/wb
     wire mem_regwrite;
     wire mem_memread;
     wire mem_memwrite;
-    wire [4:0] mem_dest;
+    wire [3:0] mem_dest;
     wire [15:0] mem_regwrdata;
     wire mem_memtoreg;
     wire mem_bustoreg;
     wire [15:0] mem_alu_in;
     wire [15:0] mem_alu_src2;
-    wire [15:0] mem_dataout;
-    wire mem_dataena;
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     //
@@ -48,7 +53,7 @@ module cpu (
 	.iInstr(instr),                // instruction: from instruction memory
 	.iWriteReg(mem_regwrite),      // write reg data into reg file: from writeback stage
 	.iWriteRegAddr(mem_dest),      // dest reg: from writeback stage
-	.iWriteData(mem_regwrdata),    // reg write data: from writeback stage
+	.iWriteRegData(mem_regwrdata), // reg write data: from writeback stage
 	.iMemtoReg(mem_memtoreg),      // write memory data to reg file: from writeback stage
 	.iBustoReg(mem_bustoreg),      // bus data to reg file: from writeback stage 
 	.iNVZ(nvz),                    // NVZ flag: from execute stage
@@ -66,7 +71,7 @@ module cpu (
 	.oOpcode(ex_opcode),           // opcode: to execute stage
 	.oALUSrc(ex_alusrc),           // select immediate value for ALU: to execute stage
 	.oSr1(ex_src1),                // src1 reg: to execute stage
-	.oSr2(ex_src2)		       // src2 reg: to execute stage
+	.oSr2(ex_src2)		           // src2 reg: to execute stage
     );
 
     // ADD Instruction BROM here
@@ -114,14 +119,12 @@ module cpu (
     //
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-    // Add Data BRAM here
-
-    //assign mem_datain = mem_alu_src2; // can be tied directly to write data wires of BRAM
-    //assign mem_dataaddr = mem_alu_in; // can be tied directly to address wires of BRAM
-    assign mem_dataena = (mem_memwrite | mem_memread);
-    //assign mem_datawr = mem_memwrite; // can be tied directly to write enable wire of BRAM
+    assign mem_data_out = mem_alu_src2;
+	assign mem_data_addr = mem_alu_in;
+    assign mem_data_en = (mem_memwrite | mem_memread);
+    assign mem_data_wr = mem_memwrite;
 
     
-    assign mem_regwrdata = (mem_memtoreg == 0) ? mem_alu_in : ((mem_memtoreg == 1) ? mem_dataout : 16'b0));
+    assign mem_regwrdata = (mem_bustoreg == 1) ? bus_data_in : ((mem_memtoreg == 1) ? mem_data_in : ((mem_regwrite == 1) ? mem_alu_in : 16'b0));
 
 endmodule
