@@ -8,7 +8,7 @@ wire [7:0] out;
 integer i;
 
 
-parallel_mult pm0(.clk(clk), .rst (rst), .input_neuron(input_neuron), .weight_bits(weight_sample), .FinalOut(out));
+parallel_mult pm0(.clk(clk), .rst (rst), .input_neuron(input_neuron), .weight_bits(weight_sample), .multiplied_done(mDone), .FinalOut(out));
 
 
 initial
