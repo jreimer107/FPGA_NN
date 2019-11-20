@@ -1,16 +1,19 @@
 module Mult(input clk,
     input reset,
-    input [7:0] input_neuron,
+    input [15:0] input_neuron,
     input Weight_bit,
-    output [7:0] out);
+    input enable,
+    output [15:0] out);
 
-localparam Integer_width = 4;
-localparam Fraction_width = 3;
+localparam Integer_width = 5;
+localparam Fraction_width = 10;
 
-reg [15:0] partial_out;
+reg [31:0] partial_out;
 reg [3:0] counter;
-reg [7:0] output_reg;
-reg [3:0] integer_rounding;
+reg [3:0] count_zeros;
+reg [15:0] output_reg;
+reg [4:0] integer_rounding;
+
 
 always @(posedge clk) begin
 	if (!reset)
@@ -19,28 +22,29 @@ always @(posedge clk) begin
 			counter <=0;
                         output_reg <=0;
 		end
-	else
+	else if(enable)
 	begin
 		if (counter == 0)
 		begin
-			partial_out =(input_neuron[6:0] * Weight_bit);
+			partial_out =(input_neuron[14:0] * Weight_bit);
 			counter <= counter +1'b1;
 		end
-		else if (counter == 7)
+		else if (counter == 15)
 		begin
-			partial_out[15] <= input_neuron[7] ^ Weight_bit;
-			if ( partial_out[10])
-				integer_rounding = partial_out[14:11] + 1'b1;
+			partial_out[31] <= input_neuron[15] ^ Weight_bit;
+			
+			if ( partial_out[25])
+				integer_rounding = partial_out[24:20] + 1'b1;
 			else 	
-				integer_rounding = partial_out[14:11] ;
+				integer_rounding = partial_out[24:20] ;
 
-			output_reg <= {partial_out[15], integer_rounding[3:0], partial_out [5:3]};
+			output_reg <= {partial_out[31], integer_rounding[4:0], partial_out [19:10]};
 			partial_out <=0;
 			counter <=0;
 		end
 		else
 		begin
-			partial_out = ((input_neuron[6:0] * Weight_bit)) + (partial_out << 1);
+			partial_out = ((input_neuron[14:0] * Weight_bit)) + (partial_out << 1);
 			counter <= counter +1'b1;
 		end
 	end
