@@ -9,9 +9,6 @@ module cpu (
 	output [15:0] mem_data_addr, // read/write address to BRAM
 	output [15:0] mem_data_out  // store data to BRAM
 );
- 
-    wire [15:0] instr_addr;
-	wire [23:0] instr;
 
     // ex
     wire [15:0] ex_reg1_data;
@@ -50,14 +47,12 @@ module cpu (
     fetchdecode U_IFID(
 	.iclk(clk),
 	.irst_n(rst_n),
-	.iInstr(instr),                // instruction: from instruction memory
 	.iWriteReg(mem_regwrite),      // write reg data into reg file: from writeback stage
 	.iWriteRegAddr(mem_dest),      // dest reg: from writeback stage
 	.iWriteRegData(mem_regwrdata), // reg write data: from writeback stage
 	.iMemtoReg(mem_memtoreg),      // write memory data to reg file: from writeback stage
 	.iBustoReg(mem_bustoreg),      // bus data to reg file: from writeback stage 
 	.iNVZ(nvz),                    // NVZ flag: from execute stage
-	.oInstrAddr(instr_addr),       // PC value: to instruction memory (TODO::move PC Control out of fetch decode to top level)
 	.oData1(ex_reg1_data),         // src reg1 data: to execute stage
 	.oData2(ex_reg2_data),         // src reg2 data: to execute stage
 	.oImm(ex_imm),                 // immediate value: to execute stage
@@ -71,7 +66,8 @@ module cpu (
 	.oOpcode(ex_opcode),           // opcode: to execute stage
 	.oALUSrc(ex_alusrc),           // select immediate value for ALU: to execute stage
 	.oSr1(ex_src1),                // src1 reg: to execute stage
-	.oSr2(ex_src2)		           // src2 reg: to execute stage
+	.oSr2(ex_src2),		           // src2 reg: to execute stage
+	.stall(mem_memread)			   // stall on data load
     );
 
     // ADD Instruction BROM here
@@ -126,5 +122,13 @@ module cpu (
 
     
     assign mem_regwrdata = (mem_bustoreg == 1) ? bus_data_in : ((mem_memtoreg == 1) ? mem_data_in : ((mem_regwrite == 1) ? mem_alu_in : 16'b0));
+
+	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    //
+    // accelerator interface
+    //
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	assign bus_data_out = 0;
+
 
 endmodule

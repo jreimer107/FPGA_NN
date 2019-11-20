@@ -12,14 +12,14 @@
  * @input iWriteBackReg is the register to write back to.
  * @input iWriteBackData is the data to write.
  * @input iNVZ is the output of the flag register in the EX phase.
- * @output oInstrAddr is the address of the instruction to fetch. AKA the PC.
  * @output oData1 is the contents of the first source register.
  * @output oData2 is the contents of the second source register.
  * @output oImm is the sign-extended immediate value
  */
 module fetchdecode(iclk, irst_n, iWriteReg, iWriteRegAddr, iWriteRegData,
 	iMemtoReg, iBustoReg, iNVZ, oData1, oData2, oImm, oWriteReg, oWriteRegAddr,
-	oMemtoReg, oBustoReg, oMemRead, oMemWrite, oBusWrite, oOpcode, oALUSrc, oSr1, oSr2);
+	oMemtoReg, oBustoReg, oMemRead, oMemWrite, oBusWrite, oOpcode, oALUSrc, 
+	oSr1, oSr2, stall);
 
 localparam Branch = 5'b01000;
 localparam BranchRegister = 5'b01001;
@@ -34,9 +34,9 @@ input iclk, irst_n;
 
 reg [15:0] PC;
 
-// BMem interface
-wire [23:0] instr;
-wire [15:0] instrAddr;
+// Imem interface
+wire [23:0] instr_temp;
+reg [23:0] instr;
 
 // Writeback, from MEM/WB phase
 input iWriteReg;
@@ -44,6 +44,9 @@ input iMemtoReg;
 input iBustoReg;
 input [3:0] iWriteRegAddr;
 input [15:0] iWriteRegData;
+
+// Stall for reads
+input stall;
 
 // Condition codes, from EX phase
 input [2:0] iNVZ;
@@ -70,10 +73,10 @@ output reg oWriteReg;
 output reg [3:0] oWriteRegAddr;
 
 // Instruction components. Immediate is not used here.
-wire [4:0] opcode = instr[4:0];
-wire [3:0] sr1 = instr[12:9];
-wire [3:0] sr2 = instr[16:13];
-wire [2:0] condition = instr[23:21];
+wire [4:0] opcode = instr[23:19];
+wire [3:0] sr1 = instr[18:15];
+wire [3:0] sr2 = instr[14:11];
+wire [2:0] condition = instr[2:0];
 
 // Register File
 reg [15:0] registers [15:0];
@@ -84,11 +87,23 @@ wire branch = opcode == Branch;
 CCodeEval cce(.C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
 
 // Instruction memory
-wire [15:0] branchAddr = PC + {instr[20:13], {8{instr[13]}}} + 1;
-wire [15:0] next_PC = branch ? branchAddr: PC + 1;
-rom imem(.address(next_PC), .clk(iclk), .q(instr));
+wire [15:0] branchAddr = PC + {{8{instr[10]}}, instr[10:3]} + 1;
+reg [15:0] next_PC;
+assign instr_temp = 24'b001010000000000000000111;
+// rom imem(.address(next_PC[7:0]), .clock(iclk), .q(instr_temp));
+always begin
+	instr = instr_temp;
+	if (stall) begin
+		next_PC = PC;
+		instr = 24'b001010000000000000000000; //Noop
+	end
+	else if (branch & conditionResult)
+		next_PC = branchAddr;
+	else
+		next_PC = PC + 1;
+end
 
-// PC register
+// Output data
 always @(posedge iclk or negedge irst_n)
 	if (!irst_n) begin
 		PC <= 0;
@@ -96,10 +111,12 @@ always @(posedge iclk or negedge irst_n)
 		oData1 <= 0;
 		oData2 <= 0;
 		oOpcode <= 0;
+		oSr1 <= 0;
+		oSr2 <= 0;
 	end
 	else begin
 		PC <= next_PC;
-		oImm <= (opcode == ImmL) ? {{8{1'b0}}, instr[20:13]} : ((opcode == ImmH) ? {instr[20:13], {8{1'b0}}} : 16'h0);
+		oImm <= (opcode == ImmL) ? {{8{1'b0}}, instr[10:3]} : ((opcode == ImmH) ? {instr[10:3], {8{1'b0}}} : 16'h0);
 		oData1 <= registers[sr1];
 		oData2 <= registers[sr2];
 		oOpcode <= opcode;
@@ -107,8 +124,7 @@ always @(posedge iclk or negedge irst_n)
 		oSr2 <= sr2;
 	end
 
-assign oInstrAddr = PC;
-
+// Control outputs
 always @(posedge iclk or negedge irst_n)
 	if(!irst_n) 
 	begin
@@ -139,13 +155,15 @@ always @(posedge iclk or negedge irst_n)
 		endcase
 	end
 
-always @(posedge iclk or negedge irst_n)
+// Register file
+always @(posedge iclk or negedge irst_n) begin
 	if (!irst_n)
 		registers <= '{default:0};
-	else 
-	begin
+	else begin
 		if (iWriteReg | iMemtoReg | iBustoReg)
 			registers[iWriteRegAddr] <= iWriteRegData;
+		registers[0] <= 16'h0;
 	end
+end
 
 endmodule

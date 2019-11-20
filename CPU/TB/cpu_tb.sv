@@ -2,7 +2,8 @@
  * This is the testbench from 552 with minor modifications to fit our ISA.
  * Also it's cleaned up, it had spaces and tabs everywhere and looked like trash.
 */
-module cpu_ptb();
+`timescale 1ps/1ps
+module cpu_tb();
 
 
 wire [15:0] PC;
@@ -30,7 +31,11 @@ integer     sim_log_file;
 reg clk; /* Clock input */
 reg rst_n; /* (Active low) Reset input */
 
-cpu DUT(.clk(clk), .rst_n(rst_n), .pc(PC), .hlt(Halt)); /* Instantiate your processor */
+wire mem_data_en = MemRead | MemWrite;
+cpu DUT(.clk(clk), .rst_n(rst_n), .mem_data_in(MemDataOut), .bus_data_in(16'h0),
+	.bus_data_out(), .mem_data_en(mem_data_en), .mem_data_wr(MemWrite),
+	.mem_data_addr(MemAddress),  .mem_data_out(MemDataIn)
+); /* Instantiate your processor */
 
 
 /* Setup */
@@ -87,7 +92,7 @@ always @ (posedge clk) begin
 			inst_count = inst_count + 1;
 		end
 
-		$fdisplay(sim_log_file, "SIMLOG:: Cycle %d PC: %8x I: %8x R: %d %3d %8x M: %d %d ADDR:%8x DATAIN:%8x DATAOUT:%8x IMISS:%d DMISS:%d",
+		$fdisplay(sim_log_file, "SIMLOG:: Cycle %d PC: %8x I: %8x R: %d %3d %8x M: %d %d ADDR:%8x DATAIN:%8x DATAOUT:%8x",
 				cycle_count,
 				PC,
 				Inst,
@@ -99,8 +104,6 @@ always @ (posedge clk) begin
 				MemAddress,
 				MemDataIn,
 				MemDataOut,
-				DUT.IF.Imem.miss_detected,
-				DUT.MEM.Dmem.miss_detected
 		);
 
 		if (RegWrite) begin
@@ -141,12 +144,13 @@ end
 // Edit the example below. You must change the signal
 // names on the right hand side
 
-// assign PC = DUT.fetch0.pcCurrent; //You won't need this because it's part of the main cpu interface
+assign PC = DUT.U_IFID.PC; //You won't need this because it's part of the main cpu interface
 
+assign Halt = 0;
 // assign Halt = DUT.memory0.halt; //You won't need this because it's part of the main cpu interface
 // Is processor halted (1 bit signal)
 
-assign Inst = DUT.instr;
+assign Inst = DUT.U_IFID.instr;
 //Instruction fetched in the current cycle
 
 assign RegWrite = DUT.mem_regwrite;
@@ -158,19 +162,19 @@ assign WriteRegister = DUT.mem_dest;
 assign WriteData = DUT.mem_regwrdata;
 // If above is true, this should hold the Data being written to the register. (16 bits)
 
-assign MemRead =  DUT.mem_memread;
+//assign MemRead =  DUT.mem_memread;
 // Is memory being read from, in this cycle. one bit signal (1 means yes, 0 means no)
 
-assign MemWrite = DUT.mem_memwrite;
+//assign MemWrite = DUT.mem_memwrite;
 // Is memory being written to, in this cycle (1 bit signal)
 
-assign MemAddress = DUT.mem_alu_inmem;
+// assign MemAddress = DUT.mem_alu_inmem;
 // If there's a memory access this cycle, this should hold the address to access memory with (for both reads and writes to memory, 16 bits)
 
-assign MemDataIn = DUT.mem_alu_src2;
+// assign MemDataIn = DUT.mem_alu_src2;
 // If there's a memory write in this cycle, this is the Data being written to memory (16 bits)
 
-assign MemDataOut = DUT.mem_data_out;
+// assign MemDataOut = DUT.mem_data_out;
 // If there's a memory read in this cycle, this is the data being read out of memory (16 bits)
 
 

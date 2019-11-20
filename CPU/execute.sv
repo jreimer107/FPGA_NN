@@ -60,7 +60,7 @@ module execute (
     // verified
     FLAG U_FLAG(
         .clk(clk),
-        .rst(rst),
+        .rst(rst_n),
         .opcode(ex_aluctrl),
         .aluout(ex_aluout),
         .aluovfl(ex_aluovfl),
@@ -72,16 +72,27 @@ module execute (
     assign ex_aluctrl = ex_aluop;
     assign ex_alu_src2 = forwardb ? mem_regwrdata_in : ex_reg_2;
 
-    always @ (posedge clk or negedge rst_n) 
-    begin
-	ex_regwrite_out  <= ex_regwrite_in;
-	ex_memtoreg_out  <= ex_memtoreg_in;
-	ex_bustoreg_out  <= ex_bustoreg_in;
-	ex_memread_out   <= ex_memread_in;
-	ex_memwrite_out  <= ex_memwrite_in;
-	ex_alu_out       <= ex_aluout;
-	ex_alu_src2_out  <= ex_alu_src2;
-	ex_regwraddr_out <= ex_regwraddr_in;
+    always @ (posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            ex_regwrite_out  <= 0;
+            ex_memtoreg_out  <= 0;
+            ex_bustoreg_out  <= 0;
+            ex_memread_out   <= 0;
+            ex_memwrite_out  <= 0;
+            ex_alu_out       <= 0;
+            ex_alu_src2_out  <= 0;
+            ex_regwraddr_out <= 0;
+        end
+        else begin
+            ex_regwrite_out  <= ex_regwrite_in;
+            ex_memtoreg_out  <= ex_memtoreg_in;
+            ex_bustoreg_out  <= ex_bustoreg_in;
+            ex_memread_out   <= ex_memread_in;
+            ex_memwrite_out  <= ex_memwrite_in;
+            ex_alu_out       <= ex_aluout;
+            ex_alu_src2_out  <= ex_alu_src2;
+            ex_regwraddr_out <= ex_regwraddr_in;
+        end
     end
 
 endmodule
