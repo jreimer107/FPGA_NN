@@ -13,9 +13,9 @@ reg [15:0]out_temp;
 wire [15:0]out_addsub;
 
 assign out = out_temp;
-assign sub = ctrl == 5'h1;
+assign sub = (ctrl == 5'h1);
 
-always begin
+always @(*) begin
 	ovfl = 0;
 	case (ctrl)
 		5'h0,
@@ -30,9 +30,7 @@ always begin
 		5'h6: out_temp = a >>> b[3:0];
 		5'h8: out_temp = {a[15:8], b[7:0]};
 		5'h9: out_temp = {b[7:0], a[7:0]};
-		default: begin
-			out_temp = 16'b0;
-		end
+		default: out_temp = 16'b0;
 	endcase
 end
 

@@ -67,7 +67,7 @@ module cpu (
 	.oALUSrc(ex_alusrc),           // select immediate value for ALU: to execute stage
 	.oSr1(ex_src1),                // src1 reg: to execute stage
 	.oSr2(ex_src2),		           // src2 reg: to execute stage
-	.stall(mem_memread)			   // stall on data load
+	.iStall(mem_memread)		   // stall on data load
     );
 
     // ADD Instruction BROM here

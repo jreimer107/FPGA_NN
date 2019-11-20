@@ -17,9 +17,9 @@
  * @output oImm is the sign-extended immediate value
  */
 module fetchdecode(iclk, irst_n, iWriteReg, iWriteRegAddr, iWriteRegData,
-	iMemtoReg, iBustoReg, iNVZ, oData1, oData2, oImm, oWriteReg, oWriteRegAddr,
+	iMemtoReg, iBustoReg, iNVZ, iStall, oData1, oData2, oImm, oWriteReg, oWriteRegAddr,
 	oMemtoReg, oBustoReg, oMemRead, oMemWrite, oBusWrite, oOpcode, oALUSrc, 
-	oSr1, oSr2, stall);
+	oSr1, oSr2);
 
 localparam Branch = 5'b01000;
 localparam BranchRegister = 5'b01001;
@@ -46,7 +46,7 @@ input [3:0] iWriteRegAddr;
 input [15:0] iWriteRegData;
 
 // Stall for reads
-input stall;
+input iStall;
 
 // Condition codes, from EX phase
 input [2:0] iNVZ;
@@ -73,9 +73,9 @@ output reg oWriteReg;
 output reg [3:0] oWriteRegAddr;
 
 // Instruction components. Immediate is not used here.
-wire [4:0] opcode = instr[23:19];
-wire [3:0] sr1 = instr[18:15];
-wire [3:0] sr2 = instr[14:11];
+wire [4:0] opcode = (iStall == 1) ? 5'b00101 : instr[23:19];
+wire [3:0] sr1 = (iStall == 1) ? 4'b0 : instr[18:15];
+wire [3:0] sr2 = (iStall == 1) ? 4'b0 : instr[14:11];
 wire [2:0] condition = instr[2:0];
 
 // Register File
@@ -83,28 +83,15 @@ reg [15:0] registers [15:0];
 
 // Evaluate condition result based on NVZ and current code.
 wire conditionResult;
-wire branch = opcode == Branch;
-CCodeEval cce(.C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
+wire branch = (opcode == Branch) | (opcode == BranchRegister);
+CCodeEval cce(.branch(branch), .C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
 
 // Instruction memory
 wire [15:0] branchAddr = PC + {{8{instr[10]}}, instr[10:3]} + 1;
 reg [15:0] next_PC;
-assign instr_temp = 24'b001010000000000000000111;
-// rom imem(.address(next_PC[7:0]), .clock(iclk), .q(instr_temp));
-always begin
-	instr = instr_temp;
-	if (stall) begin
-		next_PC = PC;
-		instr = 24'b001010000000000000000000; //Noop
-	end
-	else if (branch & conditionResult)
-		next_PC = branchAddr;
-	else
-		next_PC = PC + 1;
-end
 
 // Output data
-always @(posedge iclk or negedge irst_n)
+always @(posedge iclk or negedge irst_n) begin
 	if (!irst_n) begin
 		PC <= 0;
 		oImm <= 0;
@@ -123,11 +110,11 @@ always @(posedge iclk or negedge irst_n)
 		oSr1 <= sr1;
 		oSr2 <= sr2;
 	end
+end
 
 // Control outputs
-always @(posedge iclk or negedge irst_n)
-	if(!irst_n) 
-	begin
+always @(posedge iclk or negedge irst_n) begin
+	if(!irst_n) begin
 		oWriteReg <= 0;
 		oWriteRegAddr <= 0;
 		oMemtoReg <= 0;
@@ -137,8 +124,7 @@ always @(posedge iclk or negedge irst_n)
 		oMemWrite <= 0;
 		oALUSrc <= 0;
 	end
-	else 
-	begin
+	else begin
 		oWriteReg <= (opcode == Store) ? 0 : 1;
 		oWriteRegAddr <= (opcode == Store) ? 0 : instr[8:5];
 		oMemtoReg <= (opcode == Load) ? 1 : 0;
@@ -154,11 +140,13 @@ always @(posedge iclk or negedge irst_n)
 			default: oALUSrc <= 0;	
 		endcase
 	end
+end
 
 // Register file
 always @(posedge iclk or negedge irst_n) begin
-	if (!irst_n)
+	if (!irst_n) begin
 		registers <= '{default:0};
+	end
 	else begin
 		if (iWriteReg | iMemtoReg | iBustoReg)
 			registers[iWriteRegAddr] <= iWriteRegData;
