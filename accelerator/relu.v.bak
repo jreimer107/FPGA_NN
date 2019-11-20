@@ -2,11 +2,11 @@ module relu(
 	input clk,
 	input rst,
 	input neuron_done,
-	input [15:0]neuron,
-	output[15:0]out,
+	input [7:0]neuron,
+	output[7:0]out,
 	output cpu_neuron_done);
 
-reg [15:0]out_reg;
+reg [7:0]out_reg;
 reg cpu_sig;
 
 always@(posedge clk)
