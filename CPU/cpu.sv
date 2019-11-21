@@ -26,6 +26,7 @@ module cpu (
     wire [4:0] ex_opcode;
     wire ex_alusrc;
     wire [2:0] nvz;
+	wire regwrite;
 
     // mem/wb
     wire mem_regwrite;
@@ -37,6 +38,9 @@ module cpu (
     wire mem_bustoreg;
     wire [15:0] mem_alu_in;
     wire [15:0] mem_alu_src2;
+	reg regwrite_prev_out;
+    reg [3:0] mem_regwraddr_prev_out;
+    reg [15:0]mem_regwrdata_prev_out;
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     //
@@ -94,10 +98,13 @@ module cpu (
 	.ex_regrdaddr1_in(ex_src1),
 	.ex_regrdaddr2_in(ex_src2),
 	.ex_regwraddr_in(ex_dest),
-	.mem_regwrite_in(mem_regwrite),
+	.mem_regwrite_in(regwrite),
 	.mem_memread_in(mem_memread),
 	.mem_regwraddr_in(mem_dest),
 	.mem_regwrdata_in(mem_regwrdata),
+	.mem_regwrite_prev_in(regwrite_prev_out),
+    .mem_regwraddr_prev_in(mem_dest),
+    .mem_regwrdata_prev_in(mem_regwrdata),
 	.ex_flag_out(nvz),
 	.ex_regwrite_out(mem_regwrite),
 	.ex_memtoreg_out(mem_memtoreg),
@@ -120,6 +127,20 @@ module cpu (
     assign mem_data_en = (mem_memwrite | mem_memread);
     assign mem_data_wr = mem_memwrite;
 
+	always @(posedge clk or negedge rst_n) begin
+		if(!rst_n) begin
+			regwrite_prev_out <= 1'b0;
+			mem_regwraddr_prev_out <= 4'b0;
+			mem_regwrdata_prev_out <= 16'b0;
+		end
+		else begin
+			regwrite_prev_out <= regwrite;
+			mem_regwraddr_prev_out <= mem_dest;
+			mem_regwrdata_prev_out <= mem_regwrdata;
+		end
+	end
+
+	assign regwrite = mem_regwrite | mem_memtoreg | mem_bustoreg;
     
     assign mem_regwrdata = (mem_bustoreg == 1) ? bus_data_in : ((mem_memtoreg == 1) ? mem_data_in : ((mem_regwrite == 1) ? mem_alu_in : 16'b0));
 

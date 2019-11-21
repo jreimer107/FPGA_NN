@@ -76,9 +76,9 @@ end
 
 always @(posedge clk) begin
 	cycle_count = cycle_count + 1;
-	if (cycle_count > 100000) begin
+	if (cycle_count > 200) begin
 		$display("hmm....more than 100000 cycles of simulation...error?\n");
-		$finish;
+		$stop;
 	end
 end
 
@@ -92,7 +92,7 @@ always @ (posedge clk) begin
 			inst_count = inst_count + 1;
 		end
 
-		$fdisplay(sim_log_file, "SIMLOG:: Cycle %d PC: %8x I: %8x R: %d %3d %8x M: %d %d ADDR:%8x DATAIN:%8x DATAOUT:%8x",
+		$fdisplay(sim_log_file, "SIMLOG:: Cycle %d PC: %8x I: %6x R: %d %3d %4x M: %d %d ADDR:%4x DATAIN:%4x DATAOUT:%4x",
 				cycle_count,
 				PC,
 				Inst,

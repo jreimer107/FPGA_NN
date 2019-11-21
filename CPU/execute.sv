@@ -16,8 +16,11 @@ module execute (
     input [3:0]ex_regwraddr_in,
     input mem_regwrite_in,
     input mem_memread_in,
+    input mem_regwrite_prev_in,
     input [3:0] mem_regwraddr_in,
+    input [3:0] mem_regwraddr_prev_in,
     input [15:0]mem_regwrdata_in,
+    input [15:0]mem_regwrdata_prev_in,
     output reg [2:0] ex_flag_out,
     output reg ex_regwrite_out,
     output reg ex_memtoreg_out,
@@ -37,16 +40,20 @@ module execute (
     wire ex_aluovfl;
     wire forwarda;
     wire forwardb;
+    wire forwardc;
 
     ForwardUnit U_ForwardUnit(
         .exmemregwrite(mem_regwrite_in),
+        .exmemregwrite_prev(mem_regwrdata_prev_in),
         .exmemregrd(mem_regwraddr_in),
-        .idexregrs(ex_regrdaddr2_in),
-        .idexregrt(ex_regrdaddr1_in),
-        .idexmemwrite(ex_memwrite_in),
+        .exmemregrd_prev(mem_regwraddr_prev_in),
         .exmemmemread(mem_memread_in),
+        .idexregrs(ex_regrdaddr1_in),
+        .idexregrt(ex_regrdaddr2_in),
+        .idexmemwrite(ex_memwrite_in),
         .forwarda(forwarda),
-        .forwardb(forwardb)
+        .forwardb(forwardb),
+        .forwardc(forwardc)
     );
 
     ALU U_ALU(
@@ -68,7 +75,7 @@ module execute (
     );
 
     assign ex_aluin1 = forwarda ? mem_regwrdata_in : ex_reg_1;
-    assign ex_aluin2 = ex_alusrc ? ex_imm : (forwardb ? mem_regwrdata_in : ex_reg_2);
+    assign ex_aluin2 = ex_alusrc ? ex_imm : (forwardb ? mem_regwrdata_in : (forwardc ? mem_regwrdata_prev_in :ex_reg_2));
     assign ex_aluctrl = ex_aluop;
     assign ex_alu_src2 = forwardb ? mem_regwrdata_in : ex_reg_2;
 

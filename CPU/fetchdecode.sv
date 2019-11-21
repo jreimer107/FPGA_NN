@@ -21,8 +21,7 @@ module fetchdecode(iclk, irst_n, iWriteReg, iWriteRegAddr, iWriteRegData,
 	oMemtoReg, oBustoReg, oMemRead, oMemWrite, oBusWrite, oOpcode, oALUSrc, 
 	oSr1, oSr2);
 
-localparam Branch = 5'b01000;
-localparam BranchRegister = 5'b01001;
+localparam Branch = 5'b00111;
 localparam ImmL = 5'b01000;
 localparam ImmH = 5'b01001;
 localparam Load = 5'b01010;
@@ -73,9 +72,10 @@ output reg oWriteReg;
 output reg [3:0] oWriteRegAddr;
 
 // Instruction components. Immediate is not used here.
-wire [4:0] opcode = (iStall == 1) ? 5'b00101 : instr[23:19];
-wire [3:0] sr1 = (iStall == 1) ? 4'b0 : instr[18:15];
-wire [3:0] sr2 = (iStall == 1) ? 4'b0 : instr[14:11];
+wire [4:0] opcode = instr[23:19];
+wire [3:0] sr1 = instr[14:11];
+wire [3:0] sr2 = instr[10:7];
+wire [3:0] dest = instr[18:15];
 wire [2:0] condition = instr[2:0];
 
 // Register File
@@ -83,17 +83,33 @@ reg [15:0] registers [15:0];
 
 // Evaluate condition result based on NVZ and current code.
 wire conditionResult;
-wire branch = (opcode == Branch) | (opcode == BranchRegister);
+wire branch = (opcode == Branch) & conditionResult;
 CCodeEval cce(.branch(branch), .C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
+
+
 
 // Instruction memory
 wire [15:0] branchAddr = PC + {{8{instr[10]}}, instr[10:3]} + 1;
 reg [15:0] next_PC;
+rom imem(.address(next_PC[7:0]), .clock(iclk), .q(instr_temp), .rden(irst_n));
+always @(*) begin
+	instr = instr_temp;
+	if (iStall) begin
+		next_PC = PC;
+		instr = 24'b001010000000000000000000; //Noop
+	end
+	else if (branch) begin
+		next_PC = branchAddr;
+	end
+	else begin
+		next_PC = PC + 1;
+	end
+end
 
 // Output data
 always @(posedge iclk or negedge irst_n) begin
 	if (!irst_n) begin
-		PC <= 0;
+		PC <= -1;
 		oImm <= 0;
 		oData1 <= 0;
 		oData2 <= 0;
@@ -125,18 +141,15 @@ always @(posedge iclk or negedge irst_n) begin
 		oALUSrc <= 0;
 	end
 	else begin
-		oWriteReg <= (opcode == Store) ? 0 : 1;
-		oWriteRegAddr <= (opcode == Store) ? 0 : instr[8:5];
+		oWriteReg <= (opcode == Store | opcode == Branch) ? 0 : 1;
+		oWriteRegAddr <= (opcode == Store | opcode == Branch) ? 0 : dest;
 		oMemtoReg <= (opcode == Load) ? 1 : 0;
 		oBustoReg <= (opcode == DbLoad) ? 1 : 0;
 		oBusWrite <= (opcode == DbStore) ? 1 : 0; 
 		oMemRead <= (opcode == Load) ? 1 : 0;
 		oMemWrite <= (opcode == Store) ? 1 : 0;
 		case(opcode)
-			Load: oALUSrc <= 1;
-			Store: oALUSrc <= 1;
-			DbLoad: oALUSrc <= 1;
-			DbStore: oALUSrc <= 1;
+			ImmL, ImmH, Load, Store, DbLoad, DbStore: oALUSrc <= 1;
 			default: oALUSrc <= 0;	
 		endcase
 	end
