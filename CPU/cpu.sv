@@ -1,13 +1,13 @@
 module cpu (
     input clk,                   // Clock
     input rst_n,                 // Asynchronous reset active low
-	input [15:0] mem_data_in,    // load data from data BRAM
+	input [15:0] dmem_data_from,    // load data from data BRAM
 	input [15:0] bus_data_in,    // data from accelerator
     output [15:0] bus_data_out,  // data to accelerator
-	output mem_data_en,          // enable BRAM for read/write
-	output mem_data_wr,          // write enable to BRAM
-	output [15:0] mem_data_addr, // read/write address to BRAM
-	output [15:0] mem_data_out  // store data to BRAM
+	output dmem_ren,          // enable BRAM for read
+	output dmem_wren,          // write enable to BRAM
+	output [15:0] dmem_addr, // read/write address to BRAM
+	output [15:0] dmem_data_to  // store data to BRAM
 );
 
     // ex
@@ -29,18 +29,18 @@ module cpu (
 	wire regwrite;
 
     // mem/wb
-    wire mem_regwrite;
     wire mem_memread;
     wire mem_memwrite;
-    wire [3:0] mem_dest;
-    wire [15:0] mem_regwrdata;
     wire mem_memtoreg;
     wire mem_bustoreg;
     wire [15:0] mem_alu_in;
     wire [15:0] mem_alu_src2;
 	reg regwrite_prev_out;
-    reg [3:0] mem_regwraddr_prev_out;
-    reg [15:0]mem_regwrdata_prev_out;
+    wire wb_en;
+    wire [3:0] wb_dest;
+    wire [15:0] wb_data;
+    reg [3:0] wb_dest_prev_out;
+    reg [15:0]wb_data_prev_out;
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     //
@@ -51,9 +51,9 @@ module cpu (
     fetchdecode U_IFID(
 	.iclk(clk),
 	.irst_n(rst_n),
-	.iWriteReg(mem_regwrite),      // write reg data into reg file: from writeback stage
-	.iWriteRegAddr(mem_dest),      // dest reg: from writeback stage
-	.iWriteRegData(mem_regwrdata), // reg write data: from writeback stage
+	.iWriteReg(wb_en),      // write reg data into reg file: from writeback stage
+	.iWriteRegAddr(wb_dest),      // dest reg: from writeback stage
+	.iWriteRegData(wb_data), // reg write data: from writeback stage
 	.iMemtoReg(mem_memtoreg),      // write memory data to reg file: from writeback stage
 	.iBustoReg(mem_bustoreg),      // bus data to reg file: from writeback stage 
 	.iNVZ(nvz),                    // NVZ flag: from execute stage
@@ -100,20 +100,20 @@ module cpu (
 	.ex_regwraddr_in(ex_dest),
 	.mem_regwrite_in(regwrite),
 	.mem_memread_in(mem_memread),
-	.mem_regwraddr_in(mem_dest),
-	.mem_regwrdata_in(mem_regwrdata),
+	.mem_regwraddr_in(wb_dest),
+	.mem_regwrdata_in(wb_data),
 	.mem_regwrite_prev_in(regwrite_prev_out),
-    .mem_regwraddr_prev_in(mem_dest),
-    .mem_regwrdata_prev_in(mem_regwrdata),
+    .mem_regwraddr_prev_in(wb_dest),
+    .mem_regwrdata_prev_in(wb_data),
 	.ex_flag_out(nvz),
-	.ex_regwrite_out(mem_regwrite),
+	.ex_regwrite_out(wb_en),
 	.ex_memtoreg_out(mem_memtoreg),
 	.ex_bustoreg_out(mem_bustoreg),
 	.ex_memread_out(mem_memread),
 	.ex_memwrite_out(mem_memwrite),
 	.ex_alu_out(mem_alu_in),
 	.ex_alu_src2_out(mem_alu_src2),
-	.ex_regwraddr_out(mem_dest)
+	.ex_regwraddr_out(wb_dest)
     );
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -122,27 +122,27 @@ module cpu (
     //
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-    assign mem_data_out = mem_alu_src2;
-	assign mem_data_addr = mem_alu_in;
-    assign mem_data_en = (mem_memwrite | mem_memread);
-    assign mem_data_wr = mem_memwrite;
+    assign dmem_data_to = mem_alu_src2;
+	assign dmem_addr = mem_alu_in;
+    assign dmem_ren = mem_memread;
+    assign dmem_wren = mem_memwrite;
 
 	always @(posedge clk or negedge rst_n) begin
 		if(!rst_n) begin
 			regwrite_prev_out <= 1'b0;
-			mem_regwraddr_prev_out <= 4'b0;
-			mem_regwrdata_prev_out <= 16'b0;
+			wb_dest_prev_out <= 4'b0;
+			wb_data_prev_out <= 16'b0;
 		end
 		else begin
 			regwrite_prev_out <= regwrite;
-			mem_regwraddr_prev_out <= mem_dest;
-			mem_regwrdata_prev_out <= mem_regwrdata;
+			wb_dest_prev_out <= wb_dest;
+			wb_data_prev_out <= wb_data;
 		end
 	end
 
-	assign regwrite = mem_regwrite | mem_memtoreg | mem_bustoreg;
+	assign regwrite = wb_en | mem_memtoreg | mem_bustoreg;
     
-    assign mem_regwrdata = (mem_bustoreg == 1) ? bus_data_in : ((mem_memtoreg == 1) ? mem_data_in : ((mem_regwrite == 1) ? mem_alu_in : 16'b0));
+    assign wb_data = (mem_bustoreg == 1) ? bus_data_in : ((mem_memtoreg == 1) ? dmem_data_from : ((wb_en == 1) ? mem_alu_in : 16'b0));
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     //

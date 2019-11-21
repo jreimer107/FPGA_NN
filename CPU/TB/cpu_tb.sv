@@ -32,10 +32,12 @@ reg clk; /* Clock input */
 reg rst_n; /* (Active low) Reset input */
 
 wire mem_data_en = MemRead | MemWrite;
-cpu DUT(.clk(clk), .rst_n(rst_n), .mem_data_in(MemDataOut), .bus_data_in(16'h0),
-	.bus_data_out(), .mem_data_en(mem_data_en), .mem_data_wr(MemWrite),
-	.mem_data_addr(MemAddress),  .mem_data_out(MemDataIn)
-); /* Instantiate your processor */
+cpu_dmem_wrapper DUT(.clk(clk), .rst_n(rst_n));
+
+// cpu DUT(.clk(clk), .rst_n(rst_n), .mem_data_in(MemDataOut), .bus_data_in(16'h0),
+// 	.bus_data_out(), .mem_data_en(mem_data_en), .mem_data_wr(MemWrite),
+// 	.mem_data_addr(MemAddress),  .mem_data_out(MemDataIn)
+// ); /* Instantiate your processor */
 
 
 /* Setup */
@@ -144,37 +146,37 @@ end
 // Edit the example below. You must change the signal
 // names on the right hand side
 
-assign PC = DUT.U_IFID.PC; //You won't need this because it's part of the main cpu interface
+assign PC = DUT.CPU.U_IFID.PC; //You won't need this because it's part of the main cpu interface
 
 assign Halt = 0;
 // assign Halt = DUT.memory0.halt; //You won't need this because it's part of the main cpu interface
 // Is processor halted (1 bit signal)
 
-assign Inst = DUT.U_IFID.instr;
+assign Inst = DUT.CPU.U_IFID.instr;
 //Instruction fetched in the current cycle
 
-assign RegWrite = DUT.mem_regwrite;
+assign RegWrite = DUT.CPU.wb_en;
 // Is register file being written to in this cycle, one bit signal (1 means yes, 0 means no)
 
-assign WriteRegister = DUT.mem_dest;
+assign WriteRegister = DUT.CPU.wb_dest;
 // If above is true, this should hold the name of the register being written to. (4 bit signal)
 
-assign WriteData = DUT.mem_regwrdata;
+assign WriteData = DUT.CPU.wb_data;
 // If above is true, this should hold the Data being written to the register. (16 bits)
 
-//assign MemRead =  DUT.mem_memread;
+assign MemRead =  DUT.dmem_ren;
 // Is memory being read from, in this cycle. one bit signal (1 means yes, 0 means no)
 
-//assign MemWrite = DUT.mem_memwrite;
+assign MemWrite = DUT.CPU.dmem_wren;
 // Is memory being written to, in this cycle (1 bit signal)
 
-// assign MemAddress = DUT.mem_alu_inmem;
+assign MemAddress = DUT.data_addr;
 // If there's a memory access this cycle, this should hold the address to access memory with (for both reads and writes to memory, 16 bits)
 
-// assign MemDataIn = DUT.mem_alu_src2;
+assign MemDataIn = DUT.data_to_mem;
 // If there's a memory write in this cycle, this is the Data being written to memory (16 bits)
 
-// assign MemDataOut = DUT.mem_data_out;
+assign MemDataOut = DUT.data_to_cpu;
 // If there's a memory read in this cycle, this is the data being read out of memory (16 bits)
 
 
