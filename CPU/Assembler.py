@@ -86,7 +86,7 @@ def get_imm(imm):
             print('Immediates must be representable with 8 bits\n')
             sys.exit(1)
         if val < 0:
-            val = 2**8 + val;
+            val = 2**8 + val
         return '{0:08b}'.format(val)
     except ValueError:
         print('Invalid immediate value: '+imm+'\n')
@@ -96,7 +96,7 @@ def get_imm(imm):
 
 def get_cond(cond):
 
-# I'm writing this in a way that allows cond to be letters or a 3-bit number
+    # I'm writing this in a way that allows cond to be letters or a 3-bit number
     c = cond.lower()
 
     if c == 'ne':
@@ -165,7 +165,7 @@ def get_imm_fields(instr):
 
 def get_mem_fields(instr):
     if len(instr) is not 4:
-        print('Invalid instruction: '+instr+'\n')
+        print('Invalid instruction: '+ str(instr) +'\n')
         print('Memory instruction format: <LD/ST> <DR> <SR> <imm>\n')
         sys.exit(1)
 
@@ -196,6 +196,9 @@ def parse_and_convert(asm):
     machine_code = []
     for l in asm:
         instr = l.replace(',',' ').split()
+        if instr[0] == 'NOP':
+            machine_code.append('280000')
+            continue
         op = get_opcode(instr[0])
         if op == '00111':
             fields = get_b_fields(instr)
@@ -209,7 +212,7 @@ def parse_and_convert(asm):
             fields = get_db_fields(instr)
 
         full_instr_bin = '0'*8+op+fields
-        full_instr_hex = '%0*X' % ((len(full_instr_bin) + 3) // 4, int(full_instr_bin, 2))
+        full_instr_hex = ('%0*X' % ((len(full_instr_bin) + 3) // 4, int(full_instr_bin, 2)))[2:]
         machine_code.append(full_instr_hex)
     return machine_code
 
@@ -233,8 +236,15 @@ def main(argv):
     machine_code = parse_and_convert(asm_lines)
 
     with open(files[1], 'w') as f:
-        for instr in machine_code:
-            f.write('%s\n' % instr)
-    f.close()
+        f.write("WIDTH=24\n")
+        f.write("DEPTH=256\n\n")
+        f.write("ADDRESS_RADIX=UNS\n")
+        f.write("DATA_RADIX=HEX\n\n")
+        f.write("CONTENT BEGIN\n")
+        for i in range(len(machine_code)):
+            f.write("\t%d\t:\t%s;\n" % (i, machine_code[i]))
+        if (len(machine_code) < 256):
+            f.write("\t[%d..256]\t:\t0;\n" % len(machine_code))
+        f.write("END;")
 
 main(sys.argv[1:])
