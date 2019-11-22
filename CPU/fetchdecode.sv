@@ -122,7 +122,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 		oImm <= (opcode == ImmL) ? {{8{1'b0}}, instr[10:3]} : ((opcode == ImmH) ? {instr[10:3], {8{1'b0}}} : 16'h0);
 		oOpcode <= opcode;
 		oSr1 <= sr1;
-		oSr2 <= sr2;
+		oSr2 <= (opcode == Store) ? dest : sr2;
 		
 		// WB/IF forwarding
 		if (iWriteBack_en) begin
@@ -133,7 +133,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 		end
 		else begin
 			oData1 <= registers[sr1];
-			oData2 <= registers[sr2];
+			oData2 <= (opcode == Store) ? registers[dest] : registers[sr2];
 		end
 	end
 end

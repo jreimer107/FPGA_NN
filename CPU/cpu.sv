@@ -29,7 +29,6 @@ module cpu (
 	wire [4:0] ex_opcode;
 	wire ex_AluUseImm;
 	wire [2:0] nvz;
-	wire regwrite;
 
 	//Forwarding
 	wire [1:0] forward;
@@ -40,9 +39,6 @@ module cpu (
 
 	wire [15:0] mem_alu_in;
 	wire [15:0] mem_alu_src2;
-	reg regwrite_prev_out;
-	reg [3:0] wb_dest_prev_out;
-	reg [15:0]wb_data_prev_out;
 
 	// Writeback sources
 	wire mem_alutoreg;
@@ -52,7 +48,7 @@ module cpu (
 	// Writeback signals
 	wire wb_en;
 	wire [3:0] wb_dest;
-	wire [15:0] wb_data;
+	reg [15:0] wb_data;
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	//
@@ -106,7 +102,7 @@ module cpu (
 		.iImm(ex_imm),
 		.iSr1(ex_src1),
 		.iSr2(ex_src2),
-		.iWriteBackData(iWriteBackData),
+		.iWriteBackData(wb_data),
 		.iForward(forward),
 		.oNVZ(nvz),
 		.oAlutoReg(mem_alutoreg),
@@ -120,11 +116,11 @@ module cpu (
 	);
 
 	ForwardingUnit U_FWD(
-		.ex_sr1(ex_sr1),
-		.ex_sr2(ex_sr2),
+		.ex_sr1(ex_src1),
+		.ex_sr2(ex_src2),
 		.wb_dest(wb_dest),
 		.wb_en(wb_en),
-		.Forward(forward)
+		.oForward(forward)
 	);
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -141,16 +137,20 @@ module cpu (
 
 	// Writeback control
 	assign wb_en = mem_alutoreg | mem_memtoreg | mem_bustoreg;
-	always_comb begin
-		if (mem_alutoreg)
-			wb_data = mem_alu_in;
-		if (mem_bustoreg)
-			wb_data = bus_data_in;
-		else if  (mem_memtoreg)
-			wb_data = dmem_data_from;
-		else
-			wb_data = 16'h0;
-	end
+	assign wb_data = mem_alutoreg ? mem_alu_in :
+					 mem_bustoreg ? bus_data_in :
+					 mem_memtoreg ? dmem_data_from :
+					 16'h0;
+	// always_comb begin
+	// 	if (mem_alutoreg)
+	// 		wb_data = mem_alu_in;
+	// 	if (mem_bustoreg)
+	// 		wb_data = bus_data_in;
+	// 	else if  (mem_memtoreg)
+	// 		wb_data = dmem_data_from;
+	// 	else
+	// 		wb_data = 16'h0;
+	// end
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	//

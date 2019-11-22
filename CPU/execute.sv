@@ -31,7 +31,7 @@ module execute (
     output reg oAlutoReg,
     output reg oMemtoReg,
     output reg oBustoReg,
-    output reg oDest,
+    output reg [3:0] oDest,
 
     // Pipelined DMem controls
     input iMemRead,
