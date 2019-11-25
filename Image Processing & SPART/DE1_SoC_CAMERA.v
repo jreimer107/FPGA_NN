@@ -260,8 +260,6 @@ wire             				auto_start;
 //=======================================================
 //  Structural coding
 //=======================================================
-wire accel_done;
-assign accel_done = !KEY[3];
 
 reg start_cap, captured;
 always @(posedge CLOCK_50, negedge KEY[0]) begin
@@ -287,7 +285,6 @@ assign	D5M_RESET_N	=	DLY_RST_1;
 
 assign   VGA_CTRL_CLK = VGA_CLK;
 
-assign	LEDR		=	{8'b0,captured, KEY[2]};//Y_Cont;
 
 //fetch the high 8 bits
 assign  VGA_R = oVGA_R[9:2];
@@ -349,59 +346,61 @@ RAW2RGB				u4	(
 						   );
 reg [31:0] rd_outputs, dv_cnt;
 wire [15:0] rx_data, Read_txDATA;
-reg [15:0] old, tx_out;
-reg en_tx;
+reg [15:0] tx_out;
 wire rx_VAL, spart_req, data_val;
 
+reg [15:0] prev_data;
 always @(posedge CLOCK_50, negedge KEY[0])
-  if(!KEY[0]) begin
-    rd_outputs <= 0;
-    dv_cnt <= 0;
-  end
-  else if(data_val) begin
-    rd_outputs <= {Read_txDATA,rd_outputs[31:16]};
-    dv_cnt <= dv_cnt + 1;
-  end
+  if(!KEY[0])
+    prev_data <= 0;
+  else
+    prev_data <= Read_txDATA;
 
 always @(posedge CLOCK_50, negedge KEY[0])
   if(!KEY[0])
-    en_tx <= 0;
-  else if(Read_txDATA != old && en_tx)
-    en_tx <= 0;
-  else if(spart_req)
-    en_tx <= 1;
-
-
-always @(posedge CLOCK_50, negedge KEY[0])
-  if(!KEY[0]) begin
-    old <= 0;
     tx_out <= 0;
-  end
-  else if(Read_txDATA != old && en_tx) begin
+  else if(Read_txDATA != prev_data)
     tx_out <= Read_txDATA;
-    old <= Read_txDATA;
-  end
-  else
-    old <= Read_txDATA;
 
+wire [11:0] rd_cnt,wr_cnt;
+wire [7:0] spart_cap;
+
+reg [7:0] unique_val_cnt;
+always @(posedge CLOCK_50, negedge KEY[0])
+  if(!KEY[0])
+    unique_val_cnt <= 0;
+  else if(Read_txDATA != prev_data)
+    unique_val_cnt <= unique_val_cnt + 1;
+
+wire tbr;
 
 SPART_Control	spart(	.clk(CLOCK_50),
 			.rst(KEY[0]),
-			.ctrl(SW[8:6]),
+			.ctrl({!KEY[3],2'b00}),//.ctrl(SW[7:5]),
 			.rxd(GPIO_0[5]),
 			.txd(GPIO_0[3]),
 			.sdram_rd_req(spart_req),
 			.oWord(rx_data),
 			.owordVAL(rx_VAL),
-			.iWord(tx_out)//.iWord(Read_txDATA)
+			.iWord(Read_txDATA),//.iWord(tx_out),
+			.rd_req_cnt(rd_cnt),
+			.wr_req_cnt(wr_cnt),
+			.SPART_capture(spart_cap),
+			.otbr(tbr)
 		);
+
+wire [15:0] dq;
+wire [1:0] sdram_leds;
+
+assign	LEDR		=	{(Read_txDATA==dq),sdram_leds,4'b0,tbr,captured,KEY[2]};//Y_Cont;
+
 
 //Frame count display
 SEG7_LUT_6 			u5	(	
 							.oSEG0(HEX0),.oSEG1(HEX1),
 							.oSEG2(HEX2),.oSEG3(HEX3),
 							.oSEG4(HEX4),.oSEG5(HEX5),
-							.iDIG({Read_txDATA[15:8],rx_data[15:8],tx_out[15:8]})//.iDIG({rx_data[15:8],Read_txDATA})//.iDIG({8'b0,rx_data})//.iDIG(sample)//.iDIG(Frame_Cont[23:0])
+							.iDIG({rd_cnt[3:0],wr_cnt[3:0],spart_cap[3:0],tx_out[3:0],Read_txDATA[3:0],unique_val_cnt[3:0]})//.iDIG({rd_cnt[3:0],wr_cnt[3:0],4'b0,Read_txDATA[11:8],tx_out[3:0],spart_cap[3:0]})//.iDIG({Read_txDATA[15:8],dq})//.iDIG({Read_txDATA[15:8],rx_data[15:8],tx_out[15:8]})//.iDIG({rx_data[15:8],Read_txDATA})//.iDIG({8'b0,rx_data})//.iDIG(sample)//.iDIG(Frame_Cont[23:0])
 						   );
 												
 sdram_pll 			u6	(
@@ -423,23 +422,25 @@ Sdram_Control u7 (
 
 			//	FIFO Write Side 1
 			.WR1_DATA(rx_data),
-			.WR1(rx_VAL),
-			.WR1_ADDR(0),
-			.WR1_MAX_ADDR(3),
-			.WR1_LENGTH(8'h01),
+			.WR1(rx_VAL),//.WR1(flop_wr_req),//
+			.WR1_ADDR(0),//.WR1_ADDR(wr_addr),//
+			.WR1_MAX_ADDR(8),//.WR1_MAX_ADDR(max_addr),//
+			.WR1_LENGTH(8'h08),
 			.WR1_LOAD(!DLY_RST_0),
 			.WR1_CLK(~CLOCK_50),
 
 			//	FIFO Read Side 1
 			.RD1_DATA(Read_txDATA),
-			.RD1(spart_req),
-			.RD1_ADDR(0),
-			.RD1_MAX_ADDR(3),
+			.RD1(spart_req),//.RD1(flop_rd_req),//
+			.RD1_ADDR(0),//.RD1_ADDR(rd_addr),//
+			.RD1_MAX_ADDR(8),//.RD1_MAX_ADDR(max_addr),//
 			.RD1_LENGTH(8'h01),
 			.RD1_LOAD(!DLY_RST_0),
 			.RD1_CLK(~CLOCK_50),
 
 			.DATA_VAL(data_val),
+			.DQ_Sample(dq),
+			.led_out(sdram_leds),
 
 			//	FIFO Write Side 2
 			.WR2_DATA(),
@@ -448,7 +449,7 @@ Sdram_Control u7 (
 			.WR2_MAX_ADDR(23'h100000),
 			.WR2_LENGTH(8'h00),
 			.WR2_LOAD(!DLY_RST_0),
-			.WR2_CLK(~CLOCK_50),
+			.WR2_CLK(~sdram_ctrl_clk),
 
 			//	FIFO Read Side 2
 			.RD2_DATA(),
@@ -457,7 +458,7 @@ Sdram_Control u7 (
 			.RD2_MAX_ADDR(23'h100000),
 			.RD2_LENGTH(8'h00),
 			.RD2_LOAD(!DLY_RST_0),
-			.RD2_CLK(~CLOCK_50),
+			.RD2_CLK(~sdram_ctrl_clk),
 
 			//	SDRAM Side
 			.SA(DRAM_ADDR),
@@ -526,8 +527,7 @@ Sdram_Control u7 (
 			.DQ(DRAM_DQ),
 			.DQM({DRAM_UDQM,DRAM_LDQM})
 		);
-*/
-							
+*/							
 				
 //D5M I2C control
 I2C_CCD_Config 	u8	(	//	Host Side
