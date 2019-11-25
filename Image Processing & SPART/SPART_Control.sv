@@ -7,7 +7,13 @@ module SPART_Control(
 	output sdram_rd_req,
 	output reg [15:0] oWord,
 	output owordVAL,
-	input [15:0] iWord
+	input [15:0] iWord,
+
+	output reg [11:0] rd_req_cnt,
+	output reg [11:0] wr_req_cnt,
+
+	output [7:0] SPART_capture,
+	output otbr
 	);
 
 //wire iocs
@@ -99,26 +105,17 @@ always @(posedge clk, negedge rst)
 
 assign owordVAL = wordVAL && wordVAL_old && !old_wordVAL_old;//wordVAL && !wordVAL_old && ~ctrl[2];
 
-/*
-reg old_rx_ctrl;
 always @(posedge clk, negedge rst)
   if(!rst)
-    old_rx_ctrl <= 0;
-  else
-    old_rx_ctrl <= ctrl[1];
-
-wire start_rx;
-assign start_rx = ctrl[1] && !old_rx_ctrl;
-
-assign owordVAL = start_rx;
-*/
+    wr_req_cnt <= 0;
+  else if(owordVAL)
+    wr_req_cnt <= wr_req_cnt + 1;
 
 always @(posedge clk, negedge rst)
   if(!rst)
     oWord <= 0;
   else if(wordVAL)
     oWord <= rxbuffer;
-
 
 
 
@@ -137,14 +134,10 @@ reg [7:0] tx_data;
 reg [15:0] iWord_old;
 reg [1:0] txbyte_cnt;
 
-always @(posedge clk, negedge rst)
-  if(!rst)
-    iWord_old <= 0;
-  else
-    iWord_old <= iWord;
+wire start_tx;
+wire got_new_tx_data;
 
-wire update_tx_data;
-assign update_tx_data = iWord != iWord_old;//ctrl[2] && (iWord != iWord_old);
+reg [7:0] word_cnt;
 
 reg tbr_old;
 always @(posedge clk, negedge rst)
@@ -160,10 +153,30 @@ always @(posedge clk, negedge rst)
   else
     old_tx_ctrl <= ctrl[2];
 
-wire start_tx;
 assign start_tx = ctrl[2] && !old_tx_ctrl;// && tbr (?)
 
-assign sdram_rd_req = (tbr && ctrl[2] && !tbr_old && txbyte_cnt != 1) || start_tx;
+assign sdram_rd_req = (tbr && !tbr_old && txbyte_cnt == 2 && word_cnt < 8) || start_tx;//(tbr && ctrl[2] && !tbr_old && txbyte_cnt != 1) || start_tx;
+
+
+always @(posedge clk, negedge rst)
+  if(!rst)
+    iWord_old <= 0;
+  else
+    iWord_old <= iWord;
+
+assign got_new_tx_data = iWord != iWord_old;//ctrl[2] && (iWord != iWord_old);
+/*
+always @(posedge clk, negedge rst)
+  if(!rst)
+    word_cnt <= 0;
+  else if(got_new_tx_data)
+    word_cnt <= word_cnt + 1;
+*/
+always @(posedge clk, negedge rst)
+  if(!rst)
+    rd_req_cnt <= 0;
+  else if(sdram_rd_req)
+    rd_req_cnt <= rd_req_cnt + 1;
 
 always @(posedge clk, negedge rst)
   if(!rst)
@@ -183,8 +196,7 @@ always @(posedge clk, negedge rst)
   else if(&clk_cnt || next_state == TX)
     clk_cnt_en <= 0;
   else if(sdram_rd_req)
-    clk_cnt_en <= 1;//0
-
+    clk_cnt_en <= 1;
 
 always @(posedge clk, negedge rst)
   if(!rst)
@@ -194,19 +206,31 @@ always @(posedge clk, negedge rst)
   else
     clk_cnt <= 0;
 
+reg byte2;
+
 always @(posedge clk, negedge rst)
   if(!rst) begin
     tx_data <= 8'hFF;
     txbyte_cnt <= 0;
+    tx_ready <= 0;
+    byte2 <= 0;
+    word_cnt <= 0;
   end
-  else if(tbr && (update_tx_data || &clk_cnt))
+  else if(next_state == TX)
+    tx_ready <= 0;
+  else if(((txbyte_cnt == 1 && tbr && !tbr_old) || (tbr_old && (got_new_tx_data || &clk_cnt))) && iWord != 0)
     if(txbyte_cnt == 2 || txbyte_cnt == 0) begin
       txbyte_cnt <= 1;
       tx_data <= iWord[7:0];
+      tx_ready <= 1;
+      byte2 <= 0;
     end
     else if(txbyte_cnt == 1) begin
       txbyte_cnt <= 2;
       tx_data <= iWord[15:8];
+      tx_ready <= 1;
+      byte2 <= 1;
+      word_cnt <= word_cnt + 1;
     end
 
 always @(*) begin
@@ -235,7 +259,7 @@ always @(*) begin
 		next_state = RX;
 		iocs = 1;
 	  end
-	  else if(tbr && (update_tx_data || &clk_cnt)) begin
+	  else if(tx_ready) begin//if((tbr && (got_new_tx_data || &clk_cnt)) || (tbr && txbyte_cnt == 1)) begin
 		next_state = TX;
 		iocs = 1;
 	  end
@@ -248,5 +272,7 @@ always @(*) begin
   endcase
 end
 
+assign SPART_capture = word_cnt;//tx_data;
+assign otbr = byte2;
 
 endmodule
