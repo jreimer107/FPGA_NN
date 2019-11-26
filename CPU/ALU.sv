@@ -15,7 +15,7 @@ wire [15:0]out_addsub;
 assign out = out_temp;
 assign sub = (ctrl == 5'h1);
 
-always @(*) begin
+always_comb begin
 	ovfl = 0;
 	case (ctrl)
 		5'h0,
