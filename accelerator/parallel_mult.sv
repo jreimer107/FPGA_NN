@@ -8,7 +8,7 @@ module parallel_mult(
    
 );
 
-reg m_done;
+
 wire  [15:0][15:0] output_neuron;
 wire [15:0] sum_1_1, sum_1_2, sum_1_3, sum_1_4, sum_1_5, sum_1_6, sum_1_7, sum_1_8, sum_2_1 , sum_2_2, sum_2_3, sum_2_4, sum_3_1, sum_3_2, sum_4_1;
 
@@ -51,7 +51,7 @@ Fixed_adder Add3_2(.in1 (sum_2_3) , .in2 (sum_2_4) , .carry_in (carry_3_1), .sum
 
 Fixed_adder Add4_1(.in1 (sum_3_1) , .in2 (sum_3_2) , .carry_in (carry_3_2), .sum(sum_4_1), .carry_out (carry_4_1));
 
-Fixed_adder Add_final(.in1 (sum_4_1) , .in2 (8'h0) , .carry_in (carry_4_1), .sum(FinalOut), .carry_out (FinalCarry));
+Fixed_adder Add_final(.in1 (sum_4_1) , .in2 (16'h00) , .carry_in (carry_4_1), .sum(FinalOut), .carry_out (FinalCarry));
 
 
 

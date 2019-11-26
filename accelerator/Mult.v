@@ -32,12 +32,17 @@ always @(posedge clk) begin
 		else if (counter == 15)
 		begin
 			partial_out[31] <= input_neuron[15] ^ Weight_bit;
-			
-			if ( partial_out[25])
-				integer_rounding = partial_out[24:20] + 1'b1;
-			else 	
-				integer_rounding = partial_out[24:20] ;
-
+			//if (partial_out[30:20] >= 11'd32)
+			//	integer_rounding = partial_out[27:23];
+			//else 
+			//begin
+			if(partial_out[26]) begin
+				integer_rounding = partial_out[25:21];
+			end
+			else
+			begin
+				integer_rounding = partial_out[24:20];
+			end
 			output_reg <= {partial_out[31], integer_rounding[4:0], partial_out [19:10]};
 			partial_out <=0;
 			counter <=0;
