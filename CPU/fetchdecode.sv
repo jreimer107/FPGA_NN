@@ -88,8 +88,8 @@ reg [15:0] registers [15:0];
 
 // Evaluate condition result based on NVZ and current code.
 wire conditionResult;
-wire branch = (opcode == Branch) & conditionResult;
-CCodeEval cce(.branch(branch), .C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
+wire branch = conditionResult;
+CCodeEval cce(.opcode(opcode), .C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
 
 // Instruction memory
 wire [15:0] branchAddr = PC + {{8{instr[10]}}, instr[10:3]} + 1;
@@ -129,17 +129,8 @@ always_ff @(posedge clk or negedge rst_n) begin
 		oSr1 <= sr1;
 		oSr2 <= (opcode == Store) ? dest :  sr2;
 		
-		// WB/IF forwarding
-		if (iWriteBack_en) begin
-			if (iWriteBackAddr == sr1)
-				oData1 <= iWriteBackData;
-			if (iWriteBackData == sr2)
-				oData2 <= iWriteBackData;
-		end
-		else begin
-			oData1 <= registers[sr1];
-			oData2 <= (opcode == Store) ? registers[dest] : registers[sr2];
-		end
+		oData1 <= registers[sr1];
+		oData2 <= (opcode == Store) ? registers[dest] : registers[sr2];
 	end
 end
 
@@ -175,7 +166,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 end
 
 // Register file
-always_ff @(posedge clk or negedge rst_n) begin
+always_ff @(negedge clk, negedge rst_n) begin
 	if (!rst_n) begin
 		registers <= '{default:0};
 	end

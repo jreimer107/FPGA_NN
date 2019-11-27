@@ -10,12 +10,14 @@
 * @out is a 1 bit signal which is 1 when the requested condition matches the
 *   current codes and 0 otherwise.
 */
-module CCodeEval(branch, C, NVZ, cond_true);
+module CCodeEval(opcode, C, NVZ, cond_true);
 	input [2:0] C, NVZ;
-	input branch;
+	input [4:0] opcode;
 	output reg cond_true;
 	wire N, V, Z;
 	assign {N,V,Z} = NVZ;
+
+	localparam Branch = 5'b00111;
 
 	localparam  ne = 3'b000;
 	localparam  eq = 3'b001;
@@ -28,7 +30,7 @@ module CCodeEval(branch, C, NVZ, cond_true);
 
 	//Evaluate condition
 	always @(*)
-		if(branch) begin
+		if(opcode == Branch) begin
 			case (C)
 				ne : cond_true = ~Z;
 				eq : cond_true = Z;

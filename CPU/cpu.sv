@@ -62,6 +62,7 @@ module cpu (
 	// Writeback signals
 	wire wb_en;
 	wire [3:0] wb_dest;
+	wire [3:0] dest_reg;
 	reg [15:0] wb_data;
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -74,7 +75,7 @@ module cpu (
 	.clk(clk),
 	.rst_n(rst_n),
 	.iWriteBack_en(wb_en),     	   // write reg data into reg file: from writeback stage
-	.iWriteBackAddr(wb_dest),      // dest reg: from writeback stage
+	.iWriteBackAddr(dest_reg),     // dest reg: from writeback stage
 	.iWriteBackData(wb_data), 	   // reg write data: from writeback stage
 	.iNVZ(nvz),                    // NVZ flag: from execute stage
 	.oOpcode(ex_opcode),           // opcode: to execute stage
@@ -140,7 +141,7 @@ module cpu (
 	ForwardingUnit U_FWD(
 		.ex_sr1(ex_src1),
 		.ex_sr2(ex_src2),
-		.wb_dest(wb_dest),
+		.wb_dest(dest_reg),
 		.wb_en(wb_en),
 		.oForward(forward)
 	);
@@ -152,13 +153,20 @@ module cpu (
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 	reg mem_memtoreg_delay;
+	reg [3:0] wb_dest_delay;
 
 	always_ff @(posedge clk, negedge rst_n) begin
-		if(!rst_n)
+		if(!rst_n) begin
 			mem_memtoreg_delay <= 1'b0;
-		else
+			wb_dest_delay <= 4'b0;
+		end
+		else begin
 			mem_memtoreg_delay <= mem_memtoreg;
+			wb_dest_delay <= wb_dest;
+		end
 	end
+
+	assign dest_reg = (mem_memtoreg_delay == 1'b1) ? wb_dest_delay : wb_dest; 
 
 	// Dmemory interface
 	assign dmem_data_to = mem_alu_src2;
@@ -167,7 +175,7 @@ module cpu (
 	assign dmem_wren = mem_memwrite;
 
 	// Writeback control
-	assign wb_en = mem_alutoreg | mem_memtoreg | mem_bustoreg;
+	assign wb_en = mem_alutoreg | mem_memtoreg_delay | mem_bustoreg;
 	assign wb_data = mem_memtoreg_delay ? dmem_data_from :
 					 mem_bustoreg ? bus_data :
 	                 mem_alutoreg ? mem_alu_in :

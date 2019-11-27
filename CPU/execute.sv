@@ -50,6 +50,7 @@ wire aluovfl;
 wire [15:0] aluin1, aluin2;
 assign aluin1 = iForward[0] ? iWriteBackData : iData1;
 assign aluin2 = iAluUseImm ? iImm : (iForward[1] ? iWriteBackData : iData2);
+
 ALU U_ALU(
     .a(aluin1),
     .b(aluin2),
