@@ -46,6 +46,15 @@ module fetchdecode(
 	output reg oBustoReg,
 	output reg [3:0] oWriteBackAddr,
 
+	//CCD Interface
+	input iCCD_done,
+	output oCCD_en,
+
+	// Accelerator Interface
+	input iACC_done,
+	output oACC_en,   //These two go directly to accelerator
+	output oACC_start,
+
 	// Control Signals for later stages
 	output reg oALUSrc,
 	output reg oMemRead,
@@ -63,7 +72,8 @@ localparam DbStore = 5'b01101;
 
 // Imem interface
 reg [15:0] PC;
-reg [23:0] instr;
+wire [23:0] instr;
+reg [23:0] instr_old;
 wire [23:0] instr_temp;
 
 // Instruction components. Immediate is not used here.
@@ -83,30 +93,25 @@ CCodeEval cce(.branch(branch), .C(condition), .NVZ(iNVZ), .cond_true(conditionRe
 
 // Instruction memory
 wire [15:0] branchAddr = PC + {{8{instr[10]}}, instr[10:3]} + 1;
-reg [15:0] next_PC;
+wire [15:0] next_PC;
+
 rom imem(.address(next_PC[7:0]), .clock(clk), .q(instr_temp), .rden(rst_n));
 
 // Branching vs PC advancement
-always_comb begin
-	instr = instr_temp;
-	if (iStall) begin
-		next_PC = PC;
-		instr = 24'b001010000000000000000000; //Noop
-	end
-	else if (branch) begin
-		next_PC = branchAddr;
-	end
-	else begin
-		next_PC = PC + 1;
-	end
-end
+assign instr = (oOpcode == Load) ? 24'b001010000000000000000000 : instr_temp;
+
+assign next_PC = (branch == 1'b1) ? branchAddr : (opcode == Load) ? PC : PC + 1; 
 
 // PC register
 always_ff @(posedge clk, negedge rst_n)
-	if (!rst_n)
+	if (!rst_n) begin
 		PC <= -1;
-	else
+		instr_old <= 0;
+	end
+	else begin
 		PC <= next_PC;
+		instr_old <= instr_temp;
+	end
 
 // Output data
 always_ff @(posedge clk or negedge rst_n) begin
@@ -122,7 +127,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 		oImm <= (opcode == ImmL) ? {{8{1'b0}}, instr[10:3]} : ((opcode == ImmH) ? {instr[10:3], {8{1'b0}}} : 16'h0);
 		oOpcode <= opcode;
 		oSr1 <= sr1;
-		oSr2 <= (opcode == Store) ? dest : sr2;
+		oSr2 <= (opcode == Store) ? dest :  sr2;
 		
 		// WB/IF forwarding
 		if (iWriteBack_en) begin
@@ -154,12 +159,12 @@ always_ff @(posedge clk or negedge rst_n) begin
 	end
 	else begin
 		//Writeback signals
-		oAlutoReg <= !(opcode == Store | opcode == Branch);
+		oAlutoReg <= !(opcode == Store | opcode == Load | opcode == Branch);
 		oMemtoReg <= (opcode == Load);
 		oBustoReg <= (opcode == DbLoad);
 		oWriteBackAddr <= (opcode == Store | opcode == Branch) ? 0 : dest;
 
-		oBusWrite <= (opcode == DbStore); 
+		oBusWrite <= (opcode == DbStore);
 		oMemRead <= (opcode == Load);
 		oMemWrite <= (opcode == Store);
 		case(opcode)
@@ -178,7 +183,16 @@ always_ff @(posedge clk or negedge rst_n) begin
 		if (iWriteBack_en)
 			registers[iWriteBackAddr] <= iWriteBackData;
 		registers[0] <= 16'h0;
+
+		// Status register inputs
+		registers[15][0] <= iCCD_done;
+		registers[15][2] <= iACC_done;
 	end
 end
+
+assign oCCD_en = registers[15][1];
+assign oACC_en = registers[15][3];
+assign oACC_start = registers[15][4];
+
 
 endmodule

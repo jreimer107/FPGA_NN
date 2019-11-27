@@ -6,19 +6,37 @@ wire [15:0] data_to_mem, data_to_cpu;
 wire [15:0] data_addr;
 wire dmem_ren, dmem_wren;
 
-wire [15:0] data_to_bus;
+//Accel mock
+wire [1:0] bus_rdwr;
+tri [15:0] databus = bus_rdwr[1] ? 16'h1234 : 16'hz;
+wire bus_en;
+wire bus_start;
+wire [2:0] bus_regaddr;
+wire bus_done = bus_en & bus_start;
+
+
+//CCD mock
+wire ccd_en;
+wire ccd_done = ccd_en;
+
 
 
 cpu CPU(
     .clk(clk),
     .rst_n(rst_n),
-    .bus_data_in(16'h0),
-	.bus_data_out(),
     .dmem_ren(dmem_ren), 
     .dmem_wren(dmem_wren),
 	.dmem_addr(data_addr),  
     .dmem_data_to(data_to_mem),
-    .dmem_data_from(data_to_cpu)
+    .dmem_data_from(data_to_cpu),
+    .bus_accel_done(bus_done),
+    .bus_accel_start(bus_start),
+    .bus_accel_en(bus_en),
+    .bus_rdwr(bus_rdwr),
+    .bus_data(databus),
+    .bus_accregaddr(bus_regaddr),
+    .ccd_done(ccd_done),
+    .ccd_en(ccd_en)
 );
 
 ram DMEM(

@@ -1,13 +1,25 @@
 module cpu (
 	input clk,                   // Clock
 	input rst_n,                 // Asynchronous reset active low
+
+	// DMEM interface
 	input [15:0] dmem_data_from,    // load data from data BRAM
-	input [15:0] bus_data_in,    // data from accelerator
-	output [15:0] bus_data_out,  // data to accelerator
 	output dmem_ren,          // enable BRAM for read
 	output dmem_wren,          // write enable to BRAM
 	output [15:0] dmem_addr, // read/write address to BRAM
-	output [15:0] dmem_data_to  // store data to BRAM
+	output [15:0] dmem_data_to,  // store data to BRAM
+
+	// Accelerator interface
+	input bus_accel_done,
+	output bus_accel_start,
+	output bus_accel_en,
+	output [1:0] bus_rdwr,
+	output [2:0] bus_accregaddr,
+	inout [15:0] bus_data,
+
+	//IPU interface
+	input ccd_done,
+	output ccd_en
 );
 
 	/// ex ///
@@ -36,9 +48,11 @@ module cpu (
 	/// mem/wb ///
 	wire mem_memread;
 	wire mem_memwrite;
+	wire mem_buswrite;
 
 	wire [15:0] mem_alu_in;
 	wire [15:0] mem_alu_src2;
+	wire [3:0] mem_sr1;
 
 	// Writeback sources
 	wire mem_alutoreg;
@@ -76,8 +90,13 @@ module cpu (
 	.oALUSrc(ex_AluUseImm),        // select immediate value for ALU: to execute stage
 	.oMemRead(ex_memread),         // read enable for BRAM on a load: to execute stage
 	.oMemWrite(ex_memwrite),       // write enable for BRAM on a store: to execute stage
-	.oBusWrite(ex_buswrite),       // slect bus data to write to reg file: to execute stage
-	.iStall(mem_memread)		   // stall on data load
+	.oBusWrite(ex_buswrite),       // write enable for bus data
+	.iStall(ex_memread),		   // stall on data load
+	.iCCD_done(ccd_done),
+	.oCCD_en(ccd_en),
+	.iACC_done(bus_accel_done),
+	.oACC_en(bus_accel_en),
+	.oACC_start(bus_accel_start)
 	);
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -112,7 +131,10 @@ module cpu (
 		.oMemWrite(mem_memwrite),
 		.oAluOut(mem_alu_in),
 		.oData2(mem_alu_src2),
-		.oDest(wb_dest)
+		.oDest(wb_dest),
+		.iBusWrite(ex_buswrite),
+		.oBusWrite(mem_buswrite),
+		.oSr1(mem_sr1)
 	);
 
 	ForwardingUnit U_FWD(
@@ -129,6 +151,15 @@ module cpu (
 	//
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
+	reg mem_memtoreg_delay;
+
+	always_ff @(posedge clk, negedge rst_n) begin
+		if(!rst_n)
+			mem_memtoreg_delay <= 1'b0;
+		else
+			mem_memtoreg_delay <= mem_memtoreg;
+	end
+
 	// Dmemory interface
 	assign dmem_data_to = mem_alu_src2;
 	assign dmem_addr = mem_alu_in;
@@ -137,14 +168,14 @@ module cpu (
 
 	// Writeback control
 	assign wb_en = mem_alutoreg | mem_memtoreg | mem_bustoreg;
-	assign wb_data = mem_alutoreg ? mem_alu_in :
-					 mem_bustoreg ? bus_data_in :
-					 mem_memtoreg ? dmem_data_from :
+	assign wb_data = mem_memtoreg_delay ? dmem_data_from :
+					 mem_bustoreg ? bus_data :
+	                 mem_alutoreg ? mem_alu_in :
 					 16'h0;
 	// always_comb begin
 	// 	if (mem_alutoreg)
 	// 		wb_data = mem_alu_in;
-	// 	if (mem_bustoreg)
+	// 	else if (mem_bustoreg)
 	// 		wb_data = bus_data_in;
 	// 	else if  (mem_memtoreg)
 	// 		wb_data = dmem_data_from;
@@ -157,7 +188,10 @@ module cpu (
 	// accelerator interface
 	//
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	assign bus_data_out = 0;
-
+	assign bus_data = mem_buswrite ? mem_alu_src2 : 16'hz;
+	assign bus_rdwr = {mem_bustoreg, mem_buswrite};
+	assign bus_accregaddr = mem_bustoreg ? wb_dest[2:0] :
+							mem_buswrite ? mem_sr1[2:0] :
+							3'hz;  
 
 endmodule

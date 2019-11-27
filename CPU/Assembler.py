@@ -236,15 +236,15 @@ def main(argv):
     machine_code = parse_and_convert(asm_lines)
 
     with open(files[1], 'w') as f:
-        f.write("WIDTH=24\n")
-        f.write("DEPTH=256\n\n")
-        f.write("ADDRESS_RADIX=UNS\n")
-        f.write("DATA_RADIX=HEX\n\n")
+        f.write("WIDTH=24;\n")
+        f.write("DEPTH=256;\n\n")
+        f.write("ADDRESS_RADIX=UNS;\n")
+        f.write("DATA_RADIX=HEX;\n\n")
         f.write("CONTENT BEGIN\n")
         for i in range(len(machine_code)):
             f.write("\t%d\t:\t%s;\n" % (i, machine_code[i]))
         if (len(machine_code) < 256):
-            f.write("\t[%d..256]\t:\t0;\n" % len(machine_code))
+            f.write("\t[%d..255]\t:\t0;\n" % len(machine_code))
         f.write("END;")
 
 main(sys.argv[1:])
