@@ -52,10 +52,10 @@ module cpu (
 	wire mem_memwrite;
 	wire mem_buswrite;
 	wire mem_halt;
+	wire [2:0] bus_addr;
 
 	wire [15:0] mem_alu_in;
 	wire [15:0] mem_alu_src2;
-	wire [3:0] mem_sr1;
 
 	// Writeback sources
 	wire mem_alutoreg;
@@ -118,6 +118,7 @@ module cpu (
 		.iDest(ex_dest),				// destination upon writeback
 		.iMemRead(ex_memread),
 		.iMemWrite(ex_memwrite),
+		.iBusWrite(ex_buswrite),
 		.iAluOp(ex_opcode),
 		.iAluUseImm(ex_AluUseImm),
 		.iData1(ex_reg1_data),
@@ -137,9 +138,8 @@ module cpu (
 		.oAluOut(mem_alu_in),
 		.oData2(mem_alu_src2),
 		.oDest(wb_dest),
-		.iBusWrite(ex_buswrite),
 		.oBusWrite(mem_buswrite),
-		.oSr1(mem_sr1),
+		.oBusAddr(bus_addr),
 		.oHalt(mem_halt)
 	);
 
@@ -200,8 +200,7 @@ module cpu (
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	assign bus_data = mem_buswrite ? mem_alu_src2 : 16'hz;
 	assign bus_rdwr = (halt == 1'b1) ? 2'b0 : {mem_bustoreg, mem_buswrite};
-	assign bus_accregaddr = mem_bustoreg ? wb_dest[2:0] :
-							mem_buswrite ? mem_sr1[2:0] :
-							3'hz;  
+	assign bus_accregaddr = mem_bustoreg ? bus_addr :
+							mem_buswrite ? bus_addr : 3'hz;  
 
 endmodule

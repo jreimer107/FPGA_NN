@@ -35,7 +35,7 @@ module execute (
     output reg oMemtoReg,
     output reg oBustoReg,
     output reg [3:0] oDest,
-    output reg [3:0] oSr1,
+    output reg [2:0] oBusAddr,
 
     // Pipelined DMem controls
     input iMemRead,
@@ -87,7 +87,7 @@ always @ (posedge clk or negedge rst_n) begin
         oData2     <= 0;
         oDest      <= 0;
         oBusWrite  <= 0;
-        oSr1       <= 0;
+        oBusAddr   <= 0;
         oHalt      <= 0;
     end
     else begin
@@ -98,9 +98,9 @@ always @ (posedge clk or negedge rst_n) begin
         oMemWrite  <= iMemWrite;
         oAluOut    <= aluout;
         oData2     <= iForward[1] ? iWriteBackData : iData2;
-        oDest      <= iDest;
+        oDest      <= (iAluOp == 5'hC) ? iSr2: iDest;
         oBusWrite  <= iBusWrite;
-        oSr1       <= iSr1;
+        oBusAddr   <= iData1[2:0];
         oHalt      <= (iAluOp == 5'hE) ? 1'b1 : 1'b0; 
     end
 end

@@ -181,15 +181,20 @@ def get_mem_fields(instr):
 def get_db_fields(instr):    # Documentation for these instructions is unclear atm
     if len(instr) is not 3:
         print('Invalid instruction: '+instr+'\n')
-        print('Databus instruction format: <DBLD/DBSTR> <accel_reg> <cpu_reg>\n')
+        if(get_opcode(instr[0]) == '01100'): 
+            print('Databus instruction format: <DBLD> <cpu_reg> <accel_reg>\n')
+        else:
+            print('Databus instruction format: <DBSTR> <cpu_reg> <accel_reg>\n')
         sys.exit(1)
 
     if instr[2].lower() == 'r15' and instr[0].lower() == 'dbld':
         print('Invalid destination register for DBLD: r15\n') # Status register should not be written to
         sys.exit(1)
-    accel_reg = get_reg(instr[1])
-    cpu_reg = get_reg(instr[2])
-    return accel_reg+cpu_reg*2+'0'*7
+
+    accel_reg = get_reg(instr[2])
+    cpu_reg = get_reg(instr[1])
+
+    return '0'*4+accel_reg+cpu_reg+'0'*7
 
 
 def parse_and_convert(asm):
