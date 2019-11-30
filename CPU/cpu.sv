@@ -19,7 +19,9 @@ module cpu (
 
 	//IPU interface
 	input ccd_done,
-	output ccd_en
+	output ccd_en,
+
+	output reg halt
 );
 
 	/// ex ///
@@ -49,6 +51,7 @@ module cpu (
 	wire mem_memread;
 	wire mem_memwrite;
 	wire mem_buswrite;
+	wire mem_halt;
 
 	wire [15:0] mem_alu_in;
 	wire [15:0] mem_alu_src2;
@@ -92,7 +95,7 @@ module cpu (
 	.oMemRead(ex_memread),         // read enable for BRAM on a load: to execute stage
 	.oMemWrite(ex_memwrite),       // write enable for BRAM on a store: to execute stage
 	.oBusWrite(ex_buswrite),       // write enable for bus data
-	.iStall(ex_memread),		   // stall on data load
+	.iHalt(halt),		   		   // Halt
 	.iCCD_done(ccd_done),
 	.oCCD_en(ccd_en),
 	.iACC_done(bus_accel_done),
@@ -124,6 +127,7 @@ module cpu (
 		.iSr2(ex_src2),
 		.iWriteBackData(wb_data),
 		.iForward(forward),
+		.iFlush(halt),
 		.oNVZ(nvz),
 		.oAlutoReg(mem_alutoreg),
 		.oMemtoReg(mem_memtoreg),
@@ -135,7 +139,8 @@ module cpu (
 		.oDest(wb_dest),
 		.iBusWrite(ex_buswrite),
 		.oBusWrite(mem_buswrite),
-		.oSr1(mem_sr1)
+		.oSr1(mem_sr1),
+		.oHalt(mem_halt)
 	);
 
 	ForwardingUnit U_FWD(
@@ -171,25 +176,22 @@ module cpu (
 	// Dmemory interface
 	assign dmem_data_to = mem_alu_src2;
 	assign dmem_addr = mem_alu_in;
-	assign dmem_ren = mem_memread;
-	assign dmem_wren = mem_memwrite;
+	assign dmem_ren = (halt == 1'b1) ? 1'b0 : mem_memread;
+	assign dmem_wren = (halt == 1'b1) ? 1'b0 : mem_memwrite;
 
 	// Writeback control
-	assign wb_en = mem_alutoreg | mem_memtoreg_delay | mem_bustoreg;
+	assign wb_en = (halt == 1'b1) ? 1'b0 : (mem_alutoreg | mem_memtoreg_delay | mem_bustoreg);
 	assign wb_data = mem_memtoreg_delay ? dmem_data_from :
 					 mem_bustoreg ? bus_data :
 	                 mem_alutoreg ? mem_alu_in :
 					 16'h0;
-	// always_comb begin
-	// 	if (mem_alutoreg)
-	// 		wb_data = mem_alu_in;
-	// 	else if (mem_bustoreg)
-	// 		wb_data = bus_data_in;
-	// 	else if  (mem_memtoreg)
-	// 		wb_data = dmem_data_from;
-	// 	else
-	// 		wb_data = 16'h0;
-	// end
+	
+	// HALT regsiter
+	always_ff @(posedge clk, negedge rst_n)
+		if(!rst_n)
+			halt <= 1'b0;
+		else
+			halt <= (mem_halt == 1'b1) ? 1'b1 : halt;
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	//
@@ -197,7 +199,7 @@ module cpu (
 	//
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	assign bus_data = mem_buswrite ? mem_alu_src2 : 16'hz;
-	assign bus_rdwr = {mem_bustoreg, mem_buswrite};
+	assign bus_rdwr = (halt == 1'b1) ? 2'b0 : {mem_bustoreg, mem_buswrite};
 	assign bus_accregaddr = mem_bustoreg ? wb_dest[2:0] :
 							mem_buswrite ? mem_sr1[2:0] :
 							3'hz;  

@@ -24,11 +24,10 @@ module fetchdecode(
 	input [3:0] iWriteBackAddr,
 	input [15:0] iWriteBackData,
 
-	// Stall for dmem reads
-	input iStall,
-
 	// Condition codes, from EX phase
 	input [2:0] iNVZ,
+
+	input iHalt,
 
 	// Decoded Instruction Content
 	output reg [4:0] oOpcode,
@@ -73,7 +72,6 @@ localparam DbStore = 5'b01101;
 // Imem interface
 reg [15:0] PC;
 wire [23:0] instr;
-reg [23:0] instr_old;
 wire [23:0] instr_temp;
 
 // Instruction components. Immediate is not used here.
@@ -98,23 +96,20 @@ wire [15:0] next_PC;
 rom imem(.address(next_PC[7:0]), .clock(clk), .q(instr_temp), .rden(rst_n));
 
 // Branching vs PC advancement
-assign instr = (oOpcode == Load) ? 24'b001010000000000000000000 : instr_temp;
+assign instr = (oOpcode == Load | iHalt == 1'b1) ? 24'h280000 : instr_temp;
 
 assign next_PC = (branch == 1'b1) ? branchAddr : (opcode == Load) ? PC : PC + 1; 
 
 // PC register
 always_ff @(posedge clk, negedge rst_n)
-	if (!rst_n) begin
+	if (!rst_n)
 		PC <= -1;
-		instr_old <= 0;
-	end
-	else begin
-		PC <= next_PC;
-		instr_old <= instr_temp;
-	end
+	else
+		PC <= (iHalt == 1'b1) ? PC : next_PC;
+
 
 // Output data
-always_ff @(posedge clk or negedge rst_n) begin
+always_ff @(posedge clk, negedge rst_n) begin
 	if (!rst_n) begin
 		oImm <= 0;
 		oData1 <= 0;
@@ -135,7 +130,7 @@ always_ff @(posedge clk or negedge rst_n) begin
 end
 
 // Control outputs
-always_ff @(posedge clk or negedge rst_n) begin
+always_ff @(posedge clk, negedge rst_n) begin
 	if(!rst_n) begin
 		// Writeback signals
 		oAlutoReg <= 0;
@@ -171,7 +166,7 @@ always_ff @(negedge clk, negedge rst_n) begin
 		registers <= '{default:0};
 	end
 	else begin
-		if (iWriteBack_en)
+		if (iWriteBack_en & ~iHalt)
 			registers[iWriteBackAddr] <= iWriteBackData;
 		registers[0] <= 16'h0;
 

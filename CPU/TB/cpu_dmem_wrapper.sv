@@ -19,7 +19,7 @@ wire bus_done = bus_en & bus_start;
 wire ccd_en;
 wire ccd_done = ccd_en;
 
-
+wire halt;
 
 cpu CPU(
     .clk(clk),
@@ -36,7 +36,8 @@ cpu CPU(
     .bus_data(databus),
     .bus_accregaddr(bus_regaddr),
     .ccd_done(ccd_done),
-    .ccd_en(ccd_en)
+    .ccd_en(ccd_en),
+    .halt(halt)
 );
 
 ram DMEM(
@@ -47,7 +48,7 @@ ram DMEM(
     .data_b(256'h0),
     .rden_a(dmem_ren),
     .rden_b(1'b0),
-    .wren_a(dmem_wren),
+    .wren_a(dmem_wren & ~halt),
     .wren_b(1'b0),
     .q_a(data_to_cpu),
     .q_b()

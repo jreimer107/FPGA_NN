@@ -199,6 +199,9 @@ def parse_and_convert(asm):
         if instr[0] == 'NOP':
             machine_code.append('280000')
             continue
+        if instr[0] == 'HLT':
+            machine_code.append('700000')
+            continue
         op = get_opcode(instr[0])
         if op == '00111':
             fields = get_b_fields(instr)

@@ -16,6 +16,9 @@ module execute (
     // Forwarding
     input [1:0] iForward,
 
+    // Flush (due to HLT)
+    input iFlush,
+
     // ALU result
     output reg [15:0] oAluOut,
     output reg [15:0] oData2,
@@ -40,9 +43,11 @@ module execute (
     input iBusWrite,
     output reg oMemRead,
     output reg oMemWrite,
-    output reg oBusWrite
+    output reg oBusWrite,
+    output reg oHalt
 );
 
+wire [4:0] aluop;
 wire [15:0] aluout;
 wire aluovfl;
 
@@ -51,10 +56,12 @@ wire [15:0] aluin1, aluin2;
 assign aluin1 = iForward[0] ? iWriteBackData : iData1;
 assign aluin2 = iAluUseImm ? iImm : (iForward[1] ? iWriteBackData : iData2);
 
+assign aluop = iFlush ? 5'h5 : iAluOp;
+
 ALU U_ALU(
     .a(aluin1),
     .b(aluin2),
-    .ctrl(iAluOp),
+    .ctrl(aluop),
     .out(aluout),
     .ovfl(aluovfl)
 );
@@ -62,7 +69,7 @@ ALU U_ALU(
 FLAG U_FLAG(
     .clk(clk),
     .rst_n(rst_n),
-    .iOpcode(iAluOp),
+    .iOpcode(aluop),
     .iAluOut(aluout),
     .iAluOvfl(aluovfl),
     .oNVZ(oNVZ)
@@ -81,6 +88,7 @@ always @ (posedge clk or negedge rst_n) begin
         oDest      <= 0;
         oBusWrite  <= 0;
         oSr1       <= 0;
+        oHalt      <= 0;
     end
     else begin
         oAlutoReg  <= iAlutoReg;
@@ -93,6 +101,7 @@ always @ (posedge clk or negedge rst_n) begin
         oDest      <= iDest;
         oBusWrite  <= iBusWrite;
         oSr1       <= iSr1;
+        oHalt      <= (iAluOp == 5'hE) ? 1'b1 : 1'b0; 
     end
 end
 
