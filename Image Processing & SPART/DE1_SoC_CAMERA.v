@@ -329,6 +329,13 @@ CCD_Capture			u3	(
 						   );
 //D5M raw date convert to RGB data
 wire [23:0] sample;
+wire [10:0] BRAM_bWR_ADDR;
+wire [15:0] BRAM_bWR_DATA;
+wire BRAM_bWR_EN;
+
+wire img_done;
+wire [783:0][15:0] img;
+
 RAW2RGB				u4	(	
 							.iCLK(D5M_PIXLCLK),
 							.iRST(DLY_RST_1),
@@ -342,7 +349,9 @@ RAW2RGB				u4	(
 							.iY_Cont(Y_Cont),
 							.iCTRL({SW[2:1]}),
 							.cd_buf_rst(!KEY[3]),
-							.oSC(sample)
+							.oSC(sample),
+							.img_done(img_done),
+							.img(img)
 						   );
 reg [31:0] rd_outputs, dv_cnt;
 wire [15:0] rx_data, Read_txDATA;
@@ -365,24 +374,67 @@ always @(posedge CLOCK_50, negedge KEY[0])
 wire [11:0] rd_cnt,wr_cnt;
 wire [7:0] spart_cap;
 
-reg [7:0] unique_val_cnt;
+reg [7:0] val_cnt;
 always @(posedge CLOCK_50, negedge KEY[0])
   if(!KEY[0])
-    unique_val_cnt <= 0;
+    val_cnt <= 0;
   else if(Read_txDATA != prev_data)
-    unique_val_cnt <= unique_val_cnt + 1;
+    val_cnt <= val_cnt + 1;
 
 wire tbr;
+
+wire [22:0] max_addr;
+assign max_addr = 23'd8;//238200;
+
+wire [22:0] spart_max_words;
+assign spart_max_words = SW[8] ? 784 : max_addr;
+
+wire [15:0] q_a;	// Data from BRAM read
+wire [15:0] img_pxl;
+wire [15:0] spart_iWord;
+assign spart_iWord = SW[8] ? img_pxl : Read_txDATA;
+
+wire sdram_rd_req;
+assign sdram_rd_req = SW[8] ? 0 : spart_req;
+
+wire bram_rd_req;	// BRAM read request
+assign bram_rd_req = SW[8] ? spart_req : 0;
+
+reg start_display;
+always @(posedge CLOCK_50, negedge KEY[0])
+  if(!KEY[0])
+    start_display <= 0;
+  else if(img_done)
+    start_display <= 1;
+
+reg [9:0] idx;
+always @(posedge CLOCK_50, negedge KEY[0])
+  if(!KEY[0])
+    idx <= 10'h3FF;
+  else if(spart_req && start_display && SW[8])//else if(&temp_cnt)
+    if(idx == 783)
+      idx <= 0;
+    else
+      idx <= idx + 1;
+
+assign img_pxl = idx <= 783 ?
+			img[idx] > 16'h007F ? 16'h3333 :
+			img[idx] > 16'h000F ? 16'h3232 :
+			img[idx] > 16'h0007 ? 16'h3131 :
+			16'h3030 
+		 : 0;
+
 
 SPART_Control	spart(	.clk(CLOCK_50),
 			.rst(KEY[0]),
 			.ctrl({!KEY[3],2'b00}),//.ctrl(SW[7:5]),
 			.rxd(GPIO_0[5]),
 			.txd(GPIO_0[3]),
-			.sdram_rd_req(spart_req),
+			.rd_req(spart_req),
 			.oWord(rx_data),
 			.owordVAL(rx_VAL),
-			.iWord(Read_txDATA),//.iWord(tx_out),
+			.iWord(spart_iWord),
+			.max_words(spart_max_words),
 			.rd_req_cnt(rd_cnt),
 			.wr_req_cnt(wr_cnt),
 			.SPART_capture(spart_cap),
@@ -392,7 +444,7 @@ SPART_Control	spart(	.clk(CLOCK_50),
 wire [15:0] dq;
 wire [1:0] sdram_leds;
 
-assign	LEDR		=	{(Read_txDATA==dq),sdram_leds,4'b0,tbr,captured,KEY[2]};//Y_Cont;
+assign	LEDR		=	{(Read_txDATA==dq),sdram_leds,3'b0,start_display,tbr,captured,KEY[2]};//Y_Cont;
 
 
 //Frame count display
@@ -400,7 +452,7 @@ SEG7_LUT_6 			u5	(
 							.oSEG0(HEX0),.oSEG1(HEX1),
 							.oSEG2(HEX2),.oSEG3(HEX3),
 							.oSEG4(HEX4),.oSEG5(HEX5),
-							.iDIG({rd_cnt[3:0],wr_cnt[3:0],spart_cap[3:0],tx_out[3:0],Read_txDATA[3:0],unique_val_cnt[3:0]})//.iDIG({rd_cnt[3:0],wr_cnt[3:0],4'b0,Read_txDATA[11:8],tx_out[3:0],spart_cap[3:0]})//.iDIG({Read_txDATA[15:8],dq})//.iDIG({Read_txDATA[15:8],rx_data[15:8],tx_out[15:8]})//.iDIG({rx_data[15:8],Read_txDATA})//.iDIG({8'b0,rx_data})//.iDIG(sample)//.iDIG(Frame_Cont[23:0])
+							.iDIG({spart_cap,rx_data})//.iDIG({rd_cnt[3:0],wr_cnt[3:0],spart_cap[3:0],tx_out[3:0],Read_txDATA[3:0],val_cnt[3:0]})//.iDIG({rd_cnt[3:0],wr_cnt[3:0],4'b0,Read_txDATA[11:8],tx_out[3:0],spart_cap[3:0]})//.iDIG({Read_txDATA[15:8],dq})//.iDIG({Read_txDATA[15:8],rx_data[15:8],tx_out[15:8]})//.iDIG({rx_data[15:8],Read_txDATA})//.iDIG({8'b0,rx_data})//.iDIG(sample)//.iDIG(Frame_Cont[23:0])
 						   );
 												
 sdram_pll 			u6	(
@@ -424,16 +476,16 @@ Sdram_Control u7 (
 			.WR1_DATA(rx_data),
 			.WR1(rx_VAL),//.WR1(flop_wr_req),//
 			.WR1_ADDR(0),//.WR1_ADDR(wr_addr),//
-			.WR1_MAX_ADDR(8),//.WR1_MAX_ADDR(max_addr),//
-			.WR1_LENGTH(8'h08),
+			.WR1_MAX_ADDR(max_addr),//.WR1_MAX_ADDR(max_addr),//
+			.WR1_LENGTH(8'h01),
 			.WR1_LOAD(!DLY_RST_0),
 			.WR1_CLK(~CLOCK_50),
 
 			//	FIFO Read Side 1
 			.RD1_DATA(Read_txDATA),
-			.RD1(spart_req),//.RD1(flop_rd_req),//
+			.RD1(sdram_rd_req),//.RD1(flop_rd_req),//
 			.RD1_ADDR(0),//.RD1_ADDR(rd_addr),//
-			.RD1_MAX_ADDR(8),//.RD1_MAX_ADDR(max_addr),//
+			.RD1_MAX_ADDR(max_addr),//.RD1_MAX_ADDR(max_addr),//
 			.RD1_LENGTH(8'h01),
 			.RD1_LOAD(!DLY_RST_0),
 			.RD1_CLK(~CLOCK_50),
@@ -471,6 +523,25 @@ Sdram_Control u7 (
 			.DQ(DRAM_DQ),
 			.DQM({DRAM_UDQM,DRAM_LDQM})
 		);
+
+wire [10:0] img_addr, address_a;
+assign img_base_addr = 0;
+assign address_a = SW[8] ? rd_cnt : img_base_addr + BRAM_bWR_ADDR; 
+
+ram bram(
+	.address_a(address_a),
+	.address_b(),
+	.clock(CLOCK_50),
+	.data_a(BRAM_bWR_DATA),
+	.data_b(),
+	.rden_a(bram_rd_req),
+	.rden_b(0),
+	.wren_a(0),
+	.wren_b(BRAM_bWR_EN),
+	.q_a(q_a),
+	.q_b()
+	);
+
 
 /*
 // SDRAM Controller for VGA output
