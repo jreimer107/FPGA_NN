@@ -118,7 +118,8 @@ def get_cond(cond):
 
     if '0' not in c and '1' not in c:
         print('Invalid condition: '+cond+'\n')
-        print('Condition must be a 3-bit binary value or have a valid condition name: {ne,e,gt,lt,ge,le,ov,u}')
+        print(
+            'Condition must be a 3-bit binary value or have a valid condition name: {ne,e,gt,lt,ge,le,ov,u}')
         sys.exit(1)
     return c
 
@@ -131,20 +132,20 @@ def get_r_fields(instr):
 
     sr1 = get_reg(instr[1])
     sr2 = get_reg(instr[2])
-    if instr[3].lower() == 'r15':
-        print('Invalid destination register: r15\n') # Status register should not be written to
-        sys.exit(1)
     dr = get_reg(instr[3])
     return sr1+sr2+dr+'0'*7
 
 
-def get_b_fields(instr):
+def get_b_fields(instr, branch_marks, i):
     if len(instr) is not 3:
         print('Invalid instruction: '+instr+'\n')
         print('B instruction format: B <imm> <cond>\n')
         sys.exit(1)
 
-    imm = get_imm(instr[1])
+    if instr[1][:2] != "0x":
+        imm = get_imm(hex(branch_marks[instr[1]] - i))
+    else:
+        imm = get_imm(instr[1])
     cond = get_cond(instr[2])
     return '0'*8+imm+cond
 
@@ -155,9 +156,6 @@ def get_imm_fields(instr):
         print('Imm instruction format: <IMML/IMMH> <DR> <imm>\n')
         sys.exit(1)
 
-    if instr[1].lower() == 'r15':
-        print('Invalid destination register: r15\n') # Status register should not be written to
-        sys.exit(1)
     dr = get_reg(instr[1])
     imm = get_imm(instr[2])
     return dr+'0'*4+imm+'0'*3
@@ -165,13 +163,10 @@ def get_imm_fields(instr):
 
 def get_mem_fields(instr):
     if len(instr) is not 4:
-        print('Invalid instruction: '+ str(instr) +'\n')
+        print('Invalid instruction: ' + str(instr) + '\n')
         print('Memory instruction format: <LD/ST> <DR> <SR> <imm>\n')
         sys.exit(1)
 
-    if instr[1].lower() == 'r15' and instr[0].lower() == 'ld':
-        print('Invalid destination register for LD: r15\n') # Status register should not be written to
-        sys.exit(1)
     dr = get_reg(instr[1])
     sr = get_reg(instr[2])
     imm = get_imm(instr[3])
@@ -181,14 +176,10 @@ def get_mem_fields(instr):
 def get_db_fields(instr):    # Documentation for these instructions is unclear atm
     if len(instr) is not 3:
         print('Invalid instruction: '+instr+'\n')
-        if(get_opcode(instr[0]) == '01100'): 
+        if(get_opcode(instr[0]) == '01100'):
             print('Databus instruction format: <DBLD> <cpu_reg> <accel_reg>\n')
         else:
             print('Databus instruction format: <DBSTR> <cpu_reg> <accel_reg>\n')
-        sys.exit(1)
-
-    if instr[2].lower() == 'r15' and instr[0].lower() == 'dbld':
-        print('Invalid destination register for DBLD: r15\n') # Status register should not be written to
         sys.exit(1)
 
     accel_reg = get_reg(instr[2])
@@ -198,18 +189,43 @@ def get_db_fields(instr):    # Documentation for these instructions is unclear a
 
 
 def parse_and_convert(asm):
+    instructions = []
     machine_code = []
-    for l in asm:
-        instr = l.replace(',',' ').split()
+    branch_marks = {}
+
+    # Preprocessing to remove comments, whitespace, and log branch marks
+    for i in range(len(asm)):
+        # Remove comments and excess whitespace
+        instr = asm[i].split('#')[0].strip()
+        if len(instr) == 0:
+            continue
+
+        # Remove commas and split into array
+        instr = instr.replace(',', ' ').split()
+
+        # Check for Branch marks
+        if instr[0][-1:] == ':':
+            branch_marks[instr[0][:-1]] = len(instructions)
+            print("Found branch index at %s: %s" % (hex(len(instructions)), instr[0][:-1]))
+            instr = instr[1:]
+
+        instructions.append(instr)
+
+    for instr in instructions:
+        # Check for specific instructions
+        print(instr)
         if instr[0] == 'NOP':
             machine_code.append('280000')
             continue
         if instr[0] == 'HLT':
             machine_code.append('700000')
             continue
+
+        # Otherwise parse instruction
         op = get_opcode(instr[0])
         if op == '00111':
-            fields = get_b_fields(instr)
+            fields = get_b_fields(instr, branch_marks,
+                                  instructions.index(instr))
         elif op[0:2] == '00':
             fields = get_r_fields(instr)
         elif op[0:4] == '0100':
@@ -220,7 +236,8 @@ def parse_and_convert(asm):
             fields = get_db_fields(instr)
 
         full_instr_bin = '0'*8+op+fields
-        full_instr_hex = ('%0*X' % ((len(full_instr_bin) + 3) // 4, int(full_instr_bin, 2)))[2:]
+        full_instr_hex = (
+            '%0*X' % ((len(full_instr_bin) + 3) // 4, int(full_instr_bin, 2)))[2:]
         machine_code.append(full_instr_hex)
     return machine_code
 
@@ -231,28 +248,33 @@ def main(argv):
         print('Usage: '+sys.argv[0]+' <assembly_filename> <output_filename>\n')
         sys.exit(1)
 
-    filename = files[0]
+    # Convert asm input file into array
     asm_lines = []
     try:
-        f = open(filename, "r")
-        for line in f:
-            asm_lines.append(line)
-        f.close()
+        with open(files[0], 'r') as f:
+            asm_lines = f.readlines()
     except IOError:
-        print('Error: Cannot open file')
+        print('Error: Cannot open assembly file for reading.')
+        sys.exit(1)
 
     machine_code = parse_and_convert(asm_lines)
 
-    with open(files[1], 'w') as f:
-        f.write("WIDTH=24;\n")
-        f.write("DEPTH=256;\n\n")
-        f.write("ADDRESS_RADIX=UNS;\n")
-        f.write("DATA_RADIX=HEX;\n\n")
-        f.write("CONTENT BEGIN\n")
-        for i in range(len(machine_code)):
-            f.write("\t%d\t:\t%s;\n" % (i, machine_code[i]))
-        if (len(machine_code) < 256):
-            f.write("\t[%d..255]\t:\t0;\n" % len(machine_code))
-        f.write("END;")
+    # Write machine code to mif file
+    try:
+        with open(files[1], 'w') as f:
+            f.write("WIDTH=24;\n")
+            f.write("DEPTH=256;\n\n")
+            f.write("ADDRESS_RADIX=UNS;\n")
+            f.write("DATA_RADIX=HEX;\n\n")
+            f.write("CONTENT BEGIN\n")
+            for i in range(len(machine_code)):
+                f.write("\t%d\t:\t%s;\n" % (i, machine_code[i]))
+            if (len(machine_code) < 256):
+                f.write("\t[%d..255]\t:\t0;\n" % len(machine_code))
+            f.write("END;")
+    except IOError:
+        print('Error: Could not open mif file for writing.')
+        sys.exit(1)
+
 
 main(sys.argv[1:])

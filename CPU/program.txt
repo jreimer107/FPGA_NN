@@ -1,0 +1,62 @@
+#Mark	Op	Dest	SR1	SR2/IMM	Cond	#	Description
+	IMML	R14		0x2		#	Load Incrementor
+	IMMH	R13		0x80		#	Load Config Base Address
+	LD	R6	R13	0x0		#	Load Layer Count
+MAIN_LOOP:	IMML	R12		0x2		#	CCD_en is STATUS[1]
+	OR	R15	R15	R12		#	Set CCD_en
+CCD_WAIT:	AND	R12	R15	R15		#	CCD_done is STATUS[0]
+	B			CCD_WAIT	NE	#	Check for CCD_done
+INIT:	AND	R1	R0	R0		#	Reset Inputs Address to 0
+	AND	R2	R0	R0		#	Reset Weights Address to 0
+	IMML	R5		0x1		#	Reset Count Address to config base + 1
+	ADD	R5	R5	R13		#	
+	LD	R4	R5	0x0		#	Load Net input count
+	AND	R7	R0	R0		#	Reset Current Layer to 0
+	ADD	R9	R1	R4		#	Initialize Ouput Store Address (inputs base + numinputs)
+	IMML	R12		0x8		#	ACCEL_en is STATUS[3]
+	OR	R15	R15	R12		#	Set ACCEL_en
+PROC_LOOP:	XOR	R12	R6	R7		#	
+	B			PROC_DONE	E	#	While Current Layer != Layer Count
+	AND	R3	R4	R0		#	Set Input count to output count
+	ADD	R5	R5	R14		#	Increment Count Address
+	LD	R4	R5	0x0		#	Load next layer output count
+	DBSTR	R1	R0			#	Send Inputs Address
+	DBSTR	R3	R2			#	Send Input Count
+	AND	R8	R0	R0		#	Set Current Node to 0
+LAYER_LOOP:	XOR	R12	R8	R4		#	While Current Node != Output Count
+	B			LAYER_DONE	E	#	
+	DBSTR	R2	R1			#	Send Weights Address
+	IMML	R12		0x10			
+	OR	R15	R15	R12		#	Send Accel_start (STATUS[4])
+	IMML	R12		0x4		#	ACCEL_done is STATUS[2]
+ACCEL_WAIT:	AND	R11	R12	R15		#	Mask for ACCEL_done
+	B			ACCEL_WAIT	E	#	While !ACCEL_done
+	DBLD	R10	R3			#	Get Accel output
+	ST	R9	R10	0x0		#	Store output in Dmem
+	ADD	R9	R9	R14		#	Increment Output Store Point
+	ADD	R2	R2	R3		#	Increment Weights Address (+= Input Count)
+	ADD	R8	R8	R14		#	Increment Current Node
+	B			LAYER_LOOP	U	#	Next Output Node
+LAYER_DONE:	ADD	R1	R1	R3		#	Increment Inputs Address (+= Input Count)
+	ADD	R5	R5	R14		#	Increment Count Address
+	ADD	R7	R7	R14		#	Increment Current Layer
+	B			PROC_LOOP	U	#	Next Layer
+PROC_DONE:	IMMH	R12		0xFF		#	
+	IMML	R12		0xF7		#	ACCEL_en is STATUS[3]
+	AND	R15	R15	R12		#	Disable Accelerator
+	IMMH	R12		0x0		#	Reset R12
+	IMML	R11		0x0		#	R10 now holds largest key
+	IMML	R12		0xFF		#	R11 now holds largest value
+	IMML	R8		0x0		#	"R8 holds iterator, current value in R9"
+RET_LOOP:	XOR	R12	R4	R8		#	While current output != output count
+	B			RET_DONE	E	#	
+	LD	R9	R1	0x0		#	Load output value at R1
+	SUB	R12	R9	R11		#	
+	B			SMALLER	LT	#	If current val < largest val
+	AND	R10	R8	R8		#	largest key = iterator
+	AND	R11	R9	R9		#	largest val = current val
+SMALLER:	ADD	R8	R8	R14		#	Increment iterator
+	ADD	R1	R1	R14		#	Increment output address
+	B			RET_LOOP	U	#	Next output value
+RET_DONE:	AND	R1	R10	R10		#	Store result in R1
+	B			MAIN_LOOP	U	#	Continue infinite loop
