@@ -3,16 +3,13 @@ module Normalize(
 	input Rdy,
 	input rst,
 	input clk,
+	output reg got_pxl,
 	output ImgDone,
-	output reg [783:0][11:0] normBuff);
+	output reg [783:0][15:0] normBuff);
 	
 reg [9:0] counter_next, counter_current;
 
 logic[9:0] counter;
-//assign counter = 10'd0;	
-localparam [6:0] mean = 33, sd = 64; // mean = 33
-
-logic got_pxl;
 
 always @(posedge clk, negedge rst) begin
   if(!rst) begin
@@ -20,7 +17,7 @@ always @(posedge clk, negedge rst) begin
     normBuff <= '{default:0};
   end
   else if(Rdy) begin
-    normBuff[counter] <= (pixelValue - mean) >> 6;
+    normBuff[counter] <= {8'b0, pixelValue[11:4]};
     got_pxl <= 1;
   end
   else
