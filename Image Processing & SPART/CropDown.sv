@@ -9,7 +9,11 @@ module CropDown(
 	//input iFilter,
 	output oDVAL,
 	output [11:0] oDATA,
-	output [23:0] oSC
+	output [23:0] oSC,
+	//output reg [10:0] wr_addr,
+	output done,
+	output [783:0][15:0] img
+	//output bram_wr_en
 	);
 
 localparam X_init = 27, Y_init = 17, X_max = 614, Y_max = 464, Sx = 21, Sy = 16;
@@ -57,6 +61,57 @@ always_ff @(posedge iCLK, negedge iRST)
     out <= grayVal;
   end
 
+
+//wire pxlVAL, done;
+
+//logic [783:0][15:0] norm, norm_buf;
+
+//wire [15:0] norm_pxl;
+
+Normalize normal(
+	.pixelValue(out),
+	.Rdy(RDY),
+	.rst(iRST),
+	.clk(iCLK),
+	.got_pxl(pxlVAL),
+	.ImgDone(done),
+	.normBuff(img));
+/*
+reg start_bram_wr;
+
+always_ff @(posedge iCLK, negedge iRST)
+  if(!iRST)
+    start_bram_wr <= 0;
+  else if(wr_addr == 49)
+    start_bram_wr <= 0;
+  else if(done)
+    start_bram_wr <= 1;
+
+assign bram_wr_en = pxlVAL;//start_bram_wr;
+
+always_ff @(posedge iCLK, negedge iRST)
+  if(!iRST)
+    wr_addr <= 0;
+  else if(pxlVAL)
+    if(wr_addr == 783)
+      wr_addr <= 0;
+    else
+      wr_addr <= wr_addr + 1;
+
+
+always_ff @(posedge iCLK, negedge iRST)
+  if(!iRST)
+    norm_buf <= 0;
+  else if(done)
+    norm_buf <= norm;
+  else if(wr_addr > 0)
+    norm_buf <= {256'b0, norm[783:16]};
+
+assign bram_oDATA = norm_pxl;//start_bram_wr ? norm_buf[15:0] : 256'bz;
+*/
+
+/*
+//	Normalization with VGA output
 wire done;
 
 logic [783:0][11:0] norm;
@@ -118,8 +173,8 @@ assign oY = TARG_cnt / 640;
 
 assign oDVAL = modDVAL;
 assign oDATA = cropdown[(oX % 28)+(28*(oY%28))];//(oX < 28 && oY < 28) ? shift_reg[(oX + 28*oY)] : 0;
+*/
 
-/*
 //// Output to VGA for debugging ////
 reg [783:0][11:0] cropdown;
 always_ff @(posedge iCLK, negedge iRST)
@@ -169,7 +224,7 @@ assign oY = TARG_cnt / 640;
 
 assign oDVAL = modDVAL;
 assign oDATA = cropdown[(oX % 28)+(28*(oY%28))];//(oX < 28 && oY < 28) ? shift_reg[(oX + 28*oY)] : 0;
-*/
+
 
 /*
 reg sample_line;
