@@ -52,7 +52,9 @@ module RAW2RGB(	oRed,
 				iRST,
 				iCTRL,
 				cd_buf_rst,
-				oSC
+				oSC,
+				img_done,
+				img
 				);
 
 input	[10:0]	iX_Cont;
@@ -68,6 +70,8 @@ output	[11:0]	oGreen;
 output	[11:0]	oBlue;
 output			oDVAL;
 output [23:0] oSC;
+output img_done;
+output [783:0][15:0] img;
 
 wire	[11:0]	mDATA_0;
 wire	[11:0]	mDATA_1;
@@ -97,7 +101,7 @@ Shift_Register sr(.iCLK(iCLK),
 				.iFilter(iCTRL[2])	);
 */
 
-/*
+
 CropDown cds(	.iCLK(iCLK), 
 		.iRST(iRST), 
 		.buf_rst(cd_buf_rst),
@@ -106,11 +110,12 @@ CropDown cds(	.iCLK(iCLK),
 		.oDVAL(sr_oDVAL), 
 		.oDATA(o_data), 
 		.iY(iY_Cont[10:1]),
-		.oSC(oSC)
+		.oSC(oSC),
+		.img(img),
+		.done(img_done)
 	    );
-*/
 
-
+/*
 CropDownMean cdm(	.iCLK(iCLK), 
 		.iRST(iRST), 
 		.buf_rst(cd_buf_rst),
@@ -121,7 +126,7 @@ CropDownMean cdm(	.iCLK(iCLK),
 		.iY(iY_Cont[10:1]),
 		.oSC(oSC)
 	    );
-
+*/
 
 // Assign RGB outputs based on switch inputs
 assign	oRed	=	iCTRL[1] ? o_data : iCTRL[0] ? gray : mCCD_R[11:0];
@@ -180,4 +185,3 @@ begin
 end
 
 endmodule
-
