@@ -52,9 +52,10 @@ module RAW2RGB(	oRed,
 				iRST,
 				iCTRL,
 				cd_buf_rst,
-				oSC,
-				img_done,
-				img
+				// oSC,
+				// img_done,
+				// img
+				oPxl
 				);
 
 input	[10:0]	iX_Cont;
@@ -70,8 +71,9 @@ output	[11:0]	oGreen;
 output	[11:0]	oBlue;
 output			oDVAL;
 output [23:0] oSC;
-output img_done;
-output [783:0][15:0] img;
+// output img_done;
+// output [783:0][15:0] img;
+output [7:0] oPxl;
 
 wire	[11:0]	mDATA_0;
 wire	[11:0]	mDATA_1;
@@ -88,18 +90,6 @@ wire sr_oDVAL, RGB_oDVAL;
 wire [11:0] gray, o_data;
 assign gray = (mCCD_R[11:0] + mCCD_G[12:0] + mCCD_B[11:0]) / 4;
 
-/*
-// Convoltution handler
-Shift_Register sr(.iCLK(iCLK), 
-				.iRST(iRST), 
-				.iDVAL(RGB_oDVAL), 
-				.grayVal(gray), 
-				.oDVAL(sr_oDVAL), 
-				.oDATA(o_data), 
-				.iX(iX_Cont[10:1]), 
-				.iY(iY_Cont[10:1]), 
-				.iFilter(iCTRL[2])	);
-*/
 
 
 CropDown cds(	.iCLK(iCLK), 
@@ -110,23 +100,11 @@ CropDown cds(	.iCLK(iCLK),
 		.oDVAL(sr_oDVAL), 
 		.oDATA(o_data), 
 		.iY(iY_Cont[10:1]),
-		.oSC(oSC),
-		.img(img),
-		.done(img_done)
+		// .oSC(oSC),
+		// .img(img),
+		// .done(img_done)
+		.oPxl(oPxl)
 	    );
-
-/*
-CropDownMean cdm(	.iCLK(iCLK), 
-		.iRST(iRST), 
-		.buf_rst(cd_buf_rst),
-		.iDVAL(RGB_oDVAL), 
-		.grayVal(gray), 
-		.oDVAL(sr_oDVAL), 
-		.oDATA(o_data), 
-		.iY(iY_Cont[10:1]),
-		.oSC(oSC)
-	    );
-*/
 
 // Assign RGB outputs based on switch inputs
 assign	oRed	=	iCTRL[1] ? o_data : iCTRL[0] ? gray : mCCD_R[11:0];

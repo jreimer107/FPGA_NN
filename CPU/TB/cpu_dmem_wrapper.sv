@@ -1,6 +1,11 @@
-module cpu_dmem_wrapper(clk, rst_n);
-
-input clk, rst_n;
+module cpu_dmem_wrapper(
+    input clk, rst_n,
+    input pc_advance,
+    input [3:0] reg_index,
+    output [15:0] pc_out, reg_out,
+    output [23:0] instr_out,
+    output halt
+);
 
 wire [15:0] data_to_mem, data_to_cpu;
 wire [15:0] data_addr;
@@ -19,7 +24,7 @@ wire bus_done = bus_en & bus_start;
 wire ccd_en;
 wire ccd_done = ccd_en;
 
-wire halt;
+// wire halt;
 
 cpu CPU(
     .clk(clk),
@@ -37,7 +42,12 @@ cpu CPU(
     .bus_accregaddr(bus_regaddr),
     .ccd_done(ccd_done),
     .ccd_en(ccd_en),
-    .halt(halt)
+    .halt(halt),
+    .pc_out(pc_out),
+    .reg_index(reg_index),
+    .reg_out(reg_out),
+    .pc_advance(pc_advance),
+    .instr_out(instr_out)
 );
 
 ram DMEM(

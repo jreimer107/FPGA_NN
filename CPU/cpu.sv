@@ -21,7 +21,13 @@ module cpu (
 	input ccd_done,
 	output ccd_en,
 
-	output reg halt
+	// Testing/Demo signals
+	input pc_advance,
+	input [3:0] reg_index,
+	output reg halt,
+	output [23:0] instr_out,
+	output [15:0] pc_out,
+	output [15:0] reg_out
 );
 
 	/// ex ///
@@ -100,7 +106,12 @@ module cpu (
 	.oCCD_en(ccd_en),
 	.iACC_done(bus_accel_done),
 	.oACC_en(bus_accel_en),
-	.oACC_start(bus_accel_start)
+	.oACC_start(bus_accel_start),
+	.PC(pc_out),
+	.oReg_Out(reg_out),
+	.iRegIndex(reg_index),
+	.iPC_advance(pc_advance),
+	.oInstr_out(instr_out)
 	);
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -202,5 +213,6 @@ module cpu (
 	assign bus_rdwr = (halt == 1'b1) ? 2'b0 : {mem_bustoreg, mem_buswrite};
 	assign bus_accregaddr = mem_bustoreg ? bus_addr :
 							mem_buswrite ? bus_addr : 3'hz;  
+
 
 endmodule

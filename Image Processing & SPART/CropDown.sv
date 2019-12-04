@@ -9,10 +9,11 @@ module CropDown(
 	//input iFilter,
 	output oDVAL,
 	output [11:0] oDATA,
-	output [23:0] oSC,
+	// output [23:0] oSC,
 	//output reg [10:0] wr_addr,
-	output done,
-	output [783:0][15:0] img
+	// output done,
+	// output [783:0][15:0] img
+  output [7:0] oPxl
 	//output bram_wr_en
 	);
 
@@ -68,112 +69,17 @@ always_ff @(posedge iCLK, negedge iRST)
 
 //wire [15:0] norm_pxl;
 
-Normalize normal(
-	.pixelValue(out),
-	.Rdy(RDY),
-	.rst(iRST),
-	.clk(iCLK),
-	.got_pxl(pxlVAL),
-	.ImgDone(done),
-	.normBuff(img));
-/*
-reg start_bram_wr;
+// Normalize pixel
+assign oPxl = out[11:4];
+// Normalize normal(
+// 	.pixelValue(out),
+// 	.Rdy(RDY),
+// 	.rst(iRST),
+// 	.clk(iCLK),
+// 	.got_pxl(pxlVAL),
+// 	.ImgDone(done),
+// 	.normBuff(img));
 
-always_ff @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    start_bram_wr <= 0;
-  else if(wr_addr == 49)
-    start_bram_wr <= 0;
-  else if(done)
-    start_bram_wr <= 1;
-
-assign bram_wr_en = pxlVAL;//start_bram_wr;
-
-always_ff @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    wr_addr <= 0;
-  else if(pxlVAL)
-    if(wr_addr == 783)
-      wr_addr <= 0;
-    else
-      wr_addr <= wr_addr + 1;
-
-
-always_ff @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    norm_buf <= 0;
-  else if(done)
-    norm_buf <= norm;
-  else if(wr_addr > 0)
-    norm_buf <= {256'b0, norm[783:16]};
-
-assign bram_oDATA = norm_pxl;//start_bram_wr ? norm_buf[15:0] : 256'bz;
-*/
-
-/*
-//	Normalization with VGA output
-wire done;
-
-logic [783:0][11:0] norm;
-
-Normalize normal(
-	.pixelValue(out),
-	.Rdy(RDY),
-	.rst(iRST),
-	.clk(iCLK),
-	.ImgDone(done),
-	.normBuff(norm));
-
-//// Output to VGA for debugging ////
-reg [783:0][11:0] cropdown;
-always_ff @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    cropdown <= '{default:0};
-  else if(buf_rst)
-    cropdown <= '{default:0};
-  else if(done)
-    cropdown <= norm;
-
-reg [9:0] sample_cnt;
-always_ff @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    sample_cnt <= '{default:0};
-  else if(buf_rst)
-    sample_cnt <= '{default:0};
-  else if(done)
-    sample_cnt <= 784;
-
-assign oSC = {cropdown[783],cropdown[0]};
-
-reg [6:0] clk_cnt;
-always @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    clk_cnt <= 0;
-  else if(buf_rst)
-    clk_cnt <= 0;
-  else if(sample_cnt >= 784)
-    clk_cnt <= clk_cnt + 1;
-
-wire modDVAL;
-reg [19:0] TARG_cnt;
-always_ff @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    TARG_cnt <= 0;
-  else if(buf_rst)
-    TARG_cnt <= 0;
-  else if(modDVAL) begin
-    TARG_cnt <= TARG_cnt + 1;
-  end
-
-assign modDVAL = &clk_cnt && TARG_cnt <= 307200;
-
-wire [9:0] oX, oY;
-assign oX = TARG_cnt % 640;
-assign oY = TARG_cnt / 640;
-
-assign oDVAL = modDVAL;
-assign oDATA = cropdown[(oX % 28)+(28*(oY%28))];//(oX < 28 && oY < 28) ? shift_reg[(oX + 28*oY)] : 0;
-*/
 
 //// Output to VGA for debugging ////
 reg [783:0][11:0] cropdown;
@@ -194,7 +100,7 @@ always_ff @(posedge iCLK, negedge iRST)
   else if(RDY)
     sample_cnt <= sample_cnt + 1;
 
-assign oSC = {cropdown[783],cropdown[0]};
+// assign oSC = {cropdown[783],cropdown[0]};
 
 reg [6:0] clk_cnt;
 always @(posedge iCLK, negedge iRST)
@@ -225,69 +131,5 @@ assign oY = TARG_cnt / 640;
 assign oDVAL = modDVAL;
 assign oDATA = cropdown[(oX % 28)+(28*(oY%28))];//(oX < 28 && oY < 28) ? shift_reg[(oX + 28*oY)] : 0;
 
-
-/*
-reg sample_line;
-always @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    sample_line <= 0;
-  else if(((iY - Y_init) % Sy == 0) && X == 1 && iY >= Y_init && iY <= Y_max)
-    sample_line <= 1;
-  else
-    sample_line <= 0;
-
-reg [9:0] row_pxl_cnt, row_cnt;
-
-reg [4:0] Xsample_cnt;
-always @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    Xsample_cnt <= 0;
-//  else if(Xsample_cnt >= 28)
-//    if(Xsample_cnt == 28)
-//      Xsample_cnt <= 29;
-//    else if(X == 1)
-//      Xsample_cnt <= 0;
-  else if(Xsample_cnt >= 28)
-    if(row_pxl_cnt == 639)
-      Xsample_cnt <= 0;
-    else
-      Xsample_cnt <= 29;
-  else if(iDVAL)
-    if(in_range && ((X - X_init) % Sx == 0) && ((iY - Y_init) % Sy == 0))
-      Xsample_cnt <= Xsample_cnt + 1;
-
-always @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    row_pxl_cnt <= 0;
-  else if(row_pxl_cnt == 639)
-    row_pxl_cnt <= 0;
-  else if(sample_pxl || (Xsample_cnt > 28))
-    row_pxl_cnt <= row_pxl_cnt + 1;
-
-reg [4:0] Ysample_cnt;
-always @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    Ysample_cnt <= 0;
-  else if(Ysample_cnt >= 28)
-    if(Ysample_cnt == 28)
-      Ysample_cnt <= 29;
-    else if(iY == 0)
-      Ysample_cnt <= 0;
-  else if(sample_line)
-    Ysample_cnt <= Ysample_cnt + 1;
-
-always @(posedge iCLK, negedge iRST)
-  if(!iRST)
-    row_cnt <= 0;
-  else if(row_cnt == 479)
-    row_cnt <= 0;
-  else if(row_pxl_cnt == 639)
-    row_cnt <= row_cnt + 1;
-
-
-
-assign oDVAL = (Xsample_cnt <= 28 && Ysample_cnt <= 28) ? sample_pxl && iDVAL : row_pxl_cnt < 640 && row_cnt < 480 && row_cnt > 0 ? modDVAL : 0;
-assign oDATA = (Xsample_cnt <= 28 && Ysample_cnt <= 28) ? shift_reg : 0;
-*/
 
 endmodule
