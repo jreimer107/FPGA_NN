@@ -70,7 +70,7 @@ output	[11:0]	oRed;
 output	[11:0]	oGreen;
 output	[11:0]	oBlue;
 output			oDVAL;
-output [23:0] oSC;
+// output [23:0] oSC;
 // output img_done;
 // output [783:0][15:0] img;
 output [7:0] oPxl;

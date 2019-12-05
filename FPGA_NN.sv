@@ -41,7 +41,7 @@ module FPGA_NN (
 	inout		       D5M_SDATA,
 	input		       D5M_STROBE,
 	output		       D5M_TRIGGER,
-	output		       D5M_XCLKIN
+	output		       D5M_XCLKIN,
 
 	//////////// SEG7 //////////
 	output		     [6:0]		HEX0,
@@ -94,19 +94,59 @@ SPART_Control spart(
 wire ccd_en;
 wire ccd_done;
 wire ccd_dmem_wren;
+wire [6:0] ccd_dmem_addr;
 wire [255:0] ccd_dmem_data;
+wire DLY_RST_0;
 Image_Proc image_proc(
 	.CLOCK2_50(CLOCK2_50),
 	.CLOCK_50(CLOCK_50),
+	.rst_n(rst_n),
+
+	// User controls
+	.start_key(!KEY[3]),
+	.exposure_key(!KEY[2]),
+	.exposure_sw(SW[7]),
+	.zoom_sw(SW[6]),
+
+	// CPU interface
 	.enable(ccd_en),
-	.img_done(ccd_done)
+	.img_done(ccd_done),
+
+	// DMEM interface
 	.dmem_wren(ccd_dmem_wren),
-	.dmem_wrdata(ccd_dmem_data)
+	.dmem_wraddr(ccd_dmem_addr),
+	.dmem_wrdata(ccd_dmem_data),
+
+	//VGA
+	.VGA_B(VGA_B),
+	.VGA_BLANK_N(VGA_BLANK_N),
+	.VGA_CLK(VGA_CLK),
+	.VGA_G(VGA_G),
+	.VGA_HS(VGA_HS),
+	.VGA_R(VGA_R),
+	.VGA_SYNC_N(VGA_SYNC_N),
+	.VGA_VS(VGA_VS),
+
+	//GPIO1
+	.D5M_D(D5M_D),
+	.D5M_FVAL(D5M_FVAL),
+	.D5M_LVAL(D5M_LVAL),
+	.D5M_PIXLCLK(D5M_PIXLCLK),
+	.D5M_RESET_N(D5M_RESET_N),
+	.D5M_SCLK(D5M_SCLK),
+	.D5M_SDATA(D5M_SDATA),
+	.D5M_STROBE(D5M_STROBE),
+	.D5M_TRIGGER(D5M_TRIGGER),
+	.D5M_XCLKIN(D5M_XCLKIN),
+
+	//Stupid sdram reset
+	.oDLY_RST_0(DLY_RST_0)
 );
 
-wire [15:0] data_to_mem, data_to_cpu;
-wire [15:0] data_addr;
-wire dmem_ren, dmem_wren;
+//CPU dmem wires
+wire [15:0] cpu_dmem_data, dmem_cpu_data;
+wire [15:0] cpu_dmem_addr;
+wire cpu_dmem_ren, cpu_dmem_wren;
 
 //Accel mock
 wire [1:0] bus_rdwr;
@@ -116,22 +156,62 @@ wire bus_start;
 wire [2:0] bus_regaddr;
 wire bus_done = bus_en & bus_start;
 
+
+wire [15:0] pc_out, reg_out;
+wire halt;
+wire [23:0] instr_out;
+reg [23:0] seg7_output;
+reg pc_advance;
+reg key_last;
+
+always @(posedge CLOCK_50) begin
+	// PC Advance
+	key_last <= KEY[1];
+	if (SW[9])
+		pc_advance <= key_last & !KEY[1];
+	else
+		pc_advance <= 1'b1;
+
+	// Seg7 output
+	if (SW[8])
+		seg7_output <= instr_out;
+	else
+		seg7_output <= {8'h0, reg_out};
+end
+
+assign	LEDR = {pc_out[7:0], pc_advance, halt};
+
+SEG7_LUT_6 u5 (	
+	.oSEG0(HEX0),.oSEG1(HEX1),
+	.oSEG2(HEX2),.oSEG3(HEX3),
+	.oSEG4(HEX4),.oSEG5(HEX5),
+	.iDIG(seg7_output)
+);
+
 cpu CPU(
     .clk(clk),
     .rst_n(rst_n),
-    .dmem_ren(dmem_ren), 
-    .dmem_wren(dmem_wren),
-	.dmem_addr(data_addr),  
-    .dmem_data_to(data_to_mem),
-    .dmem_data_from(data_to_cpu),
+
+	//DMEM interface
+    .cpu_dmem_ren(cpu_dmem_ren), 
+    .cpu_dmem_wren(cpu_dmem_wren),
+	.dmem_addr(cpu_dmem_addr),  
+    .dmem_data_to(cpu_dmem_data),
+    .dmem_data_from(dmem_cpu_data),
+
+	// Accel interface
     .bus_accel_done(bus_done),
     .bus_accel_start(bus_start),
     .bus_accel_en(bus_en),
     .bus_rdwr(bus_rdwr),
     .bus_data(databus),
     .bus_accregaddr(bus_regaddr),
+
+	// CCD interface
     .ccd_done(ccd_done),
     .ccd_en(ccd_en),
+
+	// Debug signals
     .halt(halt),
     .pc_out(pc_out),
     .reg_index(reg_index),
@@ -141,15 +221,90 @@ cpu CPU(
 );
 
 ram DMEM(
-    .address_a(data_addr[10:0]),
-    .address_b(),
     .clock(clk),
-    .data_a(data_to_mem),
+
+	// CPU interface
+    .address_a(cpu_dmem_addr[10:0]),
+    .data_a(cpu_dmem_data),
+    .rden_a(cpu_dmem_ren),
+    .wren_a(cpu_dmem_wren & ~halt),
+    .q_a(dmem_cpu_data),
+
+    // Shared Accel/CCD interface
+	.address_b(ccd_dmem_addr),  //Need to mux this when implementing Accel
     .data_b(ccd_dmem_data),
-    .rden_a(dmem_ren),
-    .rden_b(1'b0),
-    .wren_a(dmem_wren & ~halt),
+    .rden_b(1'b0), 		//For accel
     .wren_b(ccd_dmem_wren),
-    .q_a(data_to_cpu),
-    .q_b()
+    .q_b()		//For accel
 );
+
+
+// wire sdram_ctrl_clk;
+// sdram_pll u6	(
+// 	.refclk(CLOCK_50),
+// 	.rst(rst_n),
+// 	.outclk_0(sdram_ctrl_clk),
+// 	.outclk_1(DRAM_CLK),
+// 	.outclk_2(D5M_XCLKIN),    //25M
+// 	.outclk_3(VGA_CLK)       //25M
+// );
+
+// // SDRAM Controller for Weights
+// // SDRam Read and Write as Frame Buffer
+// Sdram_Control u7 (
+// 	//	HOST Side						
+// 	.RESET_N(rst_n),
+// 	.CLK(sdram_ctrl_clk),
+
+// 	//	FIFO Write Side 1
+// 	.WR1_DATA(rx_data),
+// 	.WR1(rx_VAL),
+// 	.WR1_ADDR(0),
+// 	.WR1_MAX_ADDR(23'd8),
+// 	.WR1_LENGTH(8'h01),
+// 	.WR1_LOAD(!DLY_RST_0),
+// 	.WR1_CLK(~CLOCK_50),
+
+// 	//	FIFO Read Side 1
+// 	.RD1_DATA(Read_txDATA),
+// 	.RD1(sdram_rd_req),
+// 	.RD1_ADDR(0),
+// 	.RD1_MAX_ADDR(23'd8),
+// 	.RD1_LENGTH(8'h01),
+// 	.RD1_LOAD(!DLY_RST_0),
+// 	.RD1_CLK(~CLOCK_50),
+
+// 	.DATA_VAL(),
+// 	.DQ_Sample(dq),
+// 	.led_out(sdram_leds),
+
+// 	//	FIFO Write Side 2
+// 	.WR2_DATA(),
+// 	.WR2(),
+// 	.WR2_ADDR(23'h100000),
+// 	.WR2_MAX_ADDR(23'h100000),
+// 	.WR2_LENGTH(8'h00),
+// 	.WR2_LOAD(!DLY_RST_0),
+// 	.WR2_CLK(~sdram_ctrl_clk),
+
+// 	//	FIFO Read Side 2
+// 	.RD2_DATA(),
+// 	.RD2(),
+// 	.RD2_ADDR(23'h100000),
+// 	.RD2_MAX_ADDR(23'h100000),
+// 	.RD2_LENGTH(8'h00),
+// 	.RD2_LOAD(!DLY_RST_0),
+// 	.RD2_CLK(~sdram_ctrl_clk),
+
+// 	//	SDRAM Side
+// 	.SA(DRAM_ADDR),
+// 	.BA(DRAM_BA),
+// 	.CS_N(DRAM_CS_N),
+// 	.CKE(DRAM_CKE),
+// 	.RAS_N(DRAM_RAS_N),
+// 	.CAS_N(DRAM_CAS_N),
+// 	.WE_N(DRAM_WE_N),
+// 	.DQ(DRAM_DQ),
+// 	.DQM({DRAM_UDQM,DRAM_LDQM})
+// );
+endmodule

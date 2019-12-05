@@ -33,100 +33,6 @@
 
 
 module Image_Proc(
-
-	  ///////// ADC /////////
-	//   inout              ADC_CS_N,
-	//   output             ADC_DIN,
-	//   input              ADC_DOUT,
-	//   output             ADC_SCLK,
-
-	  ///////// AUD /////////
-	//   input              AUD_ADCDAT,
-	//   inout              AUD_ADCLRCK,
-	//   inout              AUD_BCLK,
-	//   output             AUD_DACDAT,
-	//   inout              AUD_DACLRCK,
-	//   output             AUD_XCK,
-
-	  ///////// CLOCK2 /////////
-	  input              CLOCK2_50,
-
-	  ///////// CLOCK3 /////////
-	//   input              CLOCK3_50,
-
-	  ///////// CLOCK4 /////////
-	//   input              CLOCK4_50,
-
-	  ///////// CLOCK /////////
-	  input              CLOCK_50,
-
-	  ///////// DRAM /////////
-	//   output      [12:0] DRAM_ADDR,
-	//   output      [1:0]  DRAM_BA,
-	//   output             DRAM_CAS_N,
-	//   output             DRAM_CKE,
-	//   output             DRAM_CLK,
-	//   output             DRAM_CS_N,
-	//   inout       [15:0] DRAM_DQ,
-	//   output             DRAM_LDQM,
-	//   output             DRAM_RAS_N,
-	//   output             DRAM_UDQM,
-	//   output             DRAM_WE_N,
-
-	  ///////// FAN /////////
-	//   output             FAN_CTRL,
-
-	  ///////// FPGA /////////
-	//   output             FPGA_I2C_SCLK,
-	//   inout              FPGA_I2C_SDAT,
-
-	//   ///////// GPIO /////////
-	//   inout     [35:0]   GPIO_0,
-	
-	//   ///////// HEX0 /////////
-	//   output      [6:0]  HEX0,
-
-	//   ///////// HEX1 /////////
-	//   output      [6:0]  HEX1,
-
-	//   ///////// HEX2 /////////
-	//   output      [6:0]  HEX2,
-
-	//   ///////// HEX3 /////////
-	//   output      [6:0]  HEX3,
-
-	//   ///////// HEX4 /////////
-	//   output      [6:0]  HEX4,
-
-	//   ///////// HEX5 /////////
-	//   output      [6:0]  HEX5,
-
-	  ///////// IRDA /////////
-	//   input              IRDA_RXD,
-	//   output             IRDA_TXD,
-
-	//   ///////// KEY /////////
-	//   input       [3:0]  KEY,
-
-	//   ///////// LEDR /////////
-	//   output      [9:0]  LEDR,
-
-	  ///////// PS2 /////////
-	//   inout              PS2_CLK,
-	//   inout              PS2_CLK2,
-	//   inout              PS2_DAT,
-	//   inout              PS2_DAT2,
-
-	  ///////// SW /////////
-	//   input       [9:0]  SW,
-
-	  ///////// TD /////////
-	//   input              TD_CLK27,
-	//   input      [7:0]   TD_DATA,
-	//   input              TD_HS,
-	//   output             TD_RESET_N,
-	//   input              TD_VS,
-
 	///////// VGA /////////
 	output      [7:0]  VGA_B,
 	output             VGA_BLANK_N,
@@ -147,47 +53,54 @@ module Image_Proc(
 	inout		          D5M_SDATA,
 	input		          D5M_STROBE,
 	output		       D5M_TRIGGER,
-	output		       D5M_XCLKIN
+	output		       D5M_XCLKIN,
 
+	//User controls
 	input rst_n,
-	input enable,
 	input start_key, exposure_key,
 	input exposure_sw, zoom_sw,
-	output img_done
-	output dmem_wren;
-	output [6:0] dmem_wraddr;
-	output [255:0] dmem_wrdata;
+
+	// CPU interface
+	input enable,
+	output img_done,
+
+	// DMEM interface
+	output dmem_wren,
+	output [6:0] dmem_wraddr,
+	output [255:0] dmem_wrdata,
+
+	//SDRAM reset, idk if this is needed
+	output oDLY_RST_0
 );
 
 
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
-wire			 [15:0]			Read_DATA1;
+wire		   [15:0]			Read_DATA1;
 wire	       [15:0]			Read_DATA2;
 
-wire			 [11:0]			mCCD_DATA;
-wire								mCCD_DVAL;
-wire								mCCD_DVAL_d;
+wire		   [11:0]			mCCD_DATA;
+wire							mCCD_DVAL;
+wire							mCCD_DVAL_d;
 wire	       [15:0]			X_Cont;
 wire	       [15:0]			Y_Cont;
 wire	       [9:0]			X_ADDR;
 wire	       [31:0]			Frame_Cont;
-wire								DLY_RST_0;
-wire								DLY_RST_1;
-wire								DLY_RST_2;
-wire								DLY_RST_3;
-wire								DLY_RST_4;
-wire								Read;
-reg		    [11:0]			rCCD_DATA;
+wire							DLY_RST_0;
+wire							DLY_RST_1;
+wire							DLY_RST_2;
+wire							DLY_RST_3;
+wire							DLY_RST_4;
+wire							Read;
+reg		       [11:0]			rCCD_DATA;
 reg								rCCD_LVAL;
 reg								rCCD_FVAL;
 wire	       [11:0]			sCCD_R;
 wire	       [11:0]			sCCD_G;
 wire	       [11:0]			sCCD_B;
-wire								sCCD_DVAL;
+wire							sCCD_DVAL;
 
-wire								sdram_ctrl_clk;
 wire	       [9:0]			oVGA_R;   				//	VGA Red[9:0]
 wire	       [9:0]			oVGA_G;	 				//	VGA Green[9:0]
 wire	       [9:0]			oVGA_B;   				//	VGA Blue[9:0]
@@ -199,7 +112,7 @@ wire             				auto_start;
 //=======================================================
 
 reg start;
-always_ff(@posedge CLOCK_50, negedge rst_n)
+always_ff @(posedge CLOCK_50, negedge rst_n)
 	if (!rst_n)
 		start <= 0;
 	else 
@@ -261,6 +174,8 @@ Reset_Delay			u2	(
 							.oRST_3(DLY_RST_3),
 							.oRST_4(DLY_RST_4)
 						   );
+assign oDLY_RST_0 = DLY_RST_0;
+
 //D5M image capture
 CCD_Capture			u3	(	
 							.oDATA(mCCD_DATA),
@@ -300,12 +215,11 @@ RAW2RGB				u4	(
 
 
 reg [9:0] pxl_cnt;
-reg [15:0] pixels [15:0];
+reg [15:0][15:0] pixels;
 assign img_done = pxl_cnt == 783;
 always @(posedge CLOCK_50, negedge rst_n)
-  	if(!rst) begin
+  	if(!rst_n) begin
 		pxl_cnt <= 10'h3FF;
-		img_done <= 0;
 		dmem_wren <= 0;
 		dmem_wraddr <= -1;
 	end
@@ -331,75 +245,6 @@ always @(posedge CLOCK_50, negedge rst_n)
 	end
 
 assign dmem_wrdata = pixels;
-											
-sdram_pll 			u6	(
-							.refclk(CLOCK_50),
-							.rst(1'b0),
-							.outclk_0(sdram_ctrl_clk),
-							.outclk_1(DRAM_CLK),
-							.outclk_2(D5M_XCLKIN),    //25M
-						  .outclk_3(VGA_CLK)       //25M
-
-						   );
-
-// SDRAM Controller for Weights
-//SDRam Read and Write as Frame Buffer
-Sdram_Control u7 (
-			//	HOST Side						
-			.RESET_N(rst_n),
-			.CLK(sdram_ctrl_clk),
-
-			//	FIFO Write Side 1
-			.WR1_DATA(rx_data),
-			.WR1(rx_VAL),//.WR1(flop_wr_req),//
-			.WR1_ADDR(0),//.WR1_ADDR(wr_addr),//
-			.WR1_MAX_ADDR(max_addr),//.WR1_MAX_ADDR(max_addr),//
-			.WR1_LENGTH(8'h01),
-			.WR1_LOAD(!DLY_RST_0),
-			.WR1_CLK(~CLOCK_50),
-
-			//	FIFO Read Side 1
-			.RD1_DATA(Read_txDATA),
-			.RD1(sdram_rd_req),//.RD1(flop_rd_req),//
-			.RD1_ADDR(0),//.RD1_ADDR(rd_addr),//
-			.RD1_MAX_ADDR(max_addr),//.RD1_MAX_ADDR(max_addr),//
-			.RD1_LENGTH(8'h01),
-			.RD1_LOAD(!DLY_RST_0),
-			.RD1_CLK(~CLOCK_50),
-
-			.DATA_VAL(),
-			.DQ_Sample(dq),
-			.led_out(sdram_leds),
-
-			//	FIFO Write Side 2
-			.WR2_DATA(),
-			.WR2(),
-			.WR2_ADDR(23'h100000),
-			.WR2_MAX_ADDR(23'h100000),
-			.WR2_LENGTH(8'h00),
-			.WR2_LOAD(!DLY_RST_0),
-			.WR2_CLK(~sdram_ctrl_clk),
-
-			//	FIFO Read Side 2
-			.RD2_DATA(),
-			.RD2(),
-			.RD2_ADDR(23'h100000),
-			.RD2_MAX_ADDR(23'h100000),
-			.RD2_LENGTH(8'h00),
-			.RD2_LOAD(!DLY_RST_0),
-			.RD2_CLK(~sdram_ctrl_clk),
-
-			//	SDRAM Side
-			.SA(DRAM_ADDR),
-			.BA(DRAM_BA),
-			.CS_N(DRAM_CS_N),
-			.CKE(DRAM_CKE),
-			.RAS_N(DRAM_RAS_N),
-			.CAS_N(DRAM_CAS_N),
-			.WE_N(DRAM_WE_N),
-			.DQ(DRAM_DQ),
-			.DQM({DRAM_UDQM,DRAM_LDQM})
-);
 			
 //D5M I2C control
 I2C_CCD_Config 	u8	(	//	Host Side
