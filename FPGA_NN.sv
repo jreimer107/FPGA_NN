@@ -193,8 +193,8 @@ cpu CPU(
     .rst_n(rst_n),
 
 	//DMEM interface
-    .cpu_dmem_ren(cpu_dmem_ren), 
-    .cpu_dmem_wren(cpu_dmem_wren),
+    .dmem_ren(cpu_dmem_ren), 
+    .dmem_wren(cpu_dmem_wren),
 	.dmem_addr(cpu_dmem_addr),  
     .dmem_data_to(cpu_dmem_data),
     .dmem_data_from(dmem_cpu_data),

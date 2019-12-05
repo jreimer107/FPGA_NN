@@ -33,6 +33,9 @@
 
 
 module Image_Proc(
+	input CLOCK_50,
+	input CLOCK2_50,
+
 	///////// VGA /////////
 	output      [7:0]  VGA_B,
 	output             VGA_BLANK_N,
