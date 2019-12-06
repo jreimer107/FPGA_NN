@@ -40,9 +40,7 @@
 //   V1.0 :| Johnny Fan        :| 07/08/01  :|      Initial Revision
 // --------------------------------------------------------------------
 
-module RAW2RGB(	oRed,
-				oGreen,
-				oBlue,
+module RAW2RGB(	
 				oDVAL,
 				iX_Cont,
 				iY_Cont,
@@ -55,7 +53,8 @@ module RAW2RGB(	oRed,
 				// oSC,
 				// img_done,
 				// img
-				oPxl
+				oPxl,
+				oDVAL
 				);
 
 input	[10:0]	iX_Cont;
@@ -66,9 +65,6 @@ input			iCLK;
 input			iRST;
 input	[1:0]	iCTRL;
 input cd_buf_rst;
-output	[11:0]	oRed;
-output	[11:0]	oGreen;
-output	[11:0]	oBlue;
 output			oDVAL;
 // output [23:0] oSC;
 // output img_done;
@@ -83,6 +79,9 @@ reg		[11:0]	mCCD_R;
 reg		[12:0]	mCCD_G;
 reg		[11:0]	mCCD_B;
 reg				mDVAL;
+wire	[11:0]	oRed;
+wire	[11:0]	oGreen;
+wire	[11:0]	oBlue;
 
 wire sr_oDVAL, RGB_oDVAL;
 
@@ -98,12 +97,14 @@ CropDown cds(	.iCLK(iCLK),
 		.iDVAL(RGB_oDVAL), 
 		.grayVal(gray), 
 		.oDVAL(sr_oDVAL), 
-		.oDATA(o_data), 
+		.oDATA(o_data),
+		.iX(iX_Cont[10:1]),
 		.iY(iY_Cont[10:1]),
 		// .oSC(oSC),
 		// .img(img),
 		// .done(img_done)
-		.oPxl(oPxl)
+		.oPxl(oPxl),
+		.oDVAL(oDVAL)
 	    );
 
 // Assign RGB outputs based on switch inputs
@@ -116,6 +117,7 @@ assign	oDVAL	=	iCTRL[1] ? sr_oDVAL : RGB_oDVAL;
 Line_Buffer1 	u0	(	.clken(iDVAL),
 						.clock(iCLK),
 						.shiftin(iDATA),
+						.shiftout(),
 						.taps0x(mDATA_1),
 						.taps1x(mDATA_0)	);
 
