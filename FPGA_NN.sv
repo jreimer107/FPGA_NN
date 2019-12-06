@@ -97,6 +97,8 @@ wire ccd_dmem_wren;
 wire [6:0] ccd_dmem_addr;
 wire [255:0] ccd_dmem_data;
 wire DLY_RST_0;
+wire [9:0] pxl_cnt;
+wire ccd_start_cap;
 Image_Proc image_proc(
 	.CLOCK2_50(CLOCK2_50),
 	.CLOCK_50(CLOCK_50),
@@ -110,22 +112,22 @@ Image_Proc image_proc(
 
 	// CPU interface
 	.enable(ccd_en),
-	.img_done(ccd_done),
+	.ccd_done(ccd_done),
 
 	// DMEM interface
 	.dmem_wren(ccd_dmem_wren),
 	.dmem_wraddr(ccd_dmem_addr),
 	.dmem_wrdata(ccd_dmem_data),
 
-	//VGA
-	.VGA_B(VGA_B),
-	.VGA_BLANK_N(VGA_BLANK_N),
-	.VGA_CLK(VGA_CLK),
-	.VGA_G(VGA_G),
-	.VGA_HS(VGA_HS),
-	.VGA_R(VGA_R),
-	.VGA_SYNC_N(VGA_SYNC_N),
-	.VGA_VS(VGA_VS),
+	// //VGA
+	// .VGA_B(VGA_B),
+	// .VGA_BLANK_N(VGA_BLANK_N),
+	// .VGA_CLK(VGA_CLK),
+	// .VGA_G(VGA_G),
+	// .VGA_HS(VGA_HS),
+	// .VGA_R(VGA_R),
+	// .VGA_SYNC_N(VGA_SYNC_N),
+	// .VGA_VS(VGA_VS),
 
 	//GPIO1
 	.D5M_D(D5M_D),
@@ -137,10 +139,13 @@ Image_Proc image_proc(
 	.D5M_SDATA(D5M_SDATA),
 	.D5M_STROBE(D5M_STROBE),
 	.D5M_TRIGGER(D5M_TRIGGER),
-	.D5M_XCLKIN(D5M_XCLKIN),
+	// .D5M_XCLKIN(D5M_XCLKIN),
 
 	//Stupid sdram reset
-	.oDLY_RST_0(DLY_RST_0)
+	.oDLY_RST_0(DLY_RST_0),
+
+	.pxl_cnt(pxl_cnt),
+	//.start_cap(ccd_start_cap)
 );
 
 //CPU dmem wires
@@ -156,14 +161,13 @@ wire bus_start;
 wire [2:0] bus_regaddr;
 wire bus_done = bus_en & bus_start;
 
-
+// CPU debug
 wire [15:0] pc_out, reg_out;
 wire halt;
 wire [23:0] instr_out;
 reg [23:0] seg7_output;
 reg pc_advance;
 reg key_last;
-
 always @(posedge CLOCK_50) begin
 	// PC Advance
 	key_last <= KEY[1];
@@ -178,14 +182,13 @@ always @(posedge CLOCK_50) begin
 	else
 		seg7_output <= {8'h0, reg_out};
 end
-
-assign	LEDR = {pc_out[7:0], pc_advance, halt};
+assign	LEDR = {pc_out[4:0], 1'b0, ccd_done, ccd_en, pc_advance, halt};
 
 SEG7_LUT_6 u5 (	
 	.oSEG0(HEX0),.oSEG1(HEX1),
 	.oSEG2(HEX2),.oSEG3(HEX3),
 	.oSEG4(HEX4),.oSEG5(HEX5),
-	.iDIG(seg7_output)
+	.iDIG({14'b0, pxl_cnt})
 );
 
 cpu CPU(
@@ -214,7 +217,7 @@ cpu CPU(
 	// Debug signals
     .halt(halt),
     .pc_out(pc_out),
-    .reg_index(reg_index),
+    .reg_index(SW[3:0]),
     .reg_out(reg_out),
     .pc_advance(pc_advance),
     .instr_out(instr_out)

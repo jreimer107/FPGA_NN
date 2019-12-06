@@ -37,26 +37,25 @@ module Image_Proc(
 	input CLOCK2_50,
 
 	///////// VGA /////////
-	output      [7:0]  VGA_B,
-	output             VGA_BLANK_N,
-	output             VGA_CLK,
-	output      [7:0]  VGA_G,
-	output             VGA_HS,
-	output      [7:0]  VGA_R,
-	output             VGA_SYNC_N,
-	output             VGA_VS,
+	// output      [7:0]  VGA_B,
+	// output             VGA_BLANK_N,
+	// output             VGA_CLK,
+	// output      [7:0]  VGA_G,
+	// output             VGA_HS,
+	// output      [7:0]  VGA_R,
+	// output             VGA_SYNC_N,
+	// output             VGA_VS,
 		
 	//////////// GPIO1, GPIO1 connect to D5M - 5M Pixel Camera //////////
 	input		   [11:0] D5M_D,
 	input		          D5M_FVAL,
 	input		          D5M_LVAL,
 	input		          D5M_PIXLCLK,
-	output		       D5M_RESET_N,
-	output		       D5M_SCLK,
+	output		          D5M_RESET_N,
+	output		          D5M_SCLK,
 	inout		          D5M_SDATA,
 	input		          D5M_STROBE,
-	output		       D5M_TRIGGER,
-	output		       D5M_XCLKIN,
+	output		          D5M_TRIGGER,
 
 	//User controls
 	input rst_n,
@@ -65,15 +64,19 @@ module Image_Proc(
 
 	// CPU interface
 	input enable,
-	output img_done,
+	output reg ccd_done,
 
 	// DMEM interface
-	output dmem_wren,
-	output [6:0] dmem_wraddr,
-	output [255:0] dmem_wrdata,
+	output reg dmem_wren,
+	output reg [6:0] dmem_wraddr,
+	output reg [255:0] dmem_wrdata,
 
 	//SDRAM reset, idk if this is needed
-	output oDLY_RST_0
+	output oDLY_RST_0,
+
+	output reg [9:0] pxl_cnt
+	// output reg start_cap
+
 );
 
 
@@ -104,29 +107,42 @@ wire	       [11:0]			sCCD_G;
 wire	       [11:0]			sCCD_B;
 wire							sCCD_DVAL;
 
-wire	       [9:0]			oVGA_R;   				//	VGA Red[9:0]
-wire	       [9:0]			oVGA_G;	 				//	VGA Green[9:0]
-wire	       [9:0]			oVGA_B;   				//	VGA Blue[9:0]
+// wire	       [9:0]			oVGA_R;   				//	VGA Red[9:0]
+// wire	       [9:0]			oVGA_G;	 				//	VGA Green[9:0]
+// wire	       [9:0]			oVGA_B;   				//	VGA Blue[9:0]
 
 //power on start
 wire             				auto_start;
+wire							img_done;
 //=======================================================
 //  Structural coding
 //=======================================================
 
 reg start;
+reg start_key_buf;
+
+reg start_cap;
+
+wire start_key_press = !start_key_buf && start_key;
+always_ff @(posedge CLOCK_50, negedge rst_n)
+	if (!rst_n)
+		start_key_buf <= 0;
+	else
+		start_key_buf <= start_key;
+
 always_ff @(posedge CLOCK_50, negedge rst_n)
 	if (!rst_n)
 		start <= 0;
 	else 
-		if (!start_cap & enable & start_key)
+		if (!start_cap & enable & start_key_press)
 			start <= 1;
 		else
 			start <= 0;
 
 
 // One image captured per enable cycle
-reg start_cap, captured;
+// reg start_cap; 
+reg captured;
 always @(posedge CLOCK_50, negedge rst_n) begin
   if (!rst_n)
 	start_cap <= 0;
@@ -144,17 +160,26 @@ always @(posedge CLOCK_50, negedge rst_n) begin
 	captured <= 1;
 end
 
+always_ff @(posedge CLOCK_50, negedge rst_n) begin
+	if (!rst_n)
+		ccd_done <= 1'b0;
+	else if (img_done)
+		ccd_done <= 1'b1;
+	else if (start)
+		ccd_done <= 1'b0;
+end
+
 // D5M
-assign	D5M_TRIGGER	=	!enable || captured;//KEY[2] || (newF && ~KEY[2]);//cap;//KEY[2] | newF;// && allow_cap;//capture;//1'b1;  // tRIGGER
+assign	D5M_TRIGGER	=	!enable || captured; //1'b1;  // tRIGGER
 assign	D5M_RESET_N	=	DLY_RST_1;
 
-assign   VGA_CTRL_CLK = VGA_CLK;
+// assign VGA_CTRL_CLK = VGA_CLK;
 
 
 //fetch the high 8 bits
-assign  VGA_R = oVGA_R[9:2];
-assign  VGA_G = oVGA_G[9:2];
-assign  VGA_B = oVGA_B[9:2];
+// assign  VGA_R = oVGA_R[9:2];
+// assign  VGA_G = oVGA_G[9:2];
+// assign  VGA_B = oVGA_B[9:2];
 
 //D5M read 
 always@(posedge D5M_PIXLCLK)
@@ -217,12 +242,20 @@ RAW2RGB				u4	(
 // wire data_val;
 
 
-reg [9:0] pxl_cnt;
+// reg [9:0] pxl_cnt;
 reg [15:0][15:0] pixels;
+reg img_done_buf;
+always_ff @(posedge CLOCK_50, negedge rst_n)
+	if (!rst_n)
+		img_done_buf <= 1'b0;
+	else
+		img_done_buf <= img_done;
+
+
 assign img_done = pxl_cnt == 783;
 always @(posedge CLOCK_50, negedge rst_n)
   	if(!rst_n) begin
-		pxl_cnt <= 10'h3FF;
+		pxl_cnt <= -1;
 		dmem_wren <= 0;
 		dmem_wraddr <= -1;
 	end
@@ -231,20 +264,24 @@ always @(posedge CLOCK_50, negedge rst_n)
 		pxl_cnt <= pxl_cnt;
 		dmem_wraddr <= dmem_wraddr;
 		if (sCCD_DVAL) begin
-			if (img_done) begin
-				pxl_cnt <= 0;
-				dmem_wren <= enable;
-				dmem_wraddr <= -1;
-			end
-			else begin
-				pixels[pxl_cnt % 16] <= {8'h0, norm_pxl};
-				pxl_cnt <= pxl_cnt + 1;
-			end
+			// Add pixel to array
+			pixels[pxl_cnt % 16] <= {8'h0, norm_pxl};
+			pxl_cnt <= pxl_cnt + 1;
+			// If array full, write to dmem
 			if (pxl_cnt % 16 == 0 && enable) begin
 				dmem_wren <= 1'b1;
 				dmem_wraddr <= dmem_wraddr + 1;
 			end
 		end
+		// If have received all pixels, write array to dmem
+		if (img_done) begin
+			pxl_cnt <= -1;
+			dmem_wren <= enable;
+			dmem_wraddr <= dmem_wraddr + 1;
+		end
+		// After sending rest of pixels to dmem, reset address
+		else if (img_done_buf)
+			dmem_wraddr <= -1;
 	end
 
 assign dmem_wrdata = pixels;
@@ -261,24 +298,24 @@ I2C_CCD_Config 	u8	(	//	Host Side
 							.I2C_SDAT(D5M_SDATA)
 						   );
 //VGA DISPLAY
-VGA_Controller	  u1	(	//	Host Side
-							.oRequest(Read),
-							.iRed(Read_DATA2[9:0]),
-						  .iGreen({Read_DATA1[14:10],Read_DATA2[14:10]}),
-						   .iBlue(Read_DATA1[9:0]),
+// VGA_Controller	  u1	(	//	Host Side
+// 							.oRequest(Read),
+// 							.iRed(Read_DATA2[9:0]),
+// 						  .iGreen({Read_DATA1[14:10],Read_DATA2[14:10]}),
+// 						   .iBlue(Read_DATA1[9:0]),
 						
-							//	VGA Side
-							.oVGA_R(oVGA_R),
-							.oVGA_G(oVGA_G),
-							.oVGA_B(oVGA_B),
-							.oVGA_H_SYNC(VGA_HS),
-							.oVGA_V_SYNC(VGA_VS),
-							.oVGA_SYNC(VGA_SYNC_N),
-							.oVGA_BLANK(VGA_BLANK_N),
-							//	Control Signal
-							.iCLK(VGA_CTRL_CLK),
-							.iRST_N(DLY_RST_2),
-							.iZOOM_MODE_SW(zoom_sw)
-						   );
+// 							//	VGA Side
+// 							.oVGA_R(oVGA_R),
+// 							.oVGA_G(oVGA_G),
+// 							.oVGA_B(oVGA_B),
+// 							.oVGA_H_SYNC(VGA_HS),
+// 							.oVGA_V_SYNC(VGA_VS),
+// 							.oVGA_SYNC(VGA_SYNC_N),
+// 							.oVGA_BLANK(VGA_BLANK_N),
+// 							//	Control Signal
+// 							.iCLK(VGA_CTRL_CLK),
+// 							.iRST_N(DLY_RST_2),
+// 							.iZOOM_MODE_SW(zoom_sw)
+// 						   );
 
 endmodule
