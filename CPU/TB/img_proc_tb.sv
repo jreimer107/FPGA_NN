@@ -1,39 +1,39 @@
+`timescale 1ps/1ps
 module img_proc_tb();
-reg CLOCK_50,
-reg CLOCK2_50,
+reg clk;
 	
 //////////// GPIO1, GPIO1 connect to D5M - 5M Pixel Camera //////////
-reg		   [11:0] D5M_D,
-reg		          D5M_FVAL,
-reg		          D5M_LVAL,
-reg		          D5M_PIXLCLK,
-wire		          D5M_RESET_N,
-wire		          D5M_SCLK,
-tri		          D5M_SDATA,
-wire		          D5M_TRIGGER,
+reg		   [11:0] D5M_D;
+reg		          D5M_FVAL;
+reg		          D5M_LVAL;
+reg		          D5M_PIXLCLK;
+wire		          D5M_RESET_N;
+wire		          D5M_SCLK;
+tri		          D5M_SDATA;
+wire		          D5M_TRIGGER;
 
 //User controls
-reg rst_n,
-reg start_key, exposure_key,
-reg exposure_sw, zoom_sw,
+reg rst_n;
+reg start_key, exposure_key;
+reg exposure_sw, zoom_sw;
 
 // CPU interface
-reg enable,
-wire ccd_done,
+reg enable;
+wire ccd_done;
 
 // DMEM interface
-wire dmem_wren,
-wire [6:0] dmem_wraddr,
-wire [255:0] dmem_wrdata,
+wire dmem_wren;
+wire [6:0] dmem_wraddr;
+wire [255:0] dmem_wrdata;
 
 //SDRAM reset, idk if this is needed
-wire oDLY_RST_0,
+wire oDLY_RST_0;
 
 wire [9:0] pxl_cnt;
 wire start_cap;
 
 assign D5M_PIXLCLK = D5M_SCLK;
-assign D5M_
+// assign D5M_
 
 Image_Proc DUT(
 	.CLOCK_50(clk),
@@ -70,7 +70,10 @@ Image_Proc DUT(
 	
 	// Debug Signals
 	.pxl_cnt(pxl_cnt),
-	.start_cap(start_cap)
+	.start_cap(start_cap),
+	.captured(captured),
+	.start_key_press(start_key_press),
+	.start(start)
 );
 
 
@@ -93,7 +96,8 @@ initial begin
 	repeat(3) @(negedge clk) 
 	start_key = 0;
 
-
+	repeat(3) @(posedge clk);
+	$stop;
 
 
 

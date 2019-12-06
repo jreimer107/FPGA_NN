@@ -54,7 +54,6 @@ module Image_Proc(
 	output		          D5M_RESET_N,
 	output		          D5M_SCLK,
 	inout		          D5M_SDATA,
-	input		          D5M_STROBE,
 	output		          D5M_TRIGGER,
 
 	//User controls
@@ -74,9 +73,12 @@ module Image_Proc(
 	//SDRAM reset, idk if this is needed
 	output oDLY_RST_0,
 
-	output reg [9:0] pxl_cnt
-	// output reg start_cap
-
+	output reg [9:0] pxl_cnt,
+	output reg start_cap,
+	output reg captured,
+	output start_key_press,
+	output reg start
+	// output [31:0] Frame_Cont
 );
 
 
@@ -118,31 +120,33 @@ wire							img_done;
 //  Structural coding
 //=======================================================
 
-reg start;
+
+// Detect button press, emit 1 cycle start_key_press signal
 reg start_key_buf;
-
-reg start_cap;
-
-wire start_key_press = !start_key_buf && start_key;
-always_ff @(posedge CLOCK_50, negedge rst_n)
+assign start_key_press = !start_key_buf & start_key;
+always_ff @(posedge CLOCK_50, negedge rst_n) begin
 	if (!rst_n)
 		start_key_buf <= 0;
 	else
 		start_key_buf <= start_key;
+end
 
-always_ff @(posedge CLOCK_50, negedge rst_n)
+// If start_key_press happens when we are enabled and not working,
+// emit 1 cycle start signal
+// reg start;
+always_ff @(posedge CLOCK_50, negedge rst_n) begin
 	if (!rst_n)
 		start <= 0;
-	else 
-		if (!start_cap & enable & start_key_press)
-			start <= 1;
-		else
-			start <= 0;
+	else if (!start & !start_cap & enable & start_key_press)
+		start <= 1;
+	else
+		start <= 0;
+end
 
-
+// Start taking picture when start signal issued, stop taking picture when done
 // One image captured per enable cycle
 // reg start_cap; 
-reg captured;
+// reg captured;
 always @(posedge CLOCK_50, negedge rst_n) begin
   if (!rst_n)
 	start_cap <= 0;
@@ -154,23 +158,25 @@ end
 always @(posedge CLOCK_50, negedge rst_n) begin
   if (!rst_n)
 	captured <= 0;
+  else if (D5M_FVAL & start_cap)//else if(D5M_FVAL == 1 && KEY[2] == 0)
+	captured <= 1;
   else if (start)
 	captured <= 0;
-  else if(D5M_FVAL == 1 && start_cap)//else if(D5M_FVAL == 1 && KEY[2] == 0)
-	captured <= 1;
 end
 
 always_ff @(posedge CLOCK_50, negedge rst_n) begin
-	if (!rst_n)
+	if (!rst_n) 
+		ccd_done <= 1'b0;
+	else if(start)
 		ccd_done <= 1'b0;
 	else if (img_done)
 		ccd_done <= 1'b1;
-	else if (start)
-		ccd_done <= 1'b0;
+	else
+		ccd_done <= ccd_done;
 end
 
 // D5M
-assign	D5M_TRIGGER	=	!enable || captured; //1'b1;  // tRIGGER
+assign	D5M_TRIGGER	=	1;//!enable || captured; //1'b1;  // tRIGGER
 assign	D5M_RESET_N	=	DLY_RST_1;
 
 // assign VGA_CTRL_CLK = VGA_CLK;
@@ -191,7 +197,8 @@ end
 
 
 //auto start when power on
-assign auto_start = rst_n & DLY_RST_3 & !DLY_RST_4 & start_cap & !captured;
+assign auto_start = rst_n & DLY_RST_3 & !DLY_RST_4;// & !captured;
+
 //Reset module
 Reset_Delay			u2	(	
 							.iCLK(CLOCK_50),
@@ -222,23 +229,23 @@ CCD_Capture			u3	(
 
 //D5M raw date convert to RGB data
 // wire [23:0] sample;
-wire[8:0] norm_pxl;
-RAW2RGB				u4	(	
-							.iCLK(D5M_PIXLCLK),
-							.iRST(DLY_RST_1),
-							.iDATA(mCCD_DATA),
-							.iDVAL(mCCD_DVAL),
-							.oRed(sCCD_R),
-							.oGreen(sCCD_G),
-							.oBlue(sCCD_B),
-							.oDVAL(sCCD_DVAL),
-							.iX_Cont(X_Cont),
-							.iY_Cont(Y_Cont),
-							.iCTRL(2'h3),
-							.cd_buf_rst(start),
-							// .oSC(sample),
-							.oPxl(norm_pxl)
-						   );
+wire[7:0] norm_pxl;
+RAW2GRAY u4 (	
+	.iCLK(D5M_PIXLCLK),
+	.iRST(DLY_RST_1),
+	.iDATA(mCCD_DATA),
+	.iDVAL(mCCD_DVAL),
+	.oRed(sCCD_R),
+	.oGreen(sCCD_G),
+	.oBlue(sCCD_B),
+	.oDVAL(sCCD_DVAL),
+	.iX_Cont(X_Cont[10:0]),
+	.iY_Cont(Y_Cont[10:0]),
+	.iCTRL(2'h3),
+	.cd_buf_rst(start),
+	// .oSC(sample),
+	.oPxl(norm_pxl)
+);
 // wire data_val;
 
 

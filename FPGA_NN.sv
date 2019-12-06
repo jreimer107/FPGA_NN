@@ -99,6 +99,13 @@ wire [255:0] ccd_dmem_data;
 wire DLY_RST_0;
 wire [9:0] pxl_cnt;
 wire ccd_start_cap;
+wire captured;
+wire start_key_press;
+wire ccd_start;
+// wire [31:0] Frame_Count;
+
+// wire cpu_done = 1;
+
 Image_Proc image_proc(
 	.CLOCK2_50(CLOCK2_50),
 	.CLOCK_50(CLOCK_50),
@@ -112,6 +119,7 @@ Image_Proc image_proc(
 
 	// CPU interface
 	.enable(ccd_en),
+	// .cpu_done(cpu_done),
 	.ccd_done(ccd_done),
 
 	// DMEM interface
@@ -137,7 +145,6 @@ Image_Proc image_proc(
 	.D5M_RESET_N(D5M_RESET_N),
 	.D5M_SCLK(D5M_SCLK),
 	.D5M_SDATA(D5M_SDATA),
-	.D5M_STROBE(D5M_STROBE),
 	.D5M_TRIGGER(D5M_TRIGGER),
 	// .D5M_XCLKIN(D5M_XCLKIN),
 
@@ -145,7 +152,11 @@ Image_Proc image_proc(
 	.oDLY_RST_0(DLY_RST_0),
 
 	.pxl_cnt(pxl_cnt),
-	//.start_cap(ccd_start_cap)
+	.start_cap(ccd_start_cap),
+	.captured(captured),
+	.start_key_press(start_key_press),
+	.start(ccd_start)
+	// .Frame_Cont(Frame_Count)
 );
 
 //CPU dmem wires
@@ -182,7 +193,18 @@ always @(posedge CLOCK_50) begin
 	else
 		seg7_output <= {8'h0, reg_out};
 end
-assign	LEDR = {pc_out[4:0], 1'b0, ccd_done, ccd_en, pc_advance, halt};
+assign	LEDR = {
+	pc_out[3:0],
+	ccd_done,
+	captured,
+	D5M_PIXLCLK,
+	ccd_start_cap,
+	ccd_start,
+	start_key_press,
+	ccd_en,
+	pc_advance,
+	halt
+};
 
 SEG7_LUT_6 u5 (	
 	.oSEG0(HEX0),.oSEG1(HEX1),
@@ -242,15 +264,15 @@ ram DMEM(
 );
 
 
-// wire sdram_ctrl_clk;
-// sdram_pll u6	(
-// 	.refclk(CLOCK_50),
-// 	.rst(rst_n),
-// 	.outclk_0(sdram_ctrl_clk),
-// 	.outclk_1(DRAM_CLK),
-// 	.outclk_2(D5M_XCLKIN),    //25M
-// 	.outclk_3(VGA_CLK)       //25M
-// );
+wire sdram_ctrl_clk;
+sdram_pll u6	(
+	.refclk(CLOCK_50),
+	.rst(rst_n),
+	.outclk_0(sdram_ctrl_clk),
+	.outclk_1(DRAM_CLK),
+	.outclk_2(D5M_XCLKIN),    //25M
+	.outclk_3(VGA_CLK)       //25M
+);
 
 // // SDRAM Controller for Weights
 // // SDRam Read and Write as Frame Buffer
