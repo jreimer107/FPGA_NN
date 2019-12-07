@@ -21,12 +21,136 @@ rst = 1;
 en =1;
 for(i=0;i<=15;i=i+1)
 begin
-    input_neuron[i][15:0] <= i[15:0];// + 16'b10011111001111;
-    if(i%2 == 0)
+    input_neuron[i][15:0] <= i[15:0] + 16'b10011111001111;
+    /*if(i%2 == 0)
         weight_sample[i] = 1'b1;
     else
+	weight_sample[i] = 1'b0;*/
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b1;
+else
 	weight_sample[i] = 1'b0;
 end
+
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b1;
+end
+
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b1;
+else
+	weight_sample[i] = 1'b0;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b1;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b1;
+else
+	weight_sample[i] = 1'b0;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b0;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b1;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b1;
+else
+	weight_sample[i] = 1'b0;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b1;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b1;
+else
+	weight_sample[i] = 1'b0;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b1;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b1;
+else
+	weight_sample[i] = 1'b0;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b1;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b1;
+else
+	weight_sample[i] = 1'b0;
+end
+#10
+for(i=0;i<=15;i=i+1)
+begin
+if(i%2 == 0)
+	weight_sample[i] = 1'b0;
+else
+	weight_sample[i] = 1'b1;
+end
+
+
 end
 
 always 

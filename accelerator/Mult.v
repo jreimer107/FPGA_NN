@@ -13,7 +13,7 @@ reg [3:0] counter;
 reg [3:0] count_zeros;
 reg [15:0] output_reg;
 reg [4:0] integer_rounding;
-
+reg enable_delay;
 
 always @(posedge clk) begin
 	if (!reset)
@@ -21,12 +21,16 @@ always @(posedge clk) begin
 			partial_out <=0;
 			counter <=0;
                         output_reg <=0;
+			enable_delay <=0;
 		end
-	else if(enable)
+	else if (enable)
+		enable_delay <=1; 
+	
+	if(enable_delay)
 	begin
 		if (counter == 0)
 		begin
-			partial_out =(input_neuron[14:0] * Weight_bit);
+			partial_out = (input_neuron[14:0] * Weight_bit);
 			counter <= counter +1'b1;
 		end
 		else if (counter == 15)

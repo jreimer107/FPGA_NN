@@ -225,7 +225,6 @@ UpdateCounters:
 begin
 	Number_of_MAC_done <= Number_of_MAC_done +1;
 	Wr_BRAM <= 0;
-	add_done_reg <= 0;
 	if (Number_of_MAC_done == (total_input_neurons/size_of_PE)-1)
 	begin
 		neuron_done_reg <=1;
