@@ -51,14 +51,21 @@ module fetchdecode(
 
 	// Accelerator Interface
 	input iACC_done,
-	output oACC_en,   //These two go directly to accelerator
+	// output oACC_en,   //These two go directly to accelerator
 	// output oACC_start,
 
 	// Control Signals for later stages
 	output reg oALUSrc,
 	output reg oMemRead,
 	output reg oMemWrite,
-	output reg oBusWrite
+	output reg oBusWrite,
+
+	// Testing/Demo signals
+	input iPC_advance,
+	input [3:0] iRegIndex,
+	output reg [15:0] PC,
+	output [15:0] oReg_Out,
+	output [23:0] oInstr_out
 );
 
 localparam Branch = 5'b00111;
@@ -70,7 +77,7 @@ localparam DbLoad = 5'b01100;
 localparam DbStore = 5'b01101;
 
 // Imem interface
-reg [15:0] PC;
+// reg [15:0] PC;
 wire [23:0] instr;
 wire [23:0] instr_temp;
 
@@ -96,11 +103,6 @@ wire [15:0] next_PC;
 rom imem(.address(next_PC[7:0]), .clock(clk), .q(instr_temp), .rden(rst_n));
 
 // Branching vs PC advancement
-<<<<<<< Updated upstream
-assign instr = (oOpcode == Load | iHalt == 1'b1) ? 24'h280000 : instr_temp;
-
-assign next_PC = (branch == 1'b1) ? branchAddr : (opcode == Load) ? PC : PC + 1; 
-=======
 //assign instr = (oOpcode == Load | iHalt | !iPC_advance) ? 24'h280000 : instr_temp;
 
 assign instr = (oOpcode == Load | iHalt) ? 24'h280000 : instr_temp;
@@ -112,7 +114,6 @@ assign instr = (oOpcode == Load | iHalt) ? 24'h280000 : instr_temp;
 assign next_PC = (branch == 1'b1) ? branchAddr :
 				 (opcode == Load) ? PC :
 				 PC + 1;  
->>>>>>> Stashed changes
 
 // PC register
 always_ff @(posedge clk, negedge rst_n)
@@ -191,8 +192,10 @@ always_ff @(negedge clk, negedge rst_n) begin
 end
 
 assign oCCD_en = registers[15][1];
-assign oACC_en = registers[15][3];
+// assign oACC_en = registers[15][3];
 assign oACC_start = registers[15][4];
 
-
+// Testing/demoing
+assign oReg_Out = registers[iRegIndex];
+assign oInstr_out = instr_temp;
 endmodule

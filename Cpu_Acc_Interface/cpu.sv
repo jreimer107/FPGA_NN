@@ -12,7 +12,7 @@ module cpu (
 	// Accelerator interface
 	input  accel_done,
 	// output accel_start,
-	output reg accel_en,
+	output accel_en,
 	output bus_wr,
 	// output [2:0] bus_accregaddr,
 	output [15:0] bus_data,
@@ -21,7 +21,13 @@ module cpu (
 	input ccd_done,
 	output ccd_en,
 
-	output reg halt
+	// Testing/Demo signals
+	input pc_advance,
+	input [3:0] reg_index,
+	output reg halt,
+	output [23:0] instr_out,
+	output [15:0] pc_out,
+	output [15:0] reg_out
 );
 
 	/// ex ///
@@ -98,20 +104,14 @@ module cpu (
 	.iHalt(halt),		   		   // Halt
 	.iCCD_done(ccd_done),
 	.oCCD_en(ccd_en),
-<<<<<<< Updated upstream
-	.iACC_done(bus_accel_done),
-	.oACC_en(bus_accel_en),
-	.oACC_start(bus_accel_start)
-=======
 	.iACC_done(accel_done),
-	.oACC_en(accel_en),
+	//.oACC_en(accel_en),
 	//.oACC_start(bus_accel_start),
 	.PC(pc_out),
 	.oReg_Out(reg_out),
 	.iRegIndex(reg_index),
 	.iPC_advance(pc_advance),
 	.oInstr_out(instr_out)
->>>>>>> Stashed changes
 	);
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -214,13 +214,7 @@ module cpu (
 	// assign bus_accregaddr = mem_bustoreg ? bus_addr :
 	//						mem_buswrite ? bus_addr : 3'hz;  
 
-<<<<<<< Updated upstream
-=======
-	always_ff @(posedge clk, negedge rst_n)
-		if(!rst_n)
-			accel_en <= 1'b0;
-		else
-			accel_en <= ~ccd_done;
 
->>>>>>> Stashed changes
+	assign accel_en = ~ccd_done;
+
 endmodule

@@ -32,7 +32,24 @@ reg clk; /* Clock input */
 reg rst_n; /* (Active low) Reset input */
 
 wire mem_data_en = MemRead | MemWrite;
+<<<<<<< Updated upstream
 cpu_dmem_wrapper DUT(.clk(clk), .rst_n(rst_n));
+=======
+
+reg pc_advance;
+reg [3:0] reg_index;
+wire [15:0] reg_out;
+cpu_dmem_acc_wrapper DUT (
+	.clk(clk),
+	.rst_n(rst_n),
+	.pc_advance(pc_advance),
+	.pc_out(PC),
+	.reg_index(reg_index),
+	.reg_out(reg_out),
+	.instr_out(Inst),
+	.halt(Halt)
+);
+>>>>>>> Stashed changes
 
 // cpu DUT(.clk(clk), .rst_n(rst_n), .mem_data_in(MemDataOut), .bus_data_in(16'h0),
 // 	.bus_data_out(), .mem_data_en(mem_data_en), .mem_data_wr(MemWrite),
