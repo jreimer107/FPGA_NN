@@ -6,16 +6,16 @@ module cpu (
 	input [15:0] dmem_data_from,    // load data from data BRAM
 	output dmem_ren,          // enable BRAM for read
 	output dmem_wren,          // write enable to BRAM
-	output [15:0] dmem_addr, // read/write address to BRAM
+	output [10:0] dmem_addr, // read/write address to BRAM
 	output [15:0] dmem_data_to,  // store data to BRAM
 
 	// Accelerator interface
-	input bus_accel_done,
-	output bus_accel_start,
-	output bus_accel_en,
-	output [1:0] bus_rdwr,
-	output [2:0] bus_accregaddr,
-	inout [15:0] bus_data,
+	input  accel_done,
+	// output accel_start,
+	output reg accel_en,
+	output bus_wr,
+	// output [2:0] bus_accregaddr,
+	output [15:0] bus_data,
 
 	//IPU interface
 	input ccd_done,
@@ -104,9 +104,9 @@ module cpu (
 	.iHalt(halt),		   		   // Halt
 	.iCCD_done(ccd_done),
 	.oCCD_en(ccd_en),
-	.iACC_done(bus_accel_done),
-	.oACC_en(bus_accel_en),
-	.oACC_start(bus_accel_start),
+	.iACC_done(accel_done),
+	.oACC_en(accel_en),
+	//.oACC_start(bus_accel_start),
 	.PC(pc_out),
 	.oReg_Out(reg_out),
 	.iRegIndex(reg_index),
@@ -186,14 +186,14 @@ module cpu (
 
 	// Dmemory interface
 	assign dmem_data_to = mem_alu_src2;
-	assign dmem_addr = mem_alu_in;
+	assign dmem_addr = mem_alu_in[10:0];
 	assign dmem_ren = (halt == 1'b1) ? 1'b0 : mem_memread;
 	assign dmem_wren = (halt == 1'b1) ? 1'b0 : mem_memwrite;
 
 	// Writeback control
 	assign wb_en = (halt == 1'b1) ? 1'b0 : (mem_alutoreg | mem_memtoreg_delay | mem_bustoreg);
 	assign wb_data = mem_memtoreg_delay ? dmem_data_from :
-					 mem_bustoreg ? bus_data :
+	// 				 mem_bustoreg ? bus_data :
 	                 mem_alutoreg ? mem_alu_in :
 					 16'h0;
 	
@@ -209,10 +209,15 @@ module cpu (
 	// accelerator interface
 	//
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	assign bus_data = mem_buswrite ? mem_alu_src2 : 16'hz;
-	assign bus_rdwr = (halt == 1'b1) ? 2'b0 : {mem_bustoreg, mem_buswrite};
-	assign bus_accregaddr = mem_bustoreg ? bus_addr :
-							mem_buswrite ? bus_addr : 3'hz;  
+	assign bus_data = bus_wr ? mem_alu_src2 : 16'h0;
+	assign bus_wr = (halt == 1'b1) ? 1'b0 : mem_buswrite;
+	// assign bus_accregaddr = mem_bustoreg ? bus_addr :
+	//						mem_buswrite ? bus_addr : 3'hz;  
 
+	always_ff @(posedge clk, negedge rst_n)
+		if(!rst_n)
+			accel_en <= 1'b0;
+		else
+			accel_en <= ~ccd_done;
 
 endmodule

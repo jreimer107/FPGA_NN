@@ -108,7 +108,7 @@ module ram (
 		altsyncram_component.clock_enable_output_a = "BYPASS",
 		altsyncram_component.clock_enable_output_b = "BYPASS",
 		altsyncram_component.indata_reg_b = "CLOCK0",
-		altsyncram_component.init_file = "C:/Users/ECE_STUDENT/Documents/FPGA_NN/CPU/config.mif",
+		altsyncram_component.init_file = "C:/Users/ECE_STUDENT/Documents/FPGA_NN/Cpu_Acc_Interface/config.mif",
 		altsyncram_component.init_file_layout = "PORT_A",
 		altsyncram_component.intended_device_family = "Cyclone V",
 		altsyncram_component.lpm_type = "altsyncram",
@@ -169,7 +169,7 @@ endmodule
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
 // Retrieval info: PRIVATE: MEMSIZE NUMERIC "32768"
 // Retrieval info: PRIVATE: MEM_IN_BITS NUMERIC "0"
-// Retrieval info: PRIVATE: MIFfilename STRING "C:/Users/ECE_STUDENT/Documents/FPGA_NN/CPU/config.mif"
+// Retrieval info: PRIVATE: MIFfilename STRING "C:/Users/ECE_STUDENT/Documents/FPGA_NN/CPU/acc_data.mif"
 // Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "3"
 // Retrieval info: PRIVATE: OUTDATA_ACLR_B NUMERIC "0"
 // Retrieval info: PRIVATE: OUTDATA_REG_B NUMERIC "0"

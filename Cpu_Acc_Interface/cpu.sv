@@ -12,7 +12,7 @@ module cpu (
 	// Accelerator interface
 	input  accel_done,
 	// output accel_start,
-	output reg accel_en,
+	output accel_en,
 	output bus_wr,
 	// output [2:0] bus_accregaddr,
 	output [15:0] bus_data,
@@ -105,7 +105,7 @@ module cpu (
 	.iCCD_done(ccd_done),
 	.oCCD_en(ccd_en),
 	.iACC_done(accel_done),
-	.oACC_en(accel_en),
+	//.oACC_en(accel_en),
 	//.oACC_start(bus_accel_start),
 	.PC(pc_out),
 	.oReg_Out(reg_out),
@@ -214,10 +214,7 @@ module cpu (
 	// assign bus_accregaddr = mem_bustoreg ? bus_addr :
 	//						mem_buswrite ? bus_addr : 3'hz;  
 
-	always_ff @(posedge clk, negedge rst_n)
-		if(!rst_n)
-			accel_en <= 1'b0;
-		else
-			accel_en <= ~ccd_done;
+
+	assign accel_en = ~ccd_done;
 
 endmodule

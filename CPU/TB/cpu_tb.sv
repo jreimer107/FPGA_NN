@@ -36,7 +36,7 @@ wire mem_data_en = MemRead | MemWrite;
 reg pc_advance;
 reg [3:0] reg_index;
 wire [15:0] reg_out;
-cpu_dmem_wrapper DUT (
+cpu_dmem_acc_wrapper DUT (
 	.clk(clk),
 	.rst_n(rst_n),
 	.pc_advance(pc_advance),

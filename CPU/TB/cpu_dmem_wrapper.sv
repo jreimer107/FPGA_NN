@@ -29,19 +29,27 @@ wire ccd_done = ccd_en;
 cpu CPU(
     .clk(clk),
     .rst_n(rst_n),
-    .dmem_ren(dmem_ren), 
-    .dmem_wren(dmem_wren),
-	.dmem_addr(data_addr),  
-    .dmem_data_to(data_to_mem),
-    .dmem_data_from(data_to_cpu),
+
+	//DMEM interface
+    .dmem_ren(cpu_dmem_ren), 
+    .dmem_wren(cpu_dmem_wren),
+	.dmem_addr(cpu_dmem_addr),  
+    .dmem_data_to(cpu_dmem_data),
+    .dmem_data_from(dmem_cpu_data),
+
+	// Accel interface
     .bus_accel_done(bus_done),
     .bus_accel_start(bus_start),
     .bus_accel_en(bus_en),
     .bus_rdwr(bus_rdwr),
     .bus_data(databus),
     .bus_accregaddr(bus_regaddr),
+
+	// CCD interface
     .ccd_done(ccd_done),
     .ccd_en(ccd_en),
+
+	// Debug signals
     .halt(halt),
     .pc_out(pc_out),
     .reg_index(reg_index),
@@ -51,17 +59,21 @@ cpu CPU(
 );
 
 ram DMEM(
-    .address_a(data_addr[10:0]),
-    .address_b(),
     .clock(clk),
-    .data_a(data_to_mem),
-    .data_b(256'h0),
-    .rden_a(dmem_ren),
-    .rden_b(1'b0),
-    .wren_a(dmem_wren & ~halt),
-    .wren_b(1'b0),
-    .q_a(data_to_cpu),
-    .q_b()
+
+	// CPU interface
+    .address_a(cpu_dmem_addr[10:0]),
+    .data_a(cpu_dmem_data),
+    .rden_a(cpu_dmem_ren),
+    .wren_a(cpu_dmem_wren & ~halt),
+    .q_a(dmem_cpu_data),
+
+    // Shared Accel/CCD interface
+	.address_b(ccd_dmem_addr),  //Need to mux this when implementing Accel
+    .data_b(ccd_dmem_data),
+    .rden_b(1'b0), 		//For accel
+    .wren_b(ccd_dmem_wren),
+    .q_b()		//For accel
 );
 
 

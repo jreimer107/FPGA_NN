@@ -52,7 +52,7 @@ module fetchdecode(
 	// Accelerator Interface
 	input iACC_done,
 	output oACC_en,   //These two go directly to accelerator
-	output oACC_start,
+	// output oACC_start,
 
 	// Control Signals for later stages
 	output reg oALUSrc,
@@ -103,11 +103,17 @@ wire [15:0] next_PC;
 rom imem(.address(next_PC[7:0]), .clock(clk), .q(instr_temp), .rden(rst_n));
 
 // Branching vs PC advancement
-assign instr = (oOpcode == Load | iHalt | !iPC_advance) ? 24'h280000 : instr_temp;
+//assign instr = (oOpcode == Load | iHalt | !iPC_advance) ? 24'h280000 : instr_temp;
+
+assign instr = (oOpcode == Load | iHalt) ? 24'h280000 : instr_temp;
+
+// assign next_PC = (branch == 1'b1) ? branchAddr :
+// 				 (opcode == Load | !iPC_advance) ? PC :
+// 				 PC + 1;
 
 assign next_PC = (branch == 1'b1) ? branchAddr :
-				 (opcode == Load | !iPC_advance) ? PC :
-				 PC + 1; 
+				 (opcode == Load) ? PC :
+				 PC + 1;  
 
 // PC register
 always_ff @(posedge clk, negedge rst_n)
