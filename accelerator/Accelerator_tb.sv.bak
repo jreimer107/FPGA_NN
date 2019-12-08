@@ -45,7 +45,7 @@ data_bus <= 16'h0000;
 #10 data_bus <= 16'h0001; //#output neurons
 #10 busrdwr <=0;
 #10 DVAL <=1;
-//#10 DVAL <= 0;
+#10 DVAL <= 0;
 for(i=0;i<=15;i=i+1)
 begin
    BRAM_data[i][15:0] <= 16'h0801; //i[15:0]; //+ 16'b10011111001111;
@@ -67,7 +67,8 @@ in_data <= 16'h0001;
 #10 in_data <= 16'h000F;
 #10 in_data <= 16'h0010;
 
-
+#10 DVAL <=1;
+#10 DVAL <= 0;
 for(i=0;i<=15;i=i+1)
 begin
    BRAM_data[i][15:0] <= 16'h0401; //i[15:0]; //+ 16'b10011111001111;

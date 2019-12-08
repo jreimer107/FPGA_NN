@@ -30,19 +30,21 @@ module Accelerator_FSM(
 	reg RD1, Rd_BRAM, Wr_BRAM;
 	reg [5:0] Number_of_MAC_done;
 	reg [9:0] Number_of_neurons_done;
-	reg [15:0] InAddress, WeightAddr, OutputAddress, total_input_neurons, total_output_neurons;
+	reg [15:0] InAddress, WeightAddr, OutputAddress, total_input_neurons, total_output_neurons, BaseInAddress;
 	reg [2:0] state;
 	reg [4:0] counter_RD1;
 	reg[4:0] num_of_addition;
 	reg[2:0] count_databus;
 	reg [15:0] Weight_data;
 	parameter IDLE = 3'b000;
-	parameter WAIT = 3'b001;
-	parameter ReadDataBus = 3'b010;
+	//parameter WAIT = 3'b001;
+	//parameter ReadDataBus = 3'b010;
+	parameter ReadDataBus = 3'b001;
+	parameter WAITFORDVAL = 3'b010;
 	parameter Multiplication = 3'b011;
 	parameter Addition = 3'b100;
 	parameter UpdateCounters = 3'b101;
-	parameter WAITFORDVAL = 3'b110;
+
 	
 	parameter size_of_PE = 5'h10; /// we have 16 parallel  multipliers
 
@@ -60,6 +62,8 @@ if (!rst)
 	RD1 <= 0;
 	Rd_BRAM <= 0;
 	Wr_BRAM<=0;
+	PE_enable_reg <= 0;
+	add_done_reg <= 0;
 	end
 
 
@@ -68,7 +72,7 @@ IDLE:
 begin
 if (Enable)
 begin
-    state = ReadDataBus;
+    	state = ReadDataBus;
 	//state <= WAIT ;
 	neuron_done_reg <=0;
 	count_databus <=0;
@@ -92,6 +96,7 @@ if(busrdwr)
 			3'b000: 
 			begin
 				InAddress <= databus;
+				BaseInAddress <= databus;
 				count_databus <= count_databus+1;
 				state <= ReadDataBus;
 			end
@@ -163,9 +168,10 @@ begin
 	end
 	else
 	begin
-		state <=WAITFORDVAL;
+		state <= WAITFORDVAL;
 		Rd_BRAM <= 0;
 		RD1 <= 0;
+		neuron_done_reg <= 0;
 	end
 end
 
@@ -180,7 +186,7 @@ begin
 	neuron_done_reg <= 0;
 	if (counter_RD1 <16)
 	begin
-		Weight_data <= DRAM_DATA;
+		Weight_data <= 16'h000 + counter_RD1; //DRAM_DATA;
 		RD1 <= 1;
 		state <= Multiplication;
 		neuron_done_reg <= 0;
@@ -225,10 +231,12 @@ UpdateCounters:
 begin
 	Number_of_MAC_done <= Number_of_MAC_done +1;
 	Wr_BRAM <= 0;
+	add_done_reg <= 0;
 	if (Number_of_MAC_done == (total_input_neurons/size_of_PE)-1)
 	begin
 		neuron_done_reg <=1;
 		Wr_BRAM <= 1;
+		InAddress <= BaseInAddress;
 		OutputAddress <= OutputAddress +1;
 		Number_of_MAC_done <=0;
 		Number_of_neurons_done <= Number_of_neurons_done +1;
@@ -238,14 +246,15 @@ begin
 			state <=IDLE;
 		end
 		else
+		begin
 			state <= WAITFORDVAL;
+			Wr_BRAM <= 0;
+		end
 	end
 	else
 		state <= WAITFORDVAL;
 
-end
-
-
+	end
 endcase
 end
 

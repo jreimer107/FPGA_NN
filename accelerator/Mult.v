@@ -24,7 +24,9 @@ always @(posedge clk) begin
 			enable_delay <=0;
 		end
 	else if (enable)
-		enable_delay <=1; 
+		enable_delay <=1;
+	else if(!enable)
+		enable_delay <=0;
 	
 	if(enable_delay)
 	begin

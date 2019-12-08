@@ -30,24 +30,17 @@ module Accelerator_FSM(
 	reg RD1, Rd_BRAM, Wr_BRAM;
 	reg [5:0] Number_of_MAC_done;
 	reg [9:0] Number_of_neurons_done;
-<<<<<<< Updated upstream
-	reg [15:0] InAddress, WeightAddr, OutputAddress, total_input_neurons, total_output_neurons;
-=======
 	reg [15:0] InAddress, WeightAddr, OutputAddress, total_input_neurons, total_output_neurons, BaseInAddress;
->>>>>>> Stashed changes
 	reg [2:0] state;
 	reg [4:0] counter_RD1;
 	reg[4:0] num_of_addition;
 	reg[2:0] count_databus;
 	reg [15:0] Weight_data;
 	parameter IDLE = 3'b000;
-<<<<<<< Updated upstream
-	parameter WAIT = 3'b001;
-	parameter ReadDataBus = 3'b010;
-=======
+	//parameter WAIT = 3'b001;
+	//parameter ReadDataBus = 3'b010;
 	parameter ReadDataBus = 3'b001;
 	parameter WAITFORDVAL = 3'b010;
->>>>>>> Stashed changes
 	parameter Multiplication = 3'b011;
 	parameter Addition = 3'b100;
 	parameter UpdateCounters = 3'b101;
@@ -69,11 +62,8 @@ if (!rst)
 	RD1 <= 0;
 	Rd_BRAM <= 0;
 	Wr_BRAM<=0;
-<<<<<<< Updated upstream
-=======
 	PE_enable_reg <= 0;
 	add_done_reg <= 0;
->>>>>>> Stashed changes
 	end
 
 
@@ -82,11 +72,7 @@ IDLE:
 begin
 if (Enable)
 begin
-<<<<<<< Updated upstream
-    state = ReadDataBus;
-=======
-    state <= ReadDataBus;
->>>>>>> Stashed changes
+    	state = ReadDataBus;
 	//state <= WAIT ;
 	neuron_done_reg <=0;
 	count_databus <=0;
@@ -109,12 +95,8 @@ if(busrdwr)
 		case (count_databus)
 			3'b000: 
 			begin
-<<<<<<< Updated upstream
 				InAddress <= databus;
-=======
 				BaseInAddress <= databus;
-				InAddress<= databus;
->>>>>>> Stashed changes
 				count_databus <= count_databus+1;
 				state <= ReadDataBus;
 			end
@@ -147,11 +129,7 @@ if(busrdwr)
 else
 begin
 	if(count_databus < 3'b101)
-<<<<<<< Updated upstream
 		state = ReadDataBus;
-=======
-		state <= ReadDataBus;
->>>>>>> Stashed changes
 end
 end
 
@@ -190,10 +168,10 @@ begin
 	end
 	else
 	begin
-		state <=WAITFORDVAL;
+		state <= WAITFORDVAL;
 		Rd_BRAM <= 0;
 		RD1 <= 0;
-		neuron_done_reg < = 0;
+		neuron_done_reg <= 0;
 	end
 end
 
@@ -206,7 +184,7 @@ begin
 	Rd_BRAM <= 0;
 	counter_RD1 <= counter_RD1+1;
 	neuron_done_reg <= 0;
-	if (counter_RD1 <16)
+	if (counter_RD1 <17)
 	begin
 		Weight_data <= 16'h000 + counter_RD1; //DRAM_DATA;
 		RD1 <= 1;
@@ -252,19 +230,13 @@ end
 UpdateCounters:
 begin
 	Number_of_MAC_done <= Number_of_MAC_done +1;
-<<<<<<< Updated upstream
 	Wr_BRAM <= 0;
-=======
->>>>>>> Stashed changes
 	add_done_reg <= 0;
 	if (Number_of_MAC_done == (total_input_neurons/size_of_PE)-1)
 	begin
 		neuron_done_reg <=1;
 		Wr_BRAM <= 1;
-<<<<<<< Updated upstream
-=======
 		InAddress <= BaseInAddress;
->>>>>>> Stashed changes
 		OutputAddress <= OutputAddress +1;
 		Number_of_MAC_done <=0;
 		Number_of_neurons_done <= Number_of_neurons_done +1;
@@ -274,21 +246,15 @@ begin
 			state <=IDLE;
 		end
 		else
-<<<<<<< Updated upstream
-			state <= WAITFORDVAL;
-=======
 		begin
 			state <= WAITFORDVAL;
 			Wr_BRAM <= 0;
-	end
->>>>>>> Stashed changes
+		end
 	end
 	else
 		state <= WAITFORDVAL;
 
-end
-
-
+	end
 endcase
 end
 
