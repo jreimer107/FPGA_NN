@@ -18,8 +18,7 @@ assign sub = (ctrl == 5'h1);
 always_comb begin
 	ovfl = 0;
 	case (ctrl)
-		5'h0,
-		5'h1: begin
+		5'h0, 5'h1, 5'hA, 5'hB: begin
 			out_temp = out_addsub;
 			ovfl = ovfl_temp;
 		end
