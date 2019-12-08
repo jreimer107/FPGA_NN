@@ -18,7 +18,7 @@ tri [15:0] databus = bus_wr ? acc_data : 16'hz;
 wire acc_en;
 // wire acc_start;
 wire [2:0] acc_regaddr;
-wire acc_done;
+wire acc_done = 1'b0;
 
 //CCD mock
 wire ccd_en;
@@ -36,8 +36,7 @@ wire [15:0] dmem_cpu_data;
 wire [6:0] ccd_dmem_addr;
 wire [255:0] ccd_dmem_data;
 wire ccd_dmem_wren;
-wire [15:0] DRAM_weight,BRAM_Addr_In,  BRAM_Addr_out, output_neuron;
-wire [15:0] [15:0] BRAM_input;
+
 cpu CPU(
     .clk(clk),
     .rst_n(rst_n),
@@ -74,37 +73,18 @@ ram DMEM(
     .clock(clk),
 
 	// CPU interface
-    .address_a(BRAM_Addr_out),
+    .address_a(cpu_dmem_addr),
     .data_a(cpu_dmem_data),
     .rden_a(cpu_dmem_ren),
-    .wren_a(Wr_BRAM),
+    .wren_a(cpu_dmem_wren & ~halt),
     .q_a(dmem_cpu_data),
 
     // Shared Accel/CCD interface
-	.address_b(BRAM_Addr_In[11:4]),  //Need to mux this when implementing Accel
+	.address_b(ccd_dmem_addr),  //Need to mux this when implementing Accel
     .data_b(ccd_dmem_data),
-    .rden_b(Rd_BRAM), 		//For accel
+    .rden_b(1'b0), 		//For accel
     .wren_b(ccd_dmem_wren),
-    .q_b(BRAM_input)		//For accel
-);
-
-
-Accelerator Acc0 (
-	.clk(clk),                   // Clock
-	.reset(rst_n),                 // Asynchronous reset active low
-	.DRAMdata (DRAM_weight),
-	.data_bus (acc_data),
-	.BRAM_data (BRAM_input),
-	.busrdwr(bus_wr),
-	.CPUEnable(acc_en),
-	.DVAL(Rd_done),
-	.BRAM_Addr_In (BRAM_Addr_In),
-	.out_addr_current (BRAM_Addr_out),
-	.Rd_BRAM_current (Rd_BRAM),
-	.Wr_BRAM_current (Wr_BRAM),
-	.SRAM_RdReq (SRAM_RdReq),
-	.cpu_neuron_done(acc_done),
-	.output_neuron (output_neuron)
+    .q_b()		//For accel
 );
 
 
