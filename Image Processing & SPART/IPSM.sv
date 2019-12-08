@@ -58,7 +58,7 @@ module IPSM(
 	input 		    [11:0]		D5M_D,
 	input 		          		D5M_FVAL,
 	input 		          		D5M_LVAL,
-	input 		          		D5M_PIXCLK,
+	input 		          		D5M_PIXLCLK,
 	output		          		D5M_RESET_N,
 	output		          		D5M_SCLK,
 	inout 		          		D5M_SDATA,
@@ -179,7 +179,32 @@ CropDown u5 (
 	.oDVAL(sCCD_DVAL)
 );
 /// End Image Capture Pipeline ///
-				
+
+// Control image capture and storage	
+Img_Proc_FSM FSM (
+	.clk(CLOCK_50),
+	.pxlclk(D5M_PIXLCLK),
+	.rst_n(rst_n),
+
+	// CPU interface
+	.enable(enable),
+	.oCCD_Done(ccd_done)
+
+	// User control
+	.iStart(start_key),
+	
+	// Pipeline interface
+	.iFVAL(D5M_FVAL),
+	.iDVAL(sCCD_DVAL),
+	.iDATA(sCCD_DATA),
+
+	// Bmem 256-bit write port
+	.oDmem_wren(dmem_wren),
+	.oDmem_addr(dmem_wraddr),
+	.oDmem_data(dmem_wrdata),
+
+);
+
 //D5M I2C control
 I2C_CCD_Config u8 (	
     //	Host Side
