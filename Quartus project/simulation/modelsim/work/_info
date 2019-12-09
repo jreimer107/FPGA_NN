@@ -8,13 +8,128 @@ z2
 !i10f 100
 cModel Technology
 Z0 dC:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/simulation/modelsim
-vBlock_Memory
+vAccel_tb
 Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
-Z2 !s110 1573000094
+Z2 !s110 1575842315
+!i10b 1
+!s100 9>]Uo4<3B9fBAF@E4gM9A3
+IcPhe0@>C9^ShBYC:mN]c02
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+!s105 Accelerator_tb_sv_unit
+S1
+R0
+Z4 w1575841742
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator_tb.sv
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator_tb.sv
+L0 1
+Z5 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z6 !s108 1575842315.000000
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator_tb.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator_tb.sv|
+!i113 1
+Z7 o-work work -sv
+Z8 tCvgOpt 0
+n@accel_tb
+vAccelerator
+R1
+Z9 !s110 1575842314
+!i10b 1
+!s100 KoI18n:M8gZ@C?21SO8Oo3
+I;NdY]CX6UQzCIAL@NE5za0
+R3
+!s105 Accelerator_sv_unit
+S1
+R0
+R4
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator.sv
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator.sv
+L0 2
+R5
+r1
+!s85 0
+31
+Z10 !s108 1575842314.000000
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accelerator.sv|
+!i113 1
+R7
+R8
+n@accelerator
+vAccelerator_FSM
+R9
+!i10b 1
+!s100 X[Z>mYY>IaOFi>A9G:>Um2
+I<GJnzB6UM=4z=Z^McVgDW1
+R3
+R0
+R4
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accel_FSM.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accel_FSM.v
+L0 2
+R5
+r1
+!s85 0
+31
+R10
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accel_FSM.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Accel_FSM.v|
+!i113 1
+Z11 o-work work
+R8
+n@accelerator_@f@s@m
+vaccumulation_register
+R2
+!i10b 1
+!s100 _k[QhS1UCz;K>VRd`bmT?0
+Ie[1_JYPhzDK:?b:W<OM8c3
+R3
+R0
+R4
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/accumulation_register.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/accumulation_register.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/accumulation_register.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/accumulation_register.v|
+!i113 1
+R11
+R8
+vAdder_tb
+R2
+!i10b 1
+!s100 H8f^iJo7E4=Lol0]^RWYW2
+IOR3MzG;L3;HXo]^nDX]1j1
+R3
+R0
+Z12 w1575661325
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder_tb.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder_tb.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder_tb.v|
+!i113 1
+R11
+R8
+n@adder_tb
+vBlock_Memory
+R1
+Z13 !s110 1573000094
 !i10b 1
 !s100 b1D@=:OG<TI8C4aMJDSdT3
 I>i<03IPX9kKLZfi5??2M@1
-Z3 VDg1SIo80bB@j0V0VzS_@n1
+R3
 !s105 Block_Memory_sv_unit
 S1
 R0
@@ -22,20 +137,20 @@ w1572998197
 8C:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv
 FC:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv
 L0 21
-Z4 OV;L;10.5b;63
+R5
 r1
 !s85 0
 31
-Z5 !s108 1573000094.000000
+Z14 !s108 1573000094.000000
 !s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/Block_Memory.sv|
 !i113 1
-Z6 o-work work -sv
-Z7 tCvgOpt 0
+R7
+R8
 n@block_@memory
 vBMem_tb
 R1
-R2
+R13
 !i10b 1
 !s100 dm9gOeaI@b]Y`JJzhfWI]0
 Ialg:[5?:I]I?`CVbUI8;E0
@@ -47,19 +162,197 @@ w1572997183
 8C:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv
 FC:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv
 L0 1
-R4
+R5
 r1
 !s85 0
 31
-R5
+R14
 !s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/BMem_tb.sv|
 !i113 1
-R6
 R7
+R8
 n@b@mem_tb
-vromtest
+vfifo
 R2
+!i10b 1
+!s100 UXjlkQNDi0HY^7jg2X7WW2
+IdZQI91:_kI`RURhQF<<Vz2
+R3
+R0
+R4
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FIFO.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FIFO.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FIFO.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FIFO.v|
+!i113 1
+R11
+R8
+vFixed_adder
+R2
+!i10b 1
+!s100 6ATGVCIY3`CFWC^P<WX[E0
+I16>=L_ETz`CA54QEciZ?Q0
+R3
+R0
+R12
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Adder.v|
+!i113 1
+R11
+R8
+n@fixed_adder
+vFSM_tb
+R2
+!i10b 1
+!s100 U4Wk18;kc@3bT8FCz`Y0^3
+Ii2>R0mO2jND]jkETCobJW0
+R3
+R0
+R12
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FSM_tb.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FSM_tb.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FSM_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/FSM_tb.v|
+!i113 1
+R11
+R8
+n@f@s@m_tb
+vMult
+R2
+!i10b 1
+!s100 S>A2fjK1iokUEiVU0<liV3
+IEgN>j]:d:5f8WTLdABaZ^1
+R3
+R0
+R4
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Mult.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Mult.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Mult.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/Mult.v|
+!i113 1
+R11
+R8
+n@mult
+vMult_tb
+R2
+!i10b 1
+!s100 ^4LdM_LVXG;H;;A^Saz890
+If99L2CHi>QlK?a`QnMbFQ0
+R3
+R0
+w1575842224
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/mult_tb.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/mult_tb.v
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/mult_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/mult_tb.v|
+!i113 1
+R11
+R8
+n@mult_tb
+vparallel_mult
+R1
+R2
+!i10b 1
+!s100 00_=D?=YK<L]XE5AI[K?23
+Ih[RMTNNJbcQRODR6RI`I72
+R3
+!s105 parallel_mult_sv_unit
+S1
+R0
+R12
+8C:\Users\ECE_STUDENT\Documents\FPGA_NN\accelerator\parallel_mult.sv
+FC:\Users\ECE_STUDENT\Documents\FPGA_NN\accelerator\parallel_mult.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:\Users\ECE_STUDENT\Documents\FPGA_NN\accelerator\parallel_mult.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:\Users\ECE_STUDENT\Documents\FPGA_NN\accelerator\parallel_mult.sv|
+!i113 1
+R7
+R8
+vparallel_mult_tb
+R1
+Z15 !s110 1575842316
+!i10b 1
+!s100 BHW]:`c2BEZ@g@2_Q8Z<O2
+Ig5Lg@`oLJmfLX:nGH^0^D0
+R3
+!s105 parallel_mult_tb_sv_unit
+S1
+R0
+R4
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/parallel_mult_tb.sv
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/parallel_mult_tb.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/parallel_mult_tb.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/parallel_mult_tb.sv|
+!i113 1
+R7
+R8
+vrelu
+R15
+!i10b 1
+!s100 kiz1CaEo=ziO:<I5CLzDS2
+Id3lnnY13<f^;]4=8T9AoP0
+R3
+R0
+R4
+8C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/relu.v
+FC:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/relu.v
+L0 1
+R5
+r1
+!s85 0
+31
+!s108 1575842316.000000
+!s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/relu.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/accelerator/relu.v|
+!i113 1
+R11
+R8
+vromtest
+R13
 !i10b 1
 !s100 ZEk@o9^>HT=lgQcY9kSXb2
 IP[FR839?m8OFdYkFWYZ4c2
@@ -69,7 +362,7 @@ w1572997869
 8C:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v
 FC:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v
 L0 34
-R4
+R5
 r1
 !s85 0
 31
@@ -77,5 +370,5 @@ r1
 !s107 C:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/romtest_bb.v|
 !i113 1
-o-work work
-R7
+R11
+R8
