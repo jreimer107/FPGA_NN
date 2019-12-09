@@ -8,7 +8,7 @@ reg enable;
 
 
 
-Mult_v2 Mult0 (.clk (clk) , .reset (rst),  .input_neuron(input_sample), .Weight_bit (weight_sample), .enable(enable), .out(out));
+Mult Mult0 (.clk (clk) , .reset (rst),  .input_neuron(input_sample), .Weight_bit (weight_sample), .enable(enable), .out(out));
 
 
 
@@ -19,8 +19,8 @@ rst = 0;
 
 #10 rst = 1;
 enable=1;
-input_sample =16'h1001;
-overal_weight = 16'b0000001100000000;
+input_sample =16'h0801;
+overal_weight = 16'b0101010101010101;
 weight_sample = overal_weight[0];
 #10 weight_sample = overal_weight[1];
 #10 weight_sample = overal_weight[2];

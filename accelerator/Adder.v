@@ -13,7 +13,7 @@ assign {carry_out, sum1} = in1 + in2 + carry_in;
 
 //// check overflow 
 assign overflow_pos = (~in1[15] & ~in2[15] & sum1[15]) ? 1 : 0;
-assign overflow_high = ( in1[15] & in2[15] & ~sum1[15]) ? 1: 0;
+assign overflow_high = ( in1[15] & in2[15] & carry_out) ? 1: 0;
 
 assign sum = overflow_pos ? 16'b0111111111111111:
 	     overflow_high ? 16'b1000000000000000:

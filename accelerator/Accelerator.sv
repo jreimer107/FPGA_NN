@@ -2,7 +2,7 @@
 module Accelerator (
 	input clk,
 	input reset,
-	input [15:0] DRAMdata,
+	input [15:0] [15:0] SDRAM_FIFO_in,
 	input [15:0] data_bus,
 	input [15:0][15:0] BRAM_data,
 	input busrdwr,
@@ -12,7 +12,7 @@ module Accelerator (
 	output [15:0] output_neuron,
 	output [15:0] out_addr_current,
 	output Rd_BRAM_current,
-	output Wr_BRAM_current,
+	//output Wr_BRAM_current,
 	output SRAM_RdReq,
 	output cpu_neuron_done
 );
@@ -21,7 +21,7 @@ wire [15:0] Weight_data_current;
 Accelerator_FSM FSM1(
 	.clk(clk), 
 	.rst(reset),
-	.DRAM_DATA(DRAMdata), 
+	.SDRAM_FIFO(SDRAM_FIFO_in), 
 	.databus(data_bus), 
 	.DVAL(DVAL),
 	.Enable(CPUEnable),
@@ -30,12 +30,13 @@ Accelerator_FSM FSM1(
 	.Weight_data_current(Weight_data_current),
 	.neuron_done(neuron_done),
 	.Rd_BRAM_current(Rd_BRAM_current),
-	.Wr_BRAM_current(Wr_BRAM_current),
+	//.Wr_BRAM_current(Wr_BRAM_current),
 	.out_addr_current(out_addr_current),
 	.PE_enable(PE_enable),
-	.RD1_current(SRAM_RdReq),
+	.SRAM_read_req_current(SRAM_RdReq),
 	.add_done(add_done)
 );
+
 
 wire [15:0] accum_sum, partial_sum;
 parallel_mult pm0(.clk(clk), .rst (reset), .input_neuron(BRAM_data), .weight_bits(Weight_data_current), .en(PE_enable), .FinalOut(partial_sum));

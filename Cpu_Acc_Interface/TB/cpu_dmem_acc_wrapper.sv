@@ -33,7 +33,8 @@ wire [15:0] dmem_cpu_data;
 wire [6:0] ccd_dmem_addr;
 wire [255:0] ccd_dmem_data;
 wire ccd_dmem_wren;
-wire [15:0] DRAM_weight, BRAM_Addr_In, BRAM_Addr_out, output_neuron;
+wire [15:0][15:0] DRAM_weight;
+wire [15:0]BRAM_Addr_In, BRAM_Addr_out, output_neuron;
 wire [15:0] [15:0] BRAM_input;
 wire [6:0] bram_addr_b;
 wire Rd_BRAM, Wr_BRAM;
@@ -97,16 +98,16 @@ ram DMEM(
 Accelerator Acc0 (
 	.clk(clk),                   // Clock
 	.reset(rst_n),                 // Asynchronous reset active low
-	.DRAMdata (DRAM_weight),
+	.SDRAM_FIFO_in (DRAM_weight),
 	.data_bus (acc_data),
 	.BRAM_data (BRAM_input),
 	.busrdwr(bus_wr),
 	.CPUEnable(acc_en),
-	.DVAL(Rd_done),
+	.DVAL(1'b1), //.DVAL(Rd_done),
 	.BRAM_Addr_In (BRAM_Addr_In),
 	.out_addr_current (BRAM_Addr_out),
 	.Rd_BRAM_current (Rd_BRAM),
-	.Wr_BRAM_current (Wr_BRAM),
+	//.Wr_BRAM_current (Wr_BRAM),
 	.SRAM_RdReq (SRAM_RdReq),
 	.cpu_neuron_done(acc_done),
 	.output_neuron (output_neuron)

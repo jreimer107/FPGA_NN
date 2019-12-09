@@ -21,9 +21,9 @@ always @(posedge clk) begin
 		begin
 			partial_out <=0;
 			counter <=0;
-                        output_reg <=0;
+         output_reg =0;
 			enable_delay <=0;
-			sign <= 0;
+			sign = 0;
 		end
 	else if (enable)
 		enable_delay <=1;
@@ -44,13 +44,19 @@ always @(posedge clk) begin
 			begin
 			partial_out_dummy = (partial_out << 1);
 			if(partial_out_dummy[26]) begin
-				integer_rounding =  partial_out_dummy [25:21];
+				integer_rounding =  5'b11111; //partial_out_dummy [25:21];
+			end
+			else if (partial_out_dummy[25])
+			begin
+				integer_rounding = 5'b11111; //partial_out_dummy[24:20];
 			end
 			else
-			begin
 				integer_rounding = partial_out_dummy[24:20];
-			end
+				
+				
 			fraction_rounding = partial_out_dummy[19:10];
+		
+				
 			output_reg = {sign, integer_rounding[4:0], fraction_rounding};
 		        partial_out <=0;
 			counter <=0;

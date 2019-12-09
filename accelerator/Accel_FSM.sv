@@ -75,7 +75,7 @@ IDLE:
 begin
 if (Enable)
 begin
-    	state = ReadDataBus;
+    state <= ReadDataBus;
 	//state <= WAIT ;
 	neuron_done_reg <=0;
 	count_databus <=0;
@@ -140,7 +140,7 @@ if(busrdwr)
 else
 begin
 	if(count_databus < 3'b101)
-		state = ReadDataBus;
+		state <= ReadDataBus;
 end
 end
 
