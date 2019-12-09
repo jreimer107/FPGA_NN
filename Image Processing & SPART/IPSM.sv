@@ -50,9 +50,9 @@ module IPSM(
 	output reg ccd_done,
 
 	// DMEM interface
-	output reg dmem_wren,
-	output reg [6:0] dmem_wraddr,
-	output reg [255:0] dmem_wrdata,
+	output dmem_wren,
+	output [6:0] dmem_wraddr,
+	output [255:0] dmem_wrdata,
 
 	//////////// GPIO_1, GPIO_1 connect to D5M - 5M Pixel Camera //////////
 	input 		    [11:0]		D5M_D,
@@ -62,9 +62,7 @@ module IPSM(
 	output		          		D5M_RESET_N,
 	output		          		D5M_SCLK,
 	inout 		          		D5M_SDATA,
-	input 		          		D5M_STROBE,
-	output		          		D5M_TRIGGER,
-	output		          		D5M_XCLKIN
+	output		          		D5M_TRIGGER
 );
 
 
@@ -182,16 +180,15 @@ CropDown u5 (
 
 // Control image capture and storage	
 Img_Proc_FSM FSM (
-	.clk(CLOCK_50),
 	.pxlclk(D5M_PIXLCLK),
 	.rst_n(rst_n),
 
 	// CPU interface
-	.enable(enable),
-	.oCCD_Done(ccd_done)
+	.iCCD_enable(enable),
+	.oCCD_done(ccd_done),
 
 	// User control
-	.iStart(start_key),
+	.iCCD_start(start_key),
 	
 	// Pipeline interface
 	.iFVAL(D5M_FVAL),

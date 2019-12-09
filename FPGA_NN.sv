@@ -106,7 +106,7 @@ wire ccd_start;
 
 // wire cpu_done = 1;
 
-Image_Proc image_proc(
+IPSM image_proc(
 	.CLOCK2_50(CLOCK2_50),
 	.CLOCK_50(CLOCK_50),
 	.rst_n(rst_n),
@@ -149,13 +149,13 @@ Image_Proc image_proc(
 	// .D5M_XCLKIN(D5M_XCLKIN),
 
 	//Stupid sdram reset
-	.oDLY_RST_0(DLY_RST_0),
+	//.oDLY_RST_0(DLY_RST_0),
 
-	.pxl_cnt(pxl_cnt),
-	.start_cap(ccd_start_cap),
-	.captured(captured),
-	.start_key_press(start_key_press),
-	.start(ccd_start)
+	//.pxl_cnt(pxl_cnt),
+	//.start_cap(ccd_start_cap),
+	//.captured(captured),
+	//.start_key_press(start_key_press),
+	//.start(ccd_start)
 	// .Frame_Cont(Frame_Count)
 );
 
@@ -165,8 +165,8 @@ wire [15:0] cpu_dmem_addr;
 wire cpu_dmem_ren, cpu_dmem_wren;
 
 //Accel mock
-wire [1:0] bus_rdwr;
-tri [15:0] databus = bus_rdwr[1] ? 16'h1234 : 16'hz;
+wire bus_wr;
+tri [15:0] databus = bus_wr ? 16'h1234 : 16'hz;
 wire bus_en;
 wire bus_start;
 wire [2:0] bus_regaddr;
@@ -196,11 +196,7 @@ end
 assign	LEDR = {
 	pc_out[3:0],
 	ccd_done,
-	captured,
-	D5M_PIXLCLK,
-	ccd_start_cap,
 	ccd_start,
-	start_key_press,
 	ccd_en,
 	pc_advance,
 	halt
@@ -220,17 +216,17 @@ cpu CPU(
 	//DMEM interface
     .dmem_ren(cpu_dmem_ren), 
     .dmem_wren(cpu_dmem_wren),
-	.dmem_addr(cpu_dmem_addr),  
+	 .dmem_addr(cpu_dmem_addr),  
     .dmem_data_to(cpu_dmem_data),
     .dmem_data_from(dmem_cpu_data),
 
 	// Accel interface
-    .bus_accel_done(bus_done),
-    .bus_accel_start(bus_start),
-    .bus_accel_en(bus_en),
-    .bus_rdwr(bus_rdwr),
+    .accel_done(bus_done),
+    // .accel_start(bus_start),
+    .accel_en(bus_en),
+    .bus_wr(bus_wr),
     .bus_data(databus),
-    .bus_accregaddr(bus_regaddr),
+    // .bus_accregaddr(bus_regaddr),
 
 	// CCD interface
     .ccd_done(ccd_done),
