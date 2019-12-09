@@ -48,11 +48,14 @@ module IPSM(
     // CPU interface
 	input enable,
 	output reg ccd_done,
+	output ccd_start,
 
 	// DMEM interface
 	output dmem_wren,
 	output [6:0] dmem_wraddr,
 	output [255:0] dmem_wrdata,
+
+	output state,
 
 	//////////// GPIO_1, GPIO_1 connect to D5M - 5M Pixel Camera //////////
 	input 		    [11:0]		D5M_D,
@@ -93,7 +96,6 @@ wire            [15:0]           Y_Gray;
 
 wire	        [11:0]			sCCD_DATA;
 wire							sCCD_DVAL;
-
 
 //power on start
 wire             				auto_start;
@@ -180,7 +182,7 @@ CropDown u5 (
 
 // Control image capture and storage	
 Img_Proc_FSM FSM (
-	.pxlclk(D5M_PIXLCLK),
+	.pxlclk(CLOCK_50),
 	.rst_n(rst_n),
 
 	// CPU interface
@@ -199,7 +201,8 @@ Img_Proc_FSM FSM (
 	.oDmem_wren(dmem_wren),
 	.oDmem_addr(dmem_wraddr),
 	.oDmem_data(dmem_wrdata),
-
+	.state_flag(state),
+	.ccd_start(ccd_start)
 );
 
 //D5M I2C control

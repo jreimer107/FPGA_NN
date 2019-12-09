@@ -102,6 +102,7 @@ wire ccd_start_cap;
 wire captured;
 wire start_key_press;
 wire ccd_start;
+wire state;
 // wire [31:0] Frame_Count;
 
 // wire cpu_done = 1;
@@ -120,12 +121,14 @@ IPSM image_proc(
 	// CPU interface
 	.enable(ccd_en),
 	// .cpu_done(cpu_done),
+	.ccd_start(ccd_start),
 	.ccd_done(ccd_done),
 
 	// DMEM interface
 	.dmem_wren(ccd_dmem_wren),
 	.dmem_wraddr(ccd_dmem_addr),
 	.dmem_wrdata(ccd_dmem_data),
+	.state(state),
 
 	// //VGA
 	// .VGA_B(VGA_B),
@@ -192,12 +195,14 @@ always @(posedge CLOCK_50) begin
 		seg7_output <= instr_out;
 	else
 		seg7_output <= {8'h0, reg_out};
+		// seg7_output <=
 end
 assign	LEDR = {
 	pc_out[3:0],
 	ccd_done,
 	ccd_start,
 	ccd_en,
+	D5M_PIXLCLK,
 	pc_advance,
 	halt
 };
@@ -206,7 +211,7 @@ SEG7_LUT_6 u5 (
 	.oSEG0(HEX0),.oSEG1(HEX1),
 	.oSEG2(HEX2),.oSEG3(HEX3),
 	.oSEG4(HEX4),.oSEG5(HEX5),
-	.iDIG({14'b0, pxl_cnt})
+	.iDIG(seg7_output)
 );
 
 cpu CPU(

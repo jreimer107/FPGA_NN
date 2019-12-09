@@ -77,7 +77,7 @@ reg	[3:0]	mSetup_ST;
 input 		iEXPOSURE_ADJ;
 input		iEXPOSURE_DEC_p;	
 
-parameter 	default_exposure 			= 16'h07c0;
+parameter 	default_exposure 			= 16'h01c0;//16'h07c0;
 parameter 	exposure_change_value	 	= 16'd200;
 
 reg	[24:0]	combo_cnt;
@@ -163,7 +163,7 @@ assign i2c_reset = iRST_N & ~exposure_adj_reset & ~combo_pulse ;
 parameter	CLK_Freq	=	50000000;	//	50	MHz
 parameter	I2C_Freq	=	20000;		//	20	KHz
 //	LUT Data Number
-parameter	LUT_SIZE	=	25;
+parameter	LUT_SIZE	=	26;//25;
 
 /////////////////////	I2C Control Clock	////////////////////////
 always@(posedge iCLK or negedge i2c_reset)
@@ -234,7 +234,7 @@ begin
 end
 ////////////////////////////////////////////////////////////////////
 /////////////////////	Config Data LUT	  //////////////////////////		
-always @(posedge iCLK)
+always @(*)
 begin
 	case(LUT_INDEX)
 	0	:	LUT_DATA	<=	24'h000000;
@@ -262,6 +262,7 @@ begin
 	22	:	LUT_DATA	<=	sensor_row_mode;		//	set row mode in bin mode
 	23	:	LUT_DATA	<=	sensor_column_mode;		//	set column mode	 in bin mode
 	24	:	LUT_DATA	<=	24'h4901A8;				//	row black target		
+	25	:	LUT_DATA <= 24'h1E4106;
 	default:LUT_DATA	<=	24'h000000;
 	endcase
 end

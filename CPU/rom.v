@@ -1,4 +1,4 @@
-// megafunction wizard: %ROM: 1-PORT%
+ // megafunction wizard: %ROM: 1-PORT%
 // GENERATION: STANDARD
 // VERSION: WM1.0
 // MODULE: altsyncram 
@@ -86,7 +86,7 @@ module rom (
 		altsyncram_component.address_aclr_a = "NONE",
 		altsyncram_component.clock_enable_input_a = "BYPASS",
 		altsyncram_component.clock_enable_output_a = "BYPASS",
-		altsyncram_component.init_file = "C:/Users/ECE_STUDENT/Documents/FPGA_NN/Cpu_Acc_Interface/instructions.mif",
+		altsyncram_component.init_file = "C:/Users/ECE_STUDENT/Desktop/FPGA_NN/Image_Processing_SPART/TB/instructions.mif",
 		altsyncram_component.intended_device_family = "Cyclone V",
 		altsyncram_component.lpm_hint = "ENABLE_RUNTIME_MOD=NO",
 		altsyncram_component.lpm_type = "altsyncram",

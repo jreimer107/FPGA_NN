@@ -9,8 +9,9 @@ module Img_Proc_FSM(
 	output oDmem_wren,
 	output [6:0] oDmem_addr,
 	output [255:0] oDmem_data,
-	// output [15:0] oDmem_data [15:0],
-	output oCCD_done
+	output reg state_flag,
+	output oCCD_done,
+	output reg ccd_start
 );
 
 // Buffer FVAL to detect rising edge (new frame)
@@ -24,8 +25,9 @@ always_ff @(posedge pxlclk, negedge rst_n)
 
 
 // FSM state control
-typedef enum {IDLE, WAIT, CAPTURE, SEND_LAST} state_t;
-state_t state;
+// typedef enum {IDLE, WAIT, CAPTURE, SEND_LAST} state_t;
+localparam IDLE = 2'h0, WAIT = 2'h1, CAPTURE = 2'h2, SEND_LAST = 2'h3;
+reg [1:0] state;
 
 reg [15:0] pixels [15:0];
 reg dmem_wren;
@@ -43,8 +45,11 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 		dmem_wren <= 1'b0;
 		dmem_addr <= 7'b0;
 		pxl_cnt <= 10'b0;
+		state_flag <= 0;
+		ccd_start <= 1'b0;
 	end
 	else begin
+		ccd_start <= iCCD_start;
 		case(state)
 			// Wait for button press and enable signal
 			IDLE: begin
@@ -53,8 +58,10 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 				dmem_addr <= 7'b0;
 				dmem_addr <= 1'b0;
 				pxl_cnt <= 10'b0;
-				if (iCCD_enable & iCCD_start)
+				if (iCCD_enable & iCCD_start) begin
 					state <= WAIT;
+					state_flag <= 1;
+				end
 			end
 
 			// Wait for next image to start
