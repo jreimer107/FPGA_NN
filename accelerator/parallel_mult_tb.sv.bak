@@ -1,5 +1,4 @@
-module parallel_mult_tb;
-
+ module parallel_mult_tb;
 
 reg clk , rst , en; 
 reg [15:0] weight_sample;
@@ -27,6 +26,7 @@ begin
     else
 	weight_sample[i] = 1'b0;*/
 end
+#10
 for(i=0;i<=15;i=i+1)
 begin
 if(i%2 == 0)
