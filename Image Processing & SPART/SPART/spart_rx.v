@@ -4,7 +4,7 @@ Receives an input bit and begins shifting the input into a buffer when a start
 bit (0) is received. The first bit is shifted in after 8 enable signals, then 
 subsequent bits are shifted in after 16 enable signals are received
 */
-module spart_rx(
+module spart_rx_old(
 	input clk,
 	input rst,
 	input enable,
