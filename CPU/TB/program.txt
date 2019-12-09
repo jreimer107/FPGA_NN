@@ -1,0 +1,9 @@
+MAIN_LOOP:	IMML	R12		0x2		#	CCD_en is STATUS[1]
+	OR	R15	R15	R12		#	Set CCD_en
+CCD_WAIT:	AND	R12	R15	R15		#	CCD_done is STATUS[0]
+	B			CCD_WAIT	NE	#	Check for CCD_done
+	LD	R1	R0	0x0
+	IMMH	R3		0x03
+	IMML	R3		0x0F
+	LD	R2	R3	0x0
+	HLT
