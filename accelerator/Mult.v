@@ -25,12 +25,12 @@ always @(posedge clk) begin
 			enable_delay <=0;
 			sign = 0;
 		end
-	else if (enable)
-		enable_delay <=1;
-	else if(!enable)
-		enable_delay <=0;
+	//else if (enable)
+	//	enable_delay <=1;
+	//else if(!enable)
+	//	enable_delay <=0;
 	
-	if(enable_delay)
+	if(enable)
 	begin
 		if (counter == 0)
 		begin

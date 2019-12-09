@@ -176,6 +176,7 @@ begin
 		state <= Multiplication;
 		Rd_BRAM <= 1;
 		SRAM_read_req <= 0;
+		PE_enable_reg <=0;
 
 	end
 	else
@@ -184,6 +185,7 @@ begin
 		Rd_BRAM <= 0;
 		SRAM_read_req <= 0;
 		neuron_done_reg <= 0;
+		PE_enable_reg <= 0;
 	end
 end
 
@@ -203,7 +205,10 @@ begin
 		Weight_data <= 16'h000 + counter_SRAM_read_req; //SDRAM_FIFO[FIFO_read_index];
 		state <= Multiplication;
 		neuron_done_reg <= 0;
-		PE_enable_reg <= 1;
+		if (counter_SRAM_read_req ==16)
+			PE_enable_reg <= 0;
+		else
+			PE_enable_reg <= 1;
 	end
 	else
 	begin 
@@ -214,7 +219,7 @@ begin
 		state <= Addition;
 		InAddress <= InAddress + 16;	
 		neuron_done_reg <= 0;
-		PE_enable_reg <= 1;
+		PE_enable_reg <= 0;
 	end
 end
 

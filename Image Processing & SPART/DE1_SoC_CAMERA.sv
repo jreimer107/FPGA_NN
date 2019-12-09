@@ -575,15 +575,15 @@ Sdram_Control u7 (
 
 			//	FIFO Read Side 1
 			.RD1_DATA(Read_txDATA),
-			.RD1(start_rd),//.RD1(sdram_rd_req && (rd_cnt % rd1_length == 0)),//.RD1(start_rd),//.RD1(sdram_rd_req),//.RD1(flop_rd_req),//
+			.RD1(start_rd),//.RD1(sdram_rd_req && (rd_cnt % rd1_length == 0)),//.RD1(start_rd),//.RD1(sdram_rd_req),//.RD1(flop_rd_req),//  Read request from accelerator
 			.RD1_ADDR(0),//.RD1_ADDR(rd_addr),//
 			.RD1_MAX_ADDR(max_addr),//.RD1_MAX_ADDR(max_addr),//
 			.RD1_LENGTH(rd1_length),
 			.RD1_LOAD(!DLY_RST_0),
 			.RD1_CLK(~CLOCK_50),
 
-			.read_buffer(rd_buf),
-			.read_done(rd_done),
+			.read_buffer(rd_buf), // Actual data
+			.read_done(rd_done), //DVAL
 			.read_count(rd_num),
 /*
 			.FIFO_DONE(),
