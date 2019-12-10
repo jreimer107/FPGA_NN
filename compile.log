@@ -1,0 +1,2125 @@
+
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+
+                 Version P-2019.03 for linux64 - Feb 27, 2019 
+
+                    Copyright (c) 1988 - 2019 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+            or distribution of this software is strictly prohibited.
+Initializing...
+Initializing gui preferences from file  /filespace/j/jreimer2/.synopsys_dv_prefs.tcl
+#read in files
+#top level
+read_file -format sverilog FPGA_NN.sv
+Loading db file '/cae/apps/data/tsmclibs-2013/digital/Front_End/timing_power_noise/NLDM/tcbn40lpbwp_120b/tcbn40lpbwptc.db'
+Loading db file '/cae/apps/data/tsmclibs-2013/digital/Front_End/timing_power_noise/NLDM/tpfn45gsgv18_120a/tpfn45gsgv18tc.db'
+Loading db file '/cae/apps/data/synopsys-2019/syn/P-2019.03/libraries/syn/gtech.db'
+Loading db file '/cae/apps/data/synopsys-2019/syn/P-2019.03/libraries/syn/standard.sldb'
+  Loading link library 'tcbn40lpbwptc'
+  Loading link library 'tpfn45gsgv18tc'
+  Loading link library 'gtech'
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/FPGA_NN.sv
+
+Inferred memory devices in process
+	in routine FPGA_NN line 185 in file
+		'/filespace/j/jreimer2/FPGA_NN/FPGA_NN.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    key_last_reg     | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|   pc_advance_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|   seg7_output_reg   | Flip-flop |  24   |  Y  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred tri-state devices in process
+	in routine FPGA_NN line 172 in file
+		'/filespace/j/jreimer2/FPGA_NN/FPGA_NN.sv'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+|  databus_tri  | Tri-State Buffer |  16   |
+============================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'FPGA_NN'.
+FPGA_NN
+# Image proc
+read_file -format sverilog Image_Processing_SPART/IPSM.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/IPSM.sv
+
+Inferred memory devices in process
+	in routine IPSM line 110 in file
+		'/filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/IPSM.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    rCCD_DATA_reg    | Flip-flop |  12   |  Y  | N  | N  | N  | N  | N  | N  |
+|    rCCD_LVAL_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    rCCD_FVAL_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'IPSM'.
+IPSM
+read_file -format sverilog Image_Processing_SPART/Img_Proc_FSM.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/Img_Proc_FSM.sv
+Warning:  /filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/Img_Proc_FSM.sv:53: DEFAULT branch of CASE statement cannot be reached. (ELAB-311)
+
+Statistics for case statements in always block at line 40 in file
+	'/filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/Img_Proc_FSM.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            53            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine Img_Proc_FSM line 20 in file
+		'/filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/Img_Proc_FSM.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    FVAL_buf_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine Img_Proc_FSM line 40 in file
+		'/filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/Img_Proc_FSM.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    ccd_start_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    ccd_done_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     pixels_reg      | Flip-flop |  256  |  Y  | N  | Y  | N  | N  | N  | N  |
+|      state_reg      | Flip-flop |   2   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    dmem_wren_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    dmem_addr_reg    | Flip-flop |   7   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     pxl_cnt_reg     | Flip-flop |  10   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   state_flag_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'Img_Proc_FSM'.
+Img_Proc_FSM
+read_file -format verilog Image_Processing_SPART/RAW2GRAY.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/RAW2GRAY.v
+
+Inferred memory devices in process
+	in routine RAW2GRAY line 79 in file
+		'/filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/RAW2GRAY.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|     mCCD_B_reg      | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     mCCD_R_reg      | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    mDATAd_0_reg     | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      mDVAL_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       oY_reg        | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|       oX_reg        | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    mDATAd_1_reg     | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     mCCD_G_reg      | Flip-flop |  13   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'RAW2GRAY'.
+RAW2GRAY
+read_file -format sverilog Image_Processing_SPART/CropDown.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/CropDown.sv
+
+Inferred memory devices in process
+	in routine CropDown line 23 in file
+		'/filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/CropDown.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|       oY_reg        | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      oDATA_reg      | Flip-flop |   8   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      oDVAL_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       oX_reg        | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'CropDown'.
+CropDown
+#Standard image proc
+read_file -format verilog Quartus_project/v/CCD_Capture.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/CCD_Capture.v
+Warning:  /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/CCD_Capture.v:124: signed to unsigned conversion occurs. (VER-318)
+Warning:  /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/CCD_Capture.v:185: signed to unsigned assignment occurs. (VER-318)
+
+Inferred memory devices in process
+	in routine CCD_Capture line 88 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/CCD_Capture.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|     mSTART_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine CCD_Capture line 101 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/CCD_Capture.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|     Y_Cont_reg      | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     X_Cont_reg      | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    mCCD_FVAL_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    Pre_FVAL_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    mCCD_LVAL_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine CCD_Capture line 141 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/CCD_Capture.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   Frame_Cont_reg    | Flip-flop |  32   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine CCD_Capture line 152 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/CCD_Capture.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    mCCD_DATA_reg    | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'CCD_Capture'.
+CCD_Capture
+read_file -format verilog Quartus_project/v/SEG7_LUT_6.v
+Detecting input file type automatically (-rtl or -netlist).
+Running DC verilog reader
+Performing 'read' command.
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/SEG7_LUT_6.v
+Reading with netlist reader (equivalent to -netlist option).
+Verilog netlist reader completed successfully.
+Loaded 1 design.
+Current design is 'SEG7_LUT_6'.
+SEG7_LUT_6
+read_file -format verilog Quartus_project/v/SEG7_LUT.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/SEG7_LUT.v
+
+Statistics for case statements in always block at line 48 in file
+	'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/SEG7_LUT.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            50            |    auto/auto     |
+===============================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'SEG7_LUT'.
+SEG7_LUT
+read_file -format verilog Quartus_project/v/I2C_CCD_Config.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v
+Warning:  /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v:126: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v:127: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v:154: signed to unsigned assignment occurs. (VER-318)
+Warning:  /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v:178: signed to unsigned conversion occurs. (VER-318)
+
+Statistics for case statements in always block at line 200 in file
+	'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           212            |     no/auto      |
+===============================================
+
+Statistics for case statements in always block at line 237 in file
+	'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           239            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine I2C_CCD_Config line 114 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'.
+===================================================================================
+|      Register Name      |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===================================================================================
+| iexposure_adj_delay_reg | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+===================================================================================
+
+Inferred memory devices in process
+	in routine I2C_CCD_Config line 130 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+| senosr_exposure_reg | Flip-flop |  11   |  Y  | N  | Y  | N  | N  | N  | N  |
+| senosr_exposure_reg | Flip-flop |   5   |  Y  | N  | N  | Y  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine I2C_CCD_Config line 144 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    combo_cnt_reg    | Flip-flop |  25   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine I2C_CCD_Config line 169 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  mI2C_CLK_DIV_reg   | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  mI2C_CTRL_CLK_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine I2C_CCD_Config line 200 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    mSetup_ST_reg    | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    LUT_INDEX_reg    | Flip-flop |   6   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    mI2C_DATA_reg    | Flip-flop |  32   |  Y  | N  | N  | N  | N  | N  | N  |
+|     mI2C_GO_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine I2C_CCD_Config line 237 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_CCD_Config.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    LUT_DATA_reg     | Flip-flop |  24   |  Y  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'I2C_CCD_Config'.
+I2C_CCD_Config
+read_file -format verilog Quartus_project/v/I2C_Controller.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_Controller.v
+
+Statistics for case statements in always block at line 88 in file
+	'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_Controller.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            91            |     no/auto      |
+===============================================
+
+Inferred memory devices in process
+	in routine I2C_Controller line 77 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_Controller.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   SD_COUNTER_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   SD_COUNTER_reg    | Flip-flop |   6   |  Y  | N  | N  | Y  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine I2C_Controller line 88 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_Controller.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|      ACK1_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      ACK2_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      ACK3_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       END_reg       | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|      ACK4_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       SD_reg        | Flip-flop |  32   |  Y  | N  | N  | N  | N  | N  | N  |
+|      SCLK_reg       | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|       SDO_reg       | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+===============================================================================
+
+Inferred tri-state devices in process
+	in routine I2C_Controller line 71 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/I2C_Controller.v'.
+============================================
+| Register Name |       Type       | Width |
+============================================
+| I2C_SDAT_tri  | Tri-State Buffer |   1   |
+============================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'I2C_Controller'.
+I2C_Controller
+read_file -format verilog Quartus_project/v/sdram_pll.v
+Detecting input file type automatically (-rtl or -netlist).
+Running DC verilog reader
+Performing 'read' command.
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/sdram_pll.v
+Reading with netlist reader (equivalent to -netlist option).
+Verilog netlist reader completed successfully.
+Loaded 1 design.
+Current design is 'sdram_pll'.
+sdram_pll
+read_file -format verilog Quartus_project/v/Reset_Delay.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/Quartus_project/v/Reset_Delay.v
+
+Inferred memory devices in process
+	in routine Reset_Delay line 54 in file
+		'/filespace/j/jreimer2/FPGA_NN/Quartus_project/v/Reset_Delay.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|     oRST_3_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     oRST_4_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      Cont_reg       | Flip-flop |  32   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     oRST_0_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     oRST_1_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     oRST_2_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'Reset_Delay'.
+Reset_Delay
+#CPU
+read_file -format sverilog CPU/ADDSUB.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/ADDSUB.sv
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'ADDSUB'.
+ADDSUB
+read_file -format sverilog CPU/ALU.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/ALU.sv
+
+Statistics for case statements in always block at line 18 in file
+	'/filespace/j/jreimer2/FPGA_NN/CPU/ALU.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            20            |    auto/auto     |
+===============================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'ALU'.
+ALU
+read_file -format verilog CPU/CCodeEval.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/CCodeEval.v
+Warning:  /filespace/j/jreimer2/FPGA_NN/CPU/CCodeEval.v:34: DEFAULT branch of CASE statement cannot be reached. (ELAB-311)
+
+Statistics for case statements in always block at line 32 in file
+	'/filespace/j/jreimer2/FPGA_NN/CPU/CCodeEval.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            34            |    auto/auto     |
+===============================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'CCodeEval'.
+CCodeEval
+read_file -format sverilog CPU/cpu.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/cpu.sv
+
+Inferred memory devices in process
+	in routine cpu line 174 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/cpu.sv'.
+==================================================================================
+|     Register Name      |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+==================================================================================
+|   wb_dest_delay_reg    | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+| mem_memtoreg_delay_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+==================================================================================
+
+Inferred memory devices in process
+	in routine cpu line 201 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/cpu.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|      halt_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine cpu line 217 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/cpu.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    accel_en_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'cpu'.
+cpu
+read_file -format sverilog CPU/execute.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/execute.sv
+
+Inferred memory devices in process
+	in routine execute line 79 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/execute.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|      oHalt_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oAlutoReg_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oMemtoReg_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oBustoReg_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oMemRead_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oMemWrite_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     oAluOut_reg     | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     oData2_reg      | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      oDest_reg      | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    oBusWrite_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oBusAddr_reg     | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'execute'.
+execute
+read_file -format sverilog CPU/fetchdecode.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/fetchdecode.sv
+
+Statistics for case statements in always block at line 148 in file
+	'/filespace/j/jreimer2/FPGA_NN/CPU/fetchdecode.sv'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           171            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine fetchdecode line 119 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/fetchdecode.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|       PC_reg        | Flip-flop |  16   |  Y  | N  | N  | Y  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine fetchdecode line 127 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/fetchdecode.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|      oSr2_reg       | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      oImm_reg       | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     oData1_reg      | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     oData2_reg      | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     oOpcode_reg     | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      oSr1_reg       | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine fetchdecode line 148 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/fetchdecode.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|     oALUSrc_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oAlutoReg_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oMemtoReg_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oBustoReg_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| oWriteBackAddr_reg  | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    oBusWrite_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oMemRead_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    oMemWrite_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine fetchdecode line 179 in file
+		'/filespace/j/jreimer2/FPGA_NN/CPU/fetchdecode.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    registers_reg    | Flip-flop |  256  |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Statistics for MUX_OPs
+======================================================
+| block name/line  | Inputs | Outputs | # sel inputs |
+======================================================
+| fetchdecode/142  |   16   |   16    |      4       |
+| fetchdecode/143  |   16   |   16    |      4       |
+| fetchdecode/143  |   16   |   16    |      4       |
+| fetchdecode/199  |   16   |   16    |      4       |
+======================================================
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'fetchdecode'.
+fetchdecode
+read_file -format verilog CPU/flag_reg.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/flag_reg.v
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'flag_reg'.
+flag_reg
+read_file -format sverilog CPU/ForwardingUnit.sv
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/ForwardingUnit.sv
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'ForwardingUnit'.
+ForwardingUnit
+read_file -format verilog CPU/ram.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/ram.v
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'ram'.
+ram
+read_file -format verilog CPU/rom.v
+Detecting input file type automatically (-rtl or -netlist).
+Reading with Presto HDL Compiler (equivalent to -rtl option).
+Running PRESTO HDLC
+Compiling source file /filespace/j/jreimer2/FPGA_NN/CPU/rom.v
+Presto compilation completed successfully.
+Loaded 1 design.
+Current design is 'rom'.
+rom
+#set current design to top level
+set current_design FPGA_NN
+FPGA_NN
+#Create and constrain clock
+create_clock -name "CLOCK_50" -period 20 -waveform {0 1} {CLOCK_50}
+Information: Building the design 'altsyncram' instantiated from design 'ram' with
+	the parameters "address_reg_b="CLOCK0",clock_enable_input_a="BYPASS",clock_enable_input_b="BYPASS",clock_enable_output_a="BYPASS",clock_enable_output_b="BYPASS",indata_reg_b="CLOCK0",init_file="C:/Users/ECE_STUDENT/Documents/FPGA_NN/Cpu_Acc_Interface/config.mif",init_file_layout="PORT_A",intended_device_family="Cyclone V",lpm_type="altsyncram",numwords_a=2048,numwords_b=128,operation_mode="BIDIR_DUAL_PORT",outdata_aclr_a="NONE",outdata_aclr_b="NONE",outdata_reg_a="UNREGISTERED",outdata_reg_b="UNREGISTERED",power_up_uninitialized="FALSE",read_during_write_mode_mixed_ports="DONT_CARE",read_during_write_mode_port_a="NEW_DATA_NO_NBE_READ",read_during_write_mode_port_b="NEW_DATA_NO_NBE_READ",widthad_a=11,widthad_b=7,width_a=16,width_b=256,width_byteena_a=1,width_byteena_b=1,wrcontrol_wraddress_reg_b="CLOCK0"". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Information: Building the design 'sdram_pll_0002'. (HDL-193)
+Warning: Cannot find the design 'sdram_pll_0002' in the library 'WORK'. (LBR-1)
+Information: Building the design 'Line_Buffer1'. (HDL-193)
+Warning: Cannot find the design 'Line_Buffer1' in the library 'WORK'. (LBR-1)
+Information: Building the design 'FLAG'. (HDL-193)
+Warning: Cannot find the design 'FLAG' in the library 'WORK'. (LBR-1)
+Information: Building the design 'altsyncram' instantiated from design 'rom' with
+	the parameters "address_aclr_a="NONE",clock_enable_input_a="BYPASS",clock_enable_output_a="BYPASS",init_file="C:/Users/ECE_STUDENT/Desktop/FPGA_NN/Image_Processing_SPART/TB/instructions.mif",intended_device_family="Cyclone V",lpm_hint="ENABLE_RUNTIME_MOD=NO",lpm_type="altsyncram",numwords_a=256,operation_mode="ROM",outdata_aclr_a="NONE",outdata_reg_a="UNREGISTERED",widthad_a=8,width_a=24,width_byteena_a=1". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'altsyncram' in 'ram'. (LINK-5)
+Warning: Unable to resolve reference 'sdram_pll_0002' in 'sdram_pll'. (LINK-5)
+Warning: Unable to resolve reference 'Line_Buffer1' in 'RAW2GRAY'. (LINK-5)
+Warning: Unable to resolve reference 'FLAG' in 'execute'. (LINK-5)
+Warning: Unable to resolve reference 'altsyncram' in 'rom'. (LINK-5)
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+create_clock -name "CLOCK2_50" -period 20 -waveform {0 1} {CLOCK2_50}
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+create_clock -name "CLOCK3_50" -period 20 -waveform {0 1} {CLOCK3_50}
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+create_clock -name "CLOCK4_50" -period 20 -waveform {0 1} {CLOCK4_50}
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+#set_dont_touch_network [[find port CLOCK_50] [find port CLOCK2_50] [find port CLOCK3_50] [find port CLOCK4_50]]
+set_dont_touch_network [all_clocks]
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+#Set input timings
+set prim_inputs [remove_from_collection [all_inputs] [all_clocks]]
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+{CLOCK2_50 CLOCK3_50 CLOCK4_50 CLOCK_50 DRAM_DQ[15] DRAM_DQ[14] DRAM_DQ[13] DRAM_DQ[12] DRAM_DQ[11] DRAM_DQ[10] DRAM_DQ[9] DRAM_DQ[8] DRAM_DQ[7] DRAM_DQ[6] DRAM_DQ[5] DRAM_DQ[4] DRAM_DQ[3] DRAM_DQ[2] DRAM_DQ[1] DRAM_DQ[0] GPIO_0[35] GPIO_0[34] GPIO_0[33] GPIO_0[32] GPIO_0[31] GPIO_0[30] GPIO_0[29] GPIO_0[28] GPIO_0[27] GPIO_0[26] GPIO_0[25] GPIO_0[24] GPIO_0[23] GPIO_0[22] GPIO_0[21] GPIO_0[20] GPIO_0[19] GPIO_0[18] GPIO_0[17] GPIO_0[16] GPIO_0[15] GPIO_0[14] GPIO_0[13] GPIO_0[12] GPIO_0[11] GPIO_0[10] GPIO_0[9] GPIO_0[8] GPIO_0[7] GPIO_0[6] GPIO_0[5] GPIO_0[4] GPIO_0[3] GPIO_0[2] GPIO_0[1] GPIO_0[0] D5M_D[11] D5M_D[10] D5M_D[9] D5M_D[8] D5M_D[7] D5M_D[6] D5M_D[5] D5M_D[4] D5M_D[3] D5M_D[2] D5M_D[1] D5M_D[0] D5M_FVAL D5M_LVAL D5M_PIXLCLK D5M_SDATA D5M_STROBE KEY[3] KEY[2] KEY[1] KEY[0] SW[9] SW[8] SW[7] SW[6] SW[5] SW[4] SW[3] SW[2] SW[1] SW[0]}
+set_input_delay -clock CLOCK_50 0.25 $prim_inputs
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Set input drives
+set_driving_cell -lib_cell ND2D2BWP -from_pin A1 -library tcbn40lpbwptc $prim_inputs
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+1
+set_drive 0.1 KEY
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+# Set outpt delays
+set_output_delay -clock CLOCK_50 0.5 [all_outputs]
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+set_load 0.1 [all_outputs]
+1
+link
+
+  Linking design 'FPGA_NN'
+  Using the following designs and libraries:
+  --------------------------------------------------------------------------
+  FPGA_NN                     /filespace/j/jreimer2/FPGA_NN/FPGA_NN.db
+  tcbn40lpbwptc (library)     /cae/apps/data/tsmclibs-2013/digital/Front_End/timing_power_noise/NLDM/tcbn40lpbwp_120b/tcbn40lpbwptc.db
+  tpfn45gsgv18tc (library)    /cae/apps/data/tsmclibs-2013/digital/Front_End/timing_power_noise/NLDM/tpfn45gsgv18_120a/tpfn45gsgv18tc.db
+  * (21 designs)              /filespace/j/jreimer2/FPGA_NN/Image_Processing_SPART/IPSM.db, etc
+
+Information: Building the design 'altsyncram' instantiated from design 'ram' with
+	the parameters "address_reg_b="CLOCK0",clock_enable_input_a="BYPASS",clock_enable_input_b="BYPASS",clock_enable_output_a="BYPASS",clock_enable_output_b="BYPASS",indata_reg_b="CLOCK0",init_file="C:/Users/ECE_STUDENT/Documents/FPGA_NN/Cpu_Acc_Interface/config.mif",init_file_layout="PORT_A",intended_device_family="Cyclone V",lpm_type="altsyncram",numwords_a=2048,numwords_b=128,operation_mode="BIDIR_DUAL_PORT",outdata_aclr_a="NONE",outdata_aclr_b="NONE",outdata_reg_a="UNREGISTERED",outdata_reg_b="UNREGISTERED",power_up_uninitialized="FALSE",read_during_write_mode_mixed_ports="DONT_CARE",read_during_write_mode_port_a="NEW_DATA_NO_NBE_READ",read_during_write_mode_port_b="NEW_DATA_NO_NBE_READ",widthad_a=11,widthad_b=7,width_a=16,width_b=256,width_byteena_a=1,width_byteena_b=1,wrcontrol_wraddress_reg_b="CLOCK0"". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Information: Building the design 'sdram_pll_0002'. (HDL-193)
+Warning: Cannot find the design 'sdram_pll_0002' in the library 'WORK'. (LBR-1)
+Information: Building the design 'Line_Buffer1'. (HDL-193)
+Warning: Cannot find the design 'Line_Buffer1' in the library 'WORK'. (LBR-1)
+Information: Building the design 'FLAG'. (HDL-193)
+Warning: Cannot find the design 'FLAG' in the library 'WORK'. (LBR-1)
+Information: Building the design 'altsyncram' instantiated from design 'rom' with
+	the parameters "address_aclr_a="NONE",clock_enable_input_a="BYPASS",clock_enable_output_a="BYPASS",init_file="C:/Users/ECE_STUDENT/Desktop/FPGA_NN/Image_Processing_SPART/TB/instructions.mif",intended_device_family="Cyclone V",lpm_hint="ENABLE_RUNTIME_MOD=NO",lpm_type="altsyncram",numwords_a=256,operation_mode="ROM",outdata_aclr_a="NONE",outdata_reg_a="UNREGISTERED",widthad_a=8,width_a=24,width_byteena_a=1". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'altsyncram' in 'ram'. (LINK-5)
+Warning: Unable to resolve reference 'sdram_pll_0002' in 'sdram_pll'. (LINK-5)
+Warning: Unable to resolve reference 'Line_Buffer1' in 'RAW2GRAY'. (LINK-5)
+Warning: Unable to resolve reference 'FLAG' in 'execute'. (LINK-5)
+Warning: Unable to resolve reference 'altsyncram' in 'rom'. (LINK-5)
+0
+#initial compile
+compile -map_effort medium
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Setting attribute 'fix_multiple_port_nets' on design 'FPGA_NN'. (UIO-59)
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | P-2019.03-DWBB_201903.0 |     *     |
+| Licensed DW Building Blocks        |                         |           |
+============================================================================
+
+
+Information: There are 921 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+
+Warning: IO pad 'PVSS3DGZ' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVSS2DGZ' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVSS2ANA' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVSS1DGZ' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVSS1ANA' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVDD2POC' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVDD2DGZ' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVDD2ANA' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVDD1DGZ' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PVDD1ANA' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PCLAMP2ANA' is unusable: unknown logic function.  (OPT-1022)
+Warning: IO pad 'PCLAMP1ANA' is unusable: unknown logic function.  (OPT-1022)
+Warning: Operating condition NCCOM set on design FPGA_NN has different process,
+voltage and temperatures parameters than the parameters at which target library 
+tpfn45gsgv18tc is characterized. Delays may be inaccurate as a result. (OPT-998)
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'sdram_pll'
+Warning: The trip points for the library named tpfn45gsgv18tc differ from those in the library named tcbn40lpbwptc. (TIM-164)
+  Processing 'ram'
+  Processing 'ForwardingUnit'
+  Processing 'ADDSUB'
+  Processing 'ALU'
+  Processing 'execute'
+Warning: Cell 'U6/U1' (*GEN*50) cannot be exactly translated 1 for 1 into target library.  Ignoring set_compile_directives. (TRANS-9)
+  Processing 'rom'
+  Processing 'CCodeEval'
+  Processing 'fetchdecode'
+Information: The register 'registers_reg[0][15]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][14]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][13]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][12]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][11]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][10]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][9]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][8]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][7]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][6]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][5]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][4]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][3]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][1]' is a constant and will be removed. (OPT-1206)
+Information: The register 'registers_reg[0][0]' is a constant and will be removed. (OPT-1206)
+  Processing 'cpu'
+  Processing 'SEG7_LUT_0'
+  Processing 'SEG7_LUT_6'
+  Processing 'I2C_Controller'
+  Processing 'I2C_CCD_Config'
+Information: The register 'mSetup_ST_reg[3]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mSetup_ST_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[31]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[30]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[29]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[28]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[27]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[26]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[25]' is a constant and will be removed. (OPT-1206)
+Information: The register 'mI2C_DATA_reg[24]' is a constant and will be removed. (OPT-1206)
+  Processing 'Img_Proc_FSM'
+  Processing 'CropDown'
+  Processing 'RAW2GRAY'
+  Processing 'CCD_Capture'
+  Processing 'Reset_Delay'
+  Processing 'IPSM'
+  Processing 'FPGA_NN'
+Information: Building the design 'altsyncram' instantiated from design 'ram' with
+	the parameters "address_reg_b="CLOCK0",clock_enable_input_a="BYPASS",clock_enable_input_b="BYPASS",clock_enable_output_a="BYPASS",clock_enable_output_b="BYPASS",indata_reg_b="CLOCK0",init_file="C:/Users/ECE_STUDENT/Documents/FPGA_NN/Cpu_Acc_Interface/config.mif",init_file_layout="PORT_A",intended_device_family="Cyclone V",lpm_type="altsyncram",numwords_a=2048,numwords_b=128,operation_mode="BIDIR_DUAL_PORT",outdata_aclr_a="NONE",outdata_aclr_b="NONE",outdata_reg_a="UNREGISTERED",outdata_reg_b="UNREGISTERED",power_up_uninitialized="FALSE",read_during_write_mode_mixed_ports="DONT_CARE",read_during_write_mode_port_a="NEW_DATA_NO_NBE_READ",read_during_write_mode_port_b="NEW_DATA_NO_NBE_READ",widthad_a=11,widthad_b=7,width_a=16,width_b=256,width_byteena_a=1,width_byteena_b=1,wrcontrol_wraddress_reg_b="CLOCK0"". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Information: Building the design 'sdram_pll_0002'. (HDL-193)
+Warning: Cannot find the design 'sdram_pll_0002' in the library 'WORK'. (LBR-1)
+Information: Building the design 'Line_Buffer1'. (HDL-193)
+Warning: Cannot find the design 'Line_Buffer1' in the library 'WORK'. (LBR-1)
+Information: Building the design 'FLAG'. (HDL-193)
+Warning: Cannot find the design 'FLAG' in the library 'WORK'. (LBR-1)
+Information: Building the design 'altsyncram' instantiated from design 'rom' with
+	the parameters "address_aclr_a="NONE",clock_enable_input_a="BYPASS",clock_enable_output_a="BYPASS",init_file="C:/Users/ECE_STUDENT/Desktop/FPGA_NN/Image_Processing_SPART/TB/instructions.mif",intended_device_family="Cyclone V",lpm_hint="ENABLE_RUNTIME_MOD=NO",lpm_type="altsyncram",numwords_a=256,operation_mode="ROM",outdata_aclr_a="NONE",outdata_reg_a="UNREGISTERED",widthad_a=8,width_a=24,width_byteena_a=1". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'altsyncram' in 'ram'. (LINK-5)
+Warning: Unable to resolve reference 'sdram_pll_0002' in 'sdram_pll'. (LINK-5)
+Warning: Unable to resolve reference 'Line_Buffer1' in 'RAW2GRAY'. (LINK-5)
+Warning: Unable to resolve reference 'FLAG' in 'execute'. (LINK-5)
+Warning: Unable to resolve reference 'altsyncram' in 'rom'. (LINK-5)
+Warning: Design 'FPGA_NN' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Warning: Clock port 'CLOCK2_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK2_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK3_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK3_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK4_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK4_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+
+  Beginning Implementation Selection
+  ----------------------------------
+  Processing 'ALU_DW01_sub_0'
+  Processing 'ALU_DW_rash_0'
+  Processing 'ALU_DW01_ash_0'
+  Processing 'ADDSUB_DW01_add_0'
+  Processing 'fetchdecode_DW01_inc_0'
+  Processing 'fetchdecode_DW01_add_0'
+  Processing 'I2C_CCD_Config_DW01_inc_0'
+  Processing 'I2C_CCD_Config_DW01_cmp2_0'
+  Processing 'I2C_CCD_Config_DW01_inc_1'
+  Processing 'I2C_CCD_Config_DW01_cmp2_1'
+  Processing 'I2C_CCD_Config_DW01_inc_2'
+  Processing 'I2C_CCD_Config_DW01_add_0'
+  Processing 'I2C_CCD_Config_DW01_sub_0'
+  Processing 'I2C_Controller_DW01_inc_0'
+  Processing 'I2C_Controller_DW01_cmp2_0'
+  Processing 'I2C_Controller_DW01_cmp2_1'
+  Processing 'Img_Proc_FSM_DW01_inc_0'
+  Processing 'Img_Proc_FSM_DW01_inc_1'
+  Processing 'Img_Proc_FSM_DW01_inc_2'
+  Processing 'CropDown_DW_div_uns_0'
+  Processing 'CropDown_DW01_sub_0'
+  Processing 'CropDown_DW01_cmp2_0'
+  Processing 'CropDown_DW01_cmp2_1'
+  Processing 'CropDown_DW01_cmp2_2'
+  Processing 'CropDown_DW01_cmp2_3'
+  Processing 'RAW2GRAY_DW01_add_0'
+  Processing 'RAW2GRAY_DW01_add_1'
+  Processing 'CCD_Capture_DW01_inc_0'
+  Processing 'CCD_Capture_DW01_inc_1'
+  Processing 'CCD_Capture_DW01_inc_2'
+  Processing 'CCD_Capture_DW01_cmp2_0'
+  Processing 'Reset_Delay_DW01_cmp2_0'
+  Processing 'Reset_Delay_DW01_cmp2_1'
+  Processing 'Reset_Delay_DW01_cmp2_2'
+  Processing 'Reset_Delay_DW01_cmp2_3'
+  Processing 'Reset_Delay_DW01_cmp2_4'
+  Processing 'Reset_Delay_DW01_inc_0'
+Warning: Clock port 'CLOCK2_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK2_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK3_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK3_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK4_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK4_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+  Processing 'RAW2GRAY_DW01_add_2'
+  Processing 'RAW2GRAY_DW01_add_3'
+Warning: Clock port 'CLOCK2_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK2_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK3_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK3_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK4_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+Warning: Clock port 'CLOCK4_50' is assigned input delay relative to clock 'CLOCK_50'. (TIM-111)
+
+  Beginning Mapping Optimizations  (Medium effort)
+  -------------------------------
+  Mapping Optimization (Phase 1)
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:09   11139.8      0.00       0.0      44.6                          
+    0:00:09   11139.8      0.00       0.0      44.6                          
+    0:00:09   11139.8      0.00       0.0      44.6                          
+    0:00:10   11139.8      0.00       0.0      44.6                          
+    0:00:10   11139.8      0.00       0.0      44.6                          
+    0:00:11    9258.2      0.00       0.0      44.5                          
+    0:00:11    9255.9      0.00       0.0      44.5                          
+    0:00:11    9255.9      0.00       0.0      42.1                          
+    0:00:11    9255.9      0.00       0.0      42.1                          
+    0:00:11    9255.9      0.00       0.0      42.1                          
+    0:00:11    9255.9      0.00       0.0      42.1                          
+    0:00:11    9255.9      0.00       0.0      42.1                          
+    0:00:11    9262.2      0.00       0.0      28.5                          
+    0:00:11    9256.9      0.00       0.0      27.4                          
+    0:00:11    9256.9      0.00       0.0      27.4                          
+    0:00:11    9256.9      0.00       0.0      27.4                          
+    0:00:11    9256.9      0.00       0.0      27.4                          
+
+
+
+  Beginning Delay Optimization Phase
+  ----------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:11    9256.9      0.00       0.0      27.4                          
+    0:00:11    9256.9      0.00       0.0      27.4                          
+    0:00:12    9253.9      0.00       0.0      31.7                          
+
+
+  Beginning Design Rule Fixing  (max_transition)  (max_capacitance)
+  ----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:12    9253.9      0.00       0.0      31.7                          
+    0:00:12    9299.8      0.00       0.0       0.3                          
+
+
+  Beginning Area-Recovery Phase  (cleanup)
+  -----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:12    9299.8      0.00       0.0       0.3                          
+    0:00:12    9299.8      0.00       0.0       0.3                          
+    0:00:12    9270.9      0.00       0.0       0.3                          
+    0:00:12    9265.1      0.00       0.0       0.3                          
+    0:00:12    9265.1      0.00       0.0       0.3                          
+    0:00:12    9265.1      0.00       0.0       0.3                          
+    0:00:12    9265.1      0.00       0.0       0.3                          
+    0:00:12    9265.1      0.00       0.0       0.3                          
+    0:00:12    9250.6      0.00       0.0       0.3                          
+    0:00:12    9250.6      0.00       0.0       0.3                          
+    0:00:12    9250.6      0.00       0.0       0.3                          
+    0:00:12    9250.6      0.00       0.0       0.3                          
+    0:00:12    9250.6      0.00       0.0       0.3                          
+    0:00:12    9250.6      0.00       0.0       0.3                          
+    0:00:12    9243.7      0.00       0.0       0.3                          
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+1
+check_design
+Information: Building the design 'altsyncram' instantiated from design 'ram' with
+	the parameters "address_reg_b="CLOCK0",clock_enable_input_a="BYPASS",clock_enable_input_b="BYPASS",clock_enable_output_a="BYPASS",clock_enable_output_b="BYPASS",indata_reg_b="CLOCK0",init_file="C:/Users/ECE_STUDENT/Documents/FPGA_NN/Cpu_Acc_Interface/config.mif",init_file_layout="PORT_A",intended_device_family="Cyclone V",lpm_type="altsyncram",numwords_a=2048,numwords_b=128,operation_mode="BIDIR_DUAL_PORT",outdata_aclr_a="NONE",outdata_aclr_b="NONE",outdata_reg_a="UNREGISTERED",outdata_reg_b="UNREGISTERED",power_up_uninitialized="FALSE",read_during_write_mode_mixed_ports="DONT_CARE",read_during_write_mode_port_a="NEW_DATA_NO_NBE_READ",read_during_write_mode_port_b="NEW_DATA_NO_NBE_READ",widthad_a=11,widthad_b=7,width_a=16,width_b=256,width_byteena_a=1,width_byteena_b=1,wrcontrol_wraddress_reg_b="CLOCK0"". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Information: Building the design 'sdram_pll_0002'. (HDL-193)
+Warning: Cannot find the design 'sdram_pll_0002' in the library 'WORK'. (LBR-1)
+Information: Building the design 'Line_Buffer1'. (HDL-193)
+Warning: Cannot find the design 'Line_Buffer1' in the library 'WORK'. (LBR-1)
+Information: Building the design 'FLAG'. (HDL-193)
+Warning: Cannot find the design 'FLAG' in the library 'WORK'. (LBR-1)
+Information: Building the design 'altsyncram' instantiated from design 'rom' with
+	the parameters "address_aclr_a="NONE",clock_enable_input_a="BYPASS",clock_enable_output_a="BYPASS",init_file="C:/Users/ECE_STUDENT/Desktop/FPGA_NN/Image_Processing_SPART/TB/instructions.mif",intended_device_family="Cyclone V",lpm_hint="ENABLE_RUNTIME_MOD=NO",lpm_type="altsyncram",numwords_a=256,operation_mode="ROM",outdata_aclr_a="NONE",outdata_reg_a="UNREGISTERED",widthad_a=8,width_a=24,width_byteena_a=1". (HDL-193)
+Warning: Cannot find the design 'altsyncram' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'altsyncram' in 'ram'. (LINK-5)
+Warning: Unable to resolve reference 'sdram_pll_0002' in 'sdram_pll'. (LINK-5)
+Warning: Unable to resolve reference 'Line_Buffer1' in 'RAW2GRAY'. (LINK-5)
+Warning: Unable to resolve reference 'FLAG' in 'execute'. (LINK-5)
+Warning: Unable to resolve reference 'altsyncram' in 'rom'. (LINK-5)
+ 
+****************************************
+check_design summary:
+Version:     P-2019.03
+Date:        Mon Dec  9 16:00:18 2019
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                    532
+    Undriven outputs (LINT-5)                                       4
+    Multiply driven inputs (LINT-6)                               323
+    Unloaded inputs (LINT-8)                                       21
+    Unconnected ports (LINT-28)                                   182
+    Constant outputs (LINT-52)                                      2
+
+Cells                                                              11
+    Nets connected to multiple pins on same cell (LINT-33)         11
+
+Nets                                                               30
+    Unloaded nets (LINT-2)                                         21
+    Undriven nets (LINT-3)                                          4
+    Multiply driven net with constant driver (LINT-54)              5
+
+Tristate                                                          341
+    A tristate bus has a non tri-state driver (LINT-34)           340
+    Single tristate driver drives an input pin (LINT-63)            1
+--------------------------------------------------------------------------------
+
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[10]' driven by pin 'image_proc/u5/rem_21/a[10]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[11]' driven by pin 'image_proc/u5/rem_21/a[11]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[12]' driven by pin 'image_proc/u5/rem_21/a[12]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[13]' driven by pin 'image_proc/u5/rem_21/a[13]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[14]' driven by pin 'image_proc/u5/rem_21/a[14]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[15]' driven by pin 'image_proc/u5/rem_21/a[15]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[16]' driven by pin 'image_proc/u5/rem_21/a[16]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[17]' driven by pin 'image_proc/u5/rem_21/a[17]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[18]' driven by pin 'image_proc/u5/rem_21/a[18]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[19]' driven by pin 'image_proc/u5/rem_21/a[19]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[20]' driven by pin 'image_proc/u5/rem_21/a[20]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[21]' driven by pin 'image_proc/u5/rem_21/a[21]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[22]' driven by pin 'image_proc/u5/rem_21/a[22]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[23]' driven by pin 'image_proc/u5/rem_21/a[23]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[24]' driven by pin 'image_proc/u5/rem_21/a[24]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[25]' driven by pin 'image_proc/u5/rem_21/a[25]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[26]' driven by pin 'image_proc/u5/rem_21/a[26]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[27]' driven by pin 'image_proc/u5/rem_21/a[27]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[28]' driven by pin 'image_proc/u5/rem_21/a[28]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[29]' driven by pin 'image_proc/u5/rem_21/a[29]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u5/rem_21/a[30]' driven by pin 'image_proc/u5/rem_21/a[30]' has no loads. (LINT-2)
+Warning: In design 'FPGA_NN', net 'image_proc/u4/add_0_root_add_0_root_add_67_2/SUM[2]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'FPGA_NN', net 'image_proc/u4/add_0_root_add_0_root_add_67_2/SUM[3]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'FPGA_NN', net 'image_proc/u4/add_0_root_add_0_root_add_67_2/SUM[4]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'FPGA_NN', net 'image_proc/u4/add_0_root_add_0_root_add_67_2/SUM[5]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'RAW2GRAY_DW01_add_2', output port 'SUM[5]' is not driven. (LINT-5)
+Warning: In design 'RAW2GRAY_DW01_add_2', output port 'SUM[4]' is not driven. (LINT-5)
+Warning: In design 'RAW2GRAY_DW01_add_2', output port 'SUM[3]' is not driven. (LINT-5)
+Warning: In design 'RAW2GRAY_DW01_add_2', output port 'SUM[2]' is not driven. (LINT-5)
+Warning: In design 'ram', input port 'address_a[10]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[9]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[8]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_a[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_b[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_b[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_b[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_b[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_b[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_b[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'address_b[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'clock' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[15]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[14]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[13]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[12]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[11]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[10]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[9]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[8]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_a[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[255]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[254]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[253]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[252]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[251]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[250]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[249]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[248]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[247]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[246]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[245]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[244]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[243]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[242]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[241]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[240]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[239]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[238]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[237]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[236]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[235]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[234]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[233]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[232]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[231]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[230]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[229]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[228]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[227]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[226]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[225]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[224]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[223]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[222]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[221]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[220]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[219]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[218]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[217]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[216]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[215]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[214]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[213]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[212]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[211]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[210]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[209]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[208]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[207]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[206]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[205]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[204]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[203]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[202]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[201]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[200]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[199]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[198]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[197]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[196]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[195]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[194]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[193]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[192]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[191]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[190]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[189]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[188]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[187]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[186]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[185]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[184]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[183]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[182]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[181]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[180]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[179]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[178]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[177]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[176]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[175]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[174]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[173]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[172]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[171]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[170]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[169]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[168]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[167]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[166]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[165]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[164]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[163]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[162]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[161]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[160]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[159]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[158]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[157]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[156]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[155]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[154]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[153]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[152]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[151]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[150]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[149]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[148]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[147]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[146]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[145]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[144]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[143]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[142]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[141]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[140]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[139]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[138]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[137]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[136]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[135]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[134]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[133]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[132]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[131]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[130]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[129]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[128]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[127]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[126]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[125]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[124]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[123]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[122]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[121]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[120]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[119]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[118]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[117]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[116]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[115]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[114]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[113]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[112]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[111]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[110]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[109]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[108]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[107]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[106]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[105]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[104]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[103]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[102]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[101]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[100]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[99]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[98]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[97]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[96]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[95]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[94]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[93]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[92]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[91]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[90]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[89]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[88]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[87]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[86]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[85]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[84]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[83]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[82]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[81]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[80]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[79]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[78]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[77]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[76]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[75]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[74]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[73]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[72]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[71]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[70]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[69]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[68]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[67]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[66]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[65]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[64]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[63]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[62]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[61]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[60]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[59]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[58]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[57]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[56]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[55]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[54]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[53]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[52]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[51]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[50]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[49]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[48]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[47]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[46]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[45]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[44]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[43]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[42]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[41]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[40]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[39]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[38]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[37]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[36]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[35]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[34]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[33]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[32]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[31]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[30]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[29]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[28]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[27]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[26]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[25]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[24]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[23]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[22]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[21]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[20]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[19]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[18]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[17]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[16]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[15]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[14]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[13]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[12]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[11]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[10]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[9]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[8]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'data_b[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'rden_a' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'rden_b' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'wren_a' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'ram', input port 'wren_b' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'sdram_pll', input port 'refclk' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'sdram_pll', input port 'rst' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iCLK' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[11]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[10]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[9]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[8]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDATA[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'RAW2GRAY', input port 'iDVAL' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'execute', input port 'clk' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'execute', input port 'rst_n' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[7]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[6]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[5]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[4]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[3]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[2]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[1]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'address[0]' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'clock' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'rom', input port 'rden' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[30]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[29]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[28]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[27]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[26]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[25]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[24]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[23]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[22]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[21]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[20]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[19]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[18]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[17]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[16]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[15]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[14]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[13]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[12]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[11]' is unloaded. (LINT-8)
+Warning: In design 'CropDown_DW_div_uns_0', input port 'a[10]' is unloaded. (LINT-8)
+Warning: In design 'FPGA_NN', port 'CLOCK3_50' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'CLOCK4_50' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_ADDR[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_BA[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_BA[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_CAS_N' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_CKE' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_CS_N' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_DQ[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_LDQM' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_RAS_N' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_UDQM' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'DRAM_WE_N' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_B[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_BLANK_N' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_G[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_HS' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_R[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_SYNC_N' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'VGA_VS' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[35]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[34]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[33]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[32]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[31]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[30]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[29]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[28]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[27]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[26]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[25]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[24]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[23]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[22]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[21]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[20]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[19]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[18]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[17]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[16]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'GPIO_0[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'D5M_STROBE' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'SW[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'FPGA_NN', port 'SW[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown', port 'buf_rst' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown', port 'iDATA[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown', port 'iDATA[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown', port 'iDATA[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown', port 'iDATA[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'fetchdecode', port 'iPC_advance' is not connected to any nets. (LINT-28)
+Warning: In design 'execute', port 'iSr1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'execute', port 'iSr1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'execute', port 'iSr1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'execute', port 'iSr1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'I2C_Controller', port 'W_R' is not connected to any nets. (LINT-28)
+Warning: In design 'ALU_DW01_ash_0', port 'DATA_TC' is not connected to any nets. (LINT-28)
+Warning: In design 'ALU_DW01_ash_0', port 'SH_TC' is not connected to any nets. (LINT-28)
+Warning: In design 'ADDSUB_DW01_add_0', port 'CI' is not connected to any nets. (LINT-28)
+Warning: In design 'ADDSUB_DW01_add_0', port 'CO' is not connected to any nets. (LINT-28)
+Warning: In design 'fetchdecode_DW01_inc_0', port 'SUM[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'b[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'b[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'b[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'b[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'b[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[31]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[30]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[29]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[28]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[27]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[26]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[25]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[24]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[23]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[22]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[21]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[20]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[19]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[18]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[17]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[16]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'quotient[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'CropDown_DW_div_uns_0', port 'divide_by_0' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_0', port 'A[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_0', port 'B[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_0', port 'CI' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_0', port 'CO' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_1', port 'A[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_1', port 'B[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_1', port 'CI' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_1', port 'CO' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_2', port 'A[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_2', port 'B[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_2', port 'CI' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_2', port 'SUM[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_2', port 'SUM[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_2', port 'CO' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_3', port 'A[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_3', port 'A[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_3', port 'B[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_3', port 'B[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_3', port 'CI' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_3', port 'SUM[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'RAW2GRAY_DW01_add_3', port 'CO' is not connected to any nets. (LINT-28)
+Warning: In design 'IPSM', the same net is connected to more than one pin on submodule 'FSM'. (LINT-33)
+   Net 'net184' is connected to pins 'iDATA[15]', 'iDATA[14]'', 'iDATA[13]', 'iDATA[12]', 'iDATA[11]', 'iDATA[10]', 'iDATA[9]', 'iDATA[8]'.
+Warning: In design 'RAW2GRAY', the same net is connected to more than one pin on submodule 'r79'. (LINT-33)
+   Net 'N18' is connected to pins 'A[12]', 'B[12]'', 'CI'.
+Warning: In design 'RAW2GRAY', the same net is connected to more than one pin on submodule 'r78'. (LINT-33)
+   Net 'N18' is connected to pins 'A[12]', 'B[12]'', 'CI'.
+Warning: In design 'RAW2GRAY', the same net is connected to more than one pin on submodule 'add_1_root_add_0_root_add_67_2'. (LINT-33)
+   Net 'N18' is connected to pins 'A[13]', 'A[12]'', 'B[13]', 'B[12]', 'CI'.
+Warning: In design 'RAW2GRAY', the same net is connected to more than one pin on submodule 'add_0_root_add_0_root_add_67_2'. (LINT-33)
+   Net 'N18' is connected to pins 'A[13]', 'B[13]'', 'CI'.
+Warning: In design 'CropDown', the same net is connected to more than one pin on submodule 'rem_21'. (LINT-33)
+   Net 'n1' is connected to pins 'a[31]', 'a[30]'', 'a[29]', 'a[28]', 'a[27]', 'a[26]', 'a[25]', 'a[24]', 'a[23]', 'a[22]', 'a[21]', 'a[20]', 'a[19]', 'a[18]', 'a[17]', 'a[16]', 'a[15]', 'a[14]', 'a[13]', 'a[12]', 'a[11]', 'a[10]'.
+Warning: In design 'CropDown', the same net is connected to more than one pin on submodule 'rem_21'. (LINT-33)
+   Net '*Logic1*' is connected to pins 'b[4]', 'b[2]'', 'b[0]'.
+Warning: In design 'CropDown', the same net is connected to more than one pin on submodule 'rem_21'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'b[3]', 'b[1]''.
+Warning: In design 'I2C_CCD_Config', the same net is connected to more than one pin on submodule 'u0'. (LINT-33)
+   Net 'n1' is connected to pins 'I2C_DATA[31]', 'I2C_DATA[29]'', 'I2C_DATA[28]', 'I2C_DATA[27]', 'I2C_DATA[25]'.
+Warning: In design 'I2C_CCD_Config', the same net is connected to more than one pin on submodule 'u0'. (LINT-33)
+   Net 'net183' is connected to pins 'I2C_DATA[30]', 'I2C_DATA[26]'', 'I2C_DATA[24]', 'W_R'.
+Warning: In design 'ALU', the same net is connected to more than one pin on submodule 'sll_29'. (LINT-33)
+   Net 'n10' is connected to pins 'DATA_TC', 'SH_TC''.
+Warning: In design 'FPGA_NN', three-state bus '_2_net_' has non three-state driver 'C114/Z'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[0]' has non three-state driver 'CPU/U_EX/oData2_reg[0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[1]' has non three-state driver 'CPU/U_EX/oData2_reg[1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[2]' has non three-state driver 'CPU/U_EX/oData2_reg[2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[3]' has non three-state driver 'CPU/U_EX/oData2_reg[3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[4]' has non three-state driver 'CPU/U_EX/oData2_reg[4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[5]' has non three-state driver 'CPU/U_EX/oData2_reg[5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[6]' has non three-state driver 'CPU/U_EX/oData2_reg[6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[7]' has non three-state driver 'CPU/U_EX/oData2_reg[7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[8]' has non three-state driver 'CPU/U_EX/oData2_reg[8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[9]' has non three-state driver 'CPU/U_EX/oData2_reg[9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[10]' has non three-state driver 'CPU/U_EX/oData2_reg[10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[11]' has non three-state driver 'CPU/U_EX/oData2_reg[11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[12]' has non three-state driver 'CPU/U_EX/oData2_reg[12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[13]' has non three-state driver 'CPU/U_EX/oData2_reg[13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[14]' has non three-state driver 'CPU/U_EX/oData2_reg[14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_data[15]' has non three-state driver 'CPU/U_EX/oData2_reg[15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[0]' has non three-state driver 'CPU/U_EX/oAluOut_reg[0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[1]' has non three-state driver 'CPU/U_EX/oAluOut_reg[1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[2]' has non three-state driver 'CPU/U_EX/oAluOut_reg[2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[3]' has non three-state driver 'CPU/U_EX/oAluOut_reg[3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[4]' has non three-state driver 'CPU/U_EX/oAluOut_reg[4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[5]' has non three-state driver 'CPU/U_EX/oAluOut_reg[5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[6]' has non three-state driver 'CPU/U_EX/oAluOut_reg[6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[7]' has non three-state driver 'CPU/U_EX/oAluOut_reg[7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[8]' has non three-state driver 'CPU/U_EX/oAluOut_reg[8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[9]' has non three-state driver 'CPU/U_EX/oAluOut_reg[9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_addr[10]' has non three-state driver 'CPU/U_EX/oAluOut_reg[10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'cpu_dmem_ren' has non three-state driver 'CPU/U49/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[0]' has non three-state driver 'image_proc/FSM/pixels_reg[0][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[1]' has non three-state driver 'image_proc/FSM/pixels_reg[0][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[2]' has non three-state driver 'image_proc/FSM/pixels_reg[0][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[3]' has non three-state driver 'image_proc/FSM/pixels_reg[0][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[4]' has non three-state driver 'image_proc/FSM/pixels_reg[0][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[5]' has non three-state driver 'image_proc/FSM/pixels_reg[0][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[6]' has non three-state driver 'image_proc/FSM/pixels_reg[0][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[7]' has non three-state driver 'image_proc/FSM/pixels_reg[0][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[8]' has non three-state driver 'image_proc/FSM/pixels_reg[0][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[9]' has non three-state driver 'image_proc/FSM/pixels_reg[0][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[10]' has non three-state driver 'image_proc/FSM/pixels_reg[0][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[11]' has non three-state driver 'image_proc/FSM/pixels_reg[0][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[12]' has non three-state driver 'image_proc/FSM/pixels_reg[0][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[13]' has non three-state driver 'image_proc/FSM/pixels_reg[0][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[14]' has non three-state driver 'image_proc/FSM/pixels_reg[0][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[15]' has non three-state driver 'image_proc/FSM/pixels_reg[0][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[16]' has non three-state driver 'image_proc/FSM/pixels_reg[1][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[17]' has non three-state driver 'image_proc/FSM/pixels_reg[1][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[18]' has non three-state driver 'image_proc/FSM/pixels_reg[1][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[19]' has non three-state driver 'image_proc/FSM/pixels_reg[1][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[20]' has non three-state driver 'image_proc/FSM/pixels_reg[1][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[21]' has non three-state driver 'image_proc/FSM/pixels_reg[1][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[22]' has non three-state driver 'image_proc/FSM/pixels_reg[1][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[23]' has non three-state driver 'image_proc/FSM/pixels_reg[1][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[24]' has non three-state driver 'image_proc/FSM/pixels_reg[1][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[25]' has non three-state driver 'image_proc/FSM/pixels_reg[1][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[26]' has non three-state driver 'image_proc/FSM/pixels_reg[1][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[27]' has non three-state driver 'image_proc/FSM/pixels_reg[1][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[28]' has non three-state driver 'image_proc/FSM/pixels_reg[1][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[29]' has non three-state driver 'image_proc/FSM/pixels_reg[1][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[30]' has non three-state driver 'image_proc/FSM/pixels_reg[1][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[31]' has non three-state driver 'image_proc/FSM/pixels_reg[1][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[32]' has non three-state driver 'image_proc/FSM/pixels_reg[2][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[33]' has non three-state driver 'image_proc/FSM/pixels_reg[2][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[34]' has non three-state driver 'image_proc/FSM/pixels_reg[2][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[35]' has non three-state driver 'image_proc/FSM/pixels_reg[2][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[36]' has non three-state driver 'image_proc/FSM/pixels_reg[2][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[37]' has non three-state driver 'image_proc/FSM/pixels_reg[2][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[38]' has non three-state driver 'image_proc/FSM/pixels_reg[2][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[39]' has non three-state driver 'image_proc/FSM/pixels_reg[2][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[40]' has non three-state driver 'image_proc/FSM/pixels_reg[2][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[41]' has non three-state driver 'image_proc/FSM/pixels_reg[2][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[42]' has non three-state driver 'image_proc/FSM/pixels_reg[2][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[43]' has non three-state driver 'image_proc/FSM/pixels_reg[2][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[44]' has non three-state driver 'image_proc/FSM/pixels_reg[2][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[45]' has non three-state driver 'image_proc/FSM/pixels_reg[2][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[46]' has non three-state driver 'image_proc/FSM/pixels_reg[2][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[47]' has non three-state driver 'image_proc/FSM/pixels_reg[2][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[48]' has non three-state driver 'image_proc/FSM/pixels_reg[3][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[49]' has non three-state driver 'image_proc/FSM/pixels_reg[3][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[50]' has non three-state driver 'image_proc/FSM/pixels_reg[3][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[51]' has non three-state driver 'image_proc/FSM/pixels_reg[3][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[52]' has non three-state driver 'image_proc/FSM/pixels_reg[3][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[53]' has non three-state driver 'image_proc/FSM/pixels_reg[3][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[54]' has non three-state driver 'image_proc/FSM/pixels_reg[3][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[55]' has non three-state driver 'image_proc/FSM/pixels_reg[3][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[56]' has non three-state driver 'image_proc/FSM/pixels_reg[3][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[57]' has non three-state driver 'image_proc/FSM/pixels_reg[3][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[58]' has non three-state driver 'image_proc/FSM/pixels_reg[3][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[59]' has non three-state driver 'image_proc/FSM/pixels_reg[3][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[60]' has non three-state driver 'image_proc/FSM/pixels_reg[3][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[61]' has non three-state driver 'image_proc/FSM/pixels_reg[3][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[62]' has non three-state driver 'image_proc/FSM/pixels_reg[3][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[63]' has non three-state driver 'image_proc/FSM/pixels_reg[3][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[64]' has non three-state driver 'image_proc/FSM/pixels_reg[4][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[65]' has non three-state driver 'image_proc/FSM/pixels_reg[4][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[66]' has non three-state driver 'image_proc/FSM/pixels_reg[4][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[67]' has non three-state driver 'image_proc/FSM/pixels_reg[4][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[68]' has non three-state driver 'image_proc/FSM/pixels_reg[4][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[69]' has non three-state driver 'image_proc/FSM/pixels_reg[4][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[70]' has non three-state driver 'image_proc/FSM/pixels_reg[4][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[71]' has non three-state driver 'image_proc/FSM/pixels_reg[4][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[72]' has non three-state driver 'image_proc/FSM/pixels_reg[4][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[73]' has non three-state driver 'image_proc/FSM/pixels_reg[4][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[74]' has non three-state driver 'image_proc/FSM/pixels_reg[4][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[75]' has non three-state driver 'image_proc/FSM/pixels_reg[4][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[76]' has non three-state driver 'image_proc/FSM/pixels_reg[4][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[77]' has non three-state driver 'image_proc/FSM/pixels_reg[4][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[78]' has non three-state driver 'image_proc/FSM/pixels_reg[4][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[79]' has non three-state driver 'image_proc/FSM/pixels_reg[4][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[80]' has non three-state driver 'image_proc/FSM/pixels_reg[5][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[81]' has non three-state driver 'image_proc/FSM/pixels_reg[5][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[82]' has non three-state driver 'image_proc/FSM/pixels_reg[5][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[83]' has non three-state driver 'image_proc/FSM/pixels_reg[5][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[84]' has non three-state driver 'image_proc/FSM/pixels_reg[5][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[85]' has non three-state driver 'image_proc/FSM/pixels_reg[5][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[86]' has non three-state driver 'image_proc/FSM/pixels_reg[5][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[87]' has non three-state driver 'image_proc/FSM/pixels_reg[5][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[88]' has non three-state driver 'image_proc/FSM/pixels_reg[5][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[89]' has non three-state driver 'image_proc/FSM/pixels_reg[5][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[90]' has non three-state driver 'image_proc/FSM/pixels_reg[5][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[91]' has non three-state driver 'image_proc/FSM/pixels_reg[5][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[92]' has non three-state driver 'image_proc/FSM/pixels_reg[5][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[93]' has non three-state driver 'image_proc/FSM/pixels_reg[5][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[94]' has non three-state driver 'image_proc/FSM/pixels_reg[5][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[95]' has non three-state driver 'image_proc/FSM/pixels_reg[5][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[96]' has non three-state driver 'image_proc/FSM/pixels_reg[6][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[97]' has non three-state driver 'image_proc/FSM/pixels_reg[6][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[98]' has non three-state driver 'image_proc/FSM/pixels_reg[6][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[99]' has non three-state driver 'image_proc/FSM/pixels_reg[6][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[100]' has non three-state driver 'image_proc/FSM/pixels_reg[6][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[101]' has non three-state driver 'image_proc/FSM/pixels_reg[6][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[102]' has non three-state driver 'image_proc/FSM/pixels_reg[6][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[103]' has non three-state driver 'image_proc/FSM/pixels_reg[6][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[104]' has non three-state driver 'image_proc/FSM/pixels_reg[6][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[105]' has non three-state driver 'image_proc/FSM/pixels_reg[6][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[106]' has non three-state driver 'image_proc/FSM/pixels_reg[6][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[107]' has non three-state driver 'image_proc/FSM/pixels_reg[6][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[108]' has non three-state driver 'image_proc/FSM/pixels_reg[6][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[109]' has non three-state driver 'image_proc/FSM/pixels_reg[6][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[110]' has non three-state driver 'image_proc/FSM/pixels_reg[6][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[111]' has non three-state driver 'image_proc/FSM/pixels_reg[6][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[112]' has non three-state driver 'image_proc/FSM/pixels_reg[7][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[113]' has non three-state driver 'image_proc/FSM/pixels_reg[7][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[114]' has non three-state driver 'image_proc/FSM/pixels_reg[7][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[115]' has non three-state driver 'image_proc/FSM/pixels_reg[7][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[116]' has non three-state driver 'image_proc/FSM/pixels_reg[7][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[117]' has non three-state driver 'image_proc/FSM/pixels_reg[7][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[118]' has non three-state driver 'image_proc/FSM/pixels_reg[7][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[119]' has non three-state driver 'image_proc/FSM/pixels_reg[7][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[120]' has non three-state driver 'image_proc/FSM/pixels_reg[7][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[121]' has non three-state driver 'image_proc/FSM/pixels_reg[7][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[122]' has non three-state driver 'image_proc/FSM/pixels_reg[7][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[123]' has non three-state driver 'image_proc/FSM/pixels_reg[7][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[124]' has non three-state driver 'image_proc/FSM/pixels_reg[7][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[125]' has non three-state driver 'image_proc/FSM/pixels_reg[7][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[126]' has non three-state driver 'image_proc/FSM/pixels_reg[7][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[127]' has non three-state driver 'image_proc/FSM/pixels_reg[7][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[128]' has non three-state driver 'image_proc/FSM/pixels_reg[8][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[129]' has non three-state driver 'image_proc/FSM/pixels_reg[8][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[130]' has non three-state driver 'image_proc/FSM/pixels_reg[8][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[131]' has non three-state driver 'image_proc/FSM/pixels_reg[8][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[132]' has non three-state driver 'image_proc/FSM/pixels_reg[8][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[133]' has non three-state driver 'image_proc/FSM/pixels_reg[8][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[134]' has non three-state driver 'image_proc/FSM/pixels_reg[8][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[135]' has non three-state driver 'image_proc/FSM/pixels_reg[8][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[136]' has non three-state driver 'image_proc/FSM/pixels_reg[8][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[137]' has non three-state driver 'image_proc/FSM/pixels_reg[8][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[138]' has non three-state driver 'image_proc/FSM/pixels_reg[8][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[139]' has non three-state driver 'image_proc/FSM/pixels_reg[8][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[140]' has non three-state driver 'image_proc/FSM/pixels_reg[8][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[141]' has non three-state driver 'image_proc/FSM/pixels_reg[8][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[142]' has non three-state driver 'image_proc/FSM/pixels_reg[8][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[143]' has non three-state driver 'image_proc/FSM/pixels_reg[8][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[144]' has non three-state driver 'image_proc/FSM/pixels_reg[9][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[145]' has non three-state driver 'image_proc/FSM/pixels_reg[9][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[146]' has non three-state driver 'image_proc/FSM/pixels_reg[9][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[147]' has non three-state driver 'image_proc/FSM/pixels_reg[9][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[148]' has non three-state driver 'image_proc/FSM/pixels_reg[9][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[149]' has non three-state driver 'image_proc/FSM/pixels_reg[9][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[150]' has non three-state driver 'image_proc/FSM/pixels_reg[9][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[151]' has non three-state driver 'image_proc/FSM/pixels_reg[9][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[152]' has non three-state driver 'image_proc/FSM/pixels_reg[9][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[153]' has non three-state driver 'image_proc/FSM/pixels_reg[9][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[154]' has non three-state driver 'image_proc/FSM/pixels_reg[9][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[155]' has non three-state driver 'image_proc/FSM/pixels_reg[9][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[156]' has non three-state driver 'image_proc/FSM/pixels_reg[9][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[157]' has non three-state driver 'image_proc/FSM/pixels_reg[9][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[158]' has non three-state driver 'image_proc/FSM/pixels_reg[9][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[159]' has non three-state driver 'image_proc/FSM/pixels_reg[9][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[160]' has non three-state driver 'image_proc/FSM/pixels_reg[10][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[161]' has non three-state driver 'image_proc/FSM/pixels_reg[10][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[162]' has non three-state driver 'image_proc/FSM/pixels_reg[10][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[163]' has non three-state driver 'image_proc/FSM/pixels_reg[10][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[164]' has non three-state driver 'image_proc/FSM/pixels_reg[10][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[165]' has non three-state driver 'image_proc/FSM/pixels_reg[10][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[166]' has non three-state driver 'image_proc/FSM/pixels_reg[10][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[167]' has non three-state driver 'image_proc/FSM/pixels_reg[10][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[168]' has non three-state driver 'image_proc/FSM/pixels_reg[10][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[169]' has non three-state driver 'image_proc/FSM/pixels_reg[10][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[170]' has non three-state driver 'image_proc/FSM/pixels_reg[10][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[171]' has non three-state driver 'image_proc/FSM/pixels_reg[10][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[172]' has non three-state driver 'image_proc/FSM/pixels_reg[10][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[173]' has non three-state driver 'image_proc/FSM/pixels_reg[10][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[174]' has non three-state driver 'image_proc/FSM/pixels_reg[10][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[175]' has non three-state driver 'image_proc/FSM/pixels_reg[10][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[176]' has non three-state driver 'image_proc/FSM/pixels_reg[11][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[177]' has non three-state driver 'image_proc/FSM/pixels_reg[11][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[178]' has non three-state driver 'image_proc/FSM/pixels_reg[11][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[179]' has non three-state driver 'image_proc/FSM/pixels_reg[11][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[180]' has non three-state driver 'image_proc/FSM/pixels_reg[11][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[181]' has non three-state driver 'image_proc/FSM/pixels_reg[11][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[182]' has non three-state driver 'image_proc/FSM/pixels_reg[11][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[183]' has non three-state driver 'image_proc/FSM/pixels_reg[11][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[184]' has non three-state driver 'image_proc/FSM/pixels_reg[11][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[185]' has non three-state driver 'image_proc/FSM/pixels_reg[11][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[186]' has non three-state driver 'image_proc/FSM/pixels_reg[11][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[187]' has non three-state driver 'image_proc/FSM/pixels_reg[11][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[188]' has non three-state driver 'image_proc/FSM/pixels_reg[11][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[189]' has non three-state driver 'image_proc/FSM/pixels_reg[11][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[190]' has non three-state driver 'image_proc/FSM/pixels_reg[11][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[191]' has non three-state driver 'image_proc/FSM/pixels_reg[11][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[192]' has non three-state driver 'image_proc/FSM/pixels_reg[12][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[193]' has non three-state driver 'image_proc/FSM/pixels_reg[12][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[194]' has non three-state driver 'image_proc/FSM/pixels_reg[12][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[195]' has non three-state driver 'image_proc/FSM/pixels_reg[12][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[196]' has non three-state driver 'image_proc/FSM/pixels_reg[12][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[197]' has non three-state driver 'image_proc/FSM/pixels_reg[12][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[198]' has non three-state driver 'image_proc/FSM/pixels_reg[12][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[199]' has non three-state driver 'image_proc/FSM/pixels_reg[12][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[200]' has non three-state driver 'image_proc/FSM/pixels_reg[12][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[201]' has non three-state driver 'image_proc/FSM/pixels_reg[12][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[202]' has non three-state driver 'image_proc/FSM/pixels_reg[12][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[203]' has non three-state driver 'image_proc/FSM/pixels_reg[12][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[204]' has non three-state driver 'image_proc/FSM/pixels_reg[12][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[205]' has non three-state driver 'image_proc/FSM/pixels_reg[12][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[206]' has non three-state driver 'image_proc/FSM/pixels_reg[12][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[207]' has non three-state driver 'image_proc/FSM/pixels_reg[12][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[208]' has non three-state driver 'image_proc/FSM/pixels_reg[13][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[209]' has non three-state driver 'image_proc/FSM/pixels_reg[13][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[210]' has non three-state driver 'image_proc/FSM/pixels_reg[13][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[211]' has non three-state driver 'image_proc/FSM/pixels_reg[13][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[212]' has non three-state driver 'image_proc/FSM/pixels_reg[13][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[213]' has non three-state driver 'image_proc/FSM/pixels_reg[13][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[214]' has non three-state driver 'image_proc/FSM/pixels_reg[13][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[215]' has non three-state driver 'image_proc/FSM/pixels_reg[13][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[216]' has non three-state driver 'image_proc/FSM/pixels_reg[13][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[217]' has non three-state driver 'image_proc/FSM/pixels_reg[13][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[218]' has non three-state driver 'image_proc/FSM/pixels_reg[13][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[219]' has non three-state driver 'image_proc/FSM/pixels_reg[13][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[220]' has non three-state driver 'image_proc/FSM/pixels_reg[13][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[221]' has non three-state driver 'image_proc/FSM/pixels_reg[13][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[222]' has non three-state driver 'image_proc/FSM/pixels_reg[13][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[223]' has non three-state driver 'image_proc/FSM/pixels_reg[13][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[224]' has non three-state driver 'image_proc/FSM/pixels_reg[14][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[225]' has non three-state driver 'image_proc/FSM/pixels_reg[14][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[226]' has non three-state driver 'image_proc/FSM/pixels_reg[14][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[227]' has non three-state driver 'image_proc/FSM/pixels_reg[14][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[228]' has non three-state driver 'image_proc/FSM/pixels_reg[14][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[229]' has non three-state driver 'image_proc/FSM/pixels_reg[14][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[230]' has non three-state driver 'image_proc/FSM/pixels_reg[14][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[231]' has non three-state driver 'image_proc/FSM/pixels_reg[14][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[232]' has non three-state driver 'image_proc/FSM/pixels_reg[14][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[233]' has non three-state driver 'image_proc/FSM/pixels_reg[14][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[234]' has non three-state driver 'image_proc/FSM/pixels_reg[14][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[235]' has non three-state driver 'image_proc/FSM/pixels_reg[14][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[236]' has non three-state driver 'image_proc/FSM/pixels_reg[14][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[237]' has non three-state driver 'image_proc/FSM/pixels_reg[14][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[238]' has non three-state driver 'image_proc/FSM/pixels_reg[14][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[239]' has non three-state driver 'image_proc/FSM/pixels_reg[14][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[240]' has non three-state driver 'image_proc/FSM/pixels_reg[15][0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[241]' has non three-state driver 'image_proc/FSM/pixels_reg[15][1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[242]' has non three-state driver 'image_proc/FSM/pixels_reg[15][2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[243]' has non three-state driver 'image_proc/FSM/pixels_reg[15][3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[244]' has non three-state driver 'image_proc/FSM/pixels_reg[15][4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[245]' has non three-state driver 'image_proc/FSM/pixels_reg[15][5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[246]' has non three-state driver 'image_proc/FSM/pixels_reg[15][6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[247]' has non three-state driver 'image_proc/FSM/pixels_reg[15][7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[248]' has non three-state driver 'image_proc/FSM/pixels_reg[15][8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[249]' has non three-state driver 'image_proc/FSM/pixels_reg[15][9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[250]' has non three-state driver 'image_proc/FSM/pixels_reg[15][10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[251]' has non three-state driver 'image_proc/FSM/pixels_reg[15][11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[252]' has non three-state driver 'image_proc/FSM/pixels_reg[15][12]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[253]' has non three-state driver 'image_proc/FSM/pixels_reg[15][13]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[254]' has non three-state driver 'image_proc/FSM/pixels_reg[15][14]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_data[255]' has non three-state driver 'image_proc/FSM/pixels_reg[15][15]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_addr[0]' has non three-state driver 'image_proc/FSM/dmem_addr_reg[0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_addr[1]' has non three-state driver 'image_proc/FSM/dmem_addr_reg[1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_addr[2]' has non three-state driver 'image_proc/FSM/dmem_addr_reg[2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_addr[3]' has non three-state driver 'image_proc/FSM/dmem_addr_reg[3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_addr[4]' has non three-state driver 'image_proc/FSM/dmem_addr_reg[4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_addr[5]' has non three-state driver 'image_proc/FSM/dmem_addr_reg[5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_addr[6]' has non three-state driver 'image_proc/FSM/dmem_addr_reg[6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'ccd_dmem_wren' has non three-state driver 'image_proc/FSM/dmem_wren_reg/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DVAL' has non three-state driver 'image_proc/u3/U66/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[0]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[0]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[1]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[1]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[2]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[2]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[3]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[3]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[4]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[4]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[5]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[5]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[6]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[6]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[7]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[7]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[8]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[8]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[9]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[9]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[10]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[10]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'image_proc/mCCD_DATA[11]' has non three-state driver 'image_proc/u3/mCCD_DATA_reg[11]/Q'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'DMEM/n2' has non three-state driver 'DMEM/U4/**logic_1**'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'DMEM/n1' has non three-state driver 'DMEM/U3/**logic_0**'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[0]' has non three-state driver 'CPU/U_IFID/U14/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[1]' has non three-state driver 'CPU/U_IFID/U13/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[2]' has non three-state driver 'CPU/U_IFID/U12/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[3]' has non three-state driver 'CPU/U_IFID/U11/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[4]' has non three-state driver 'CPU/U_IFID/U10/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[5]' has non three-state driver 'CPU/U_IFID/U9/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[6]' has non three-state driver 'CPU/U_IFID/U8/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/next_PC[7]' has non three-state driver 'CPU/U_IFID/U7/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluovfl' has non three-state driver 'CPU/U_EX/U_ALU/U9/Z'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[0]' has non three-state driver 'CPU/U_EX/U_ALU/U136/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[1]' has non three-state driver 'CPU/U_EX/U_ALU/U140/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[2]' has non three-state driver 'CPU/U_EX/U_ALU/U144/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[3]' has non three-state driver 'CPU/U_EX/U_ALU/U148/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[4]' has non three-state driver 'CPU/U_EX/U_ALU/U152/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[5]' has non three-state driver 'CPU/U_EX/U_ALU/U156/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[6]' has non three-state driver 'CPU/U_EX/U_ALU/U160/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[7]' has non three-state driver 'CPU/U_EX/U_ALU/U164/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[8]' has non three-state driver 'CPU/U_EX/U_ALU/U168/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[9]' has non three-state driver 'CPU/U_EX/U_ALU/U172/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[10]' has non three-state driver 'CPU/U_EX/U_ALU/U176/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[11]' has non three-state driver 'CPU/U_EX/U_ALU/U180/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[12]' has non three-state driver 'CPU/U_EX/U_ALU/U184/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[13]' has non three-state driver 'CPU/U_EX/U_ALU/U188/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[14]' has non three-state driver 'CPU/U_EX/U_ALU/U192/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluout[15]' has non three-state driver 'CPU/U_EX/U_ALU/U196/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluop[0]' has non three-state driver 'CPU/U_EX/U65/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluop[1]' has non three-state driver 'CPU/U_EX/U64/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluop[2]' has non three-state driver 'CPU/U_EX/U63/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluop[3]' has non three-state driver 'CPU/U_EX/U62/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_EX/aluop[4]' has non three-state driver 'CPU/U_EX/U61/ZN'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/imem/n2' has non three-state driver 'CPU/U_IFID/imem/U4/**logic_1**'. (LINT-34)
+Warning: In design 'FPGA_NN', three-state bus 'CPU/U_IFID/imem/n1' has non three-state driver 'CPU/U_IFID/imem/U3/**logic_0**'. (LINT-34)
+Warning: In design 'FPGA_NN', output port 'D5M_TRIGGER' is connected directly to 'logic 1'. (LINT-52)
+Warning: In design 'IPSM', output port 'D5M_TRIGGER' is connected directly to 'logic 1'. (LINT-52)
+Warning: In design 'FPGA_NN', multiply-driven net '*Logic0*' is driven by constant 0. (LINT-54)
+Warning: In design 'FPGA_NN', multiply-driven net 'DMEM/n2' is driven by constant 1. (LINT-54)
+Warning: In design 'FPGA_NN', multiply-driven net 'DMEM/n1' is driven by constant 0. (LINT-54)
+Warning: In design 'FPGA_NN', multiply-driven net 'CPU/U_IFID/imem/n2' is driven by constant 1. (LINT-54)
+Warning: In design 'FPGA_NN', multiply-driven net 'CPU/U_IFID/imem/n1' is driven by constant 0. (LINT-54)
+Warning: Net 'D5M_SDATA' has a single tri-state driver.  (LINT-63)
+1
+exit
+
+Thank you...

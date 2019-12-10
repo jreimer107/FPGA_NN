@@ -1,0 +1,62 @@
+#read in files
+
+#top level
+read_file -format sverilog FPGA_NN.sv
+
+# Image proc
+read_file -format sverilog Image_Processing_SPART/IPSM.sv
+read_file -format sverilog Image_Processing_SPART/Img_Proc_FSM.sv
+read_file -format verilog Image_Processing_SPART/RAW2GRAY.v
+read_file -format sverilog Image_Processing_SPART/CropDown.sv
+
+#Standard image proc
+read_file -format verilog Quartus_project/v/CCD_Capture.v
+read_file -format verilog Quartus_project/v/SEG7_LUT_6.v
+read_file -format verilog Quartus_project/v/SEG7_LUT.v
+read_file -format verilog Quartus_project/v/I2C_CCD_Config.v
+read_file -format verilog Quartus_project/v/I2C_Controller.v
+read_file -format verilog Quartus_project/v/sdram_pll.v
+read_file -format verilog Quartus_project/v/Reset_Delay.v
+
+#CPU
+read_file -format sverilog CPU/ADDSUB.sv
+read_file -format sverilog CPU/ALU.sv
+read_file -format verilog CPU/CCodeEval.v
+read_file -format sverilog CPU/cpu.sv
+read_file -format sverilog CPU/execute.sv
+read_file -format sverilog CPU/fetchdecode.sv
+read_file -format verilog CPU/flag_reg.v
+read_file -format sverilog CPU/ForwardingUnit.sv
+read_file -format verilog CPU/ram.v
+read_file -format verilog CPU/rom.v
+
+#set current design to top level
+set current_design FPGA_NN
+
+#Create and constrain clock
+create_clock -name "CLOCK_50" -period 20 -waveform {0 1} {CLOCK_50}
+create_clock -name "CLOCK2_50" -period 20 -waveform {0 1} {CLOCK2_50}
+create_clock -name "CLOCK3_50" -period 20 -waveform {0 1} {CLOCK3_50}
+create_clock -name "CLOCK4_50" -period 20 -waveform {0 1} {CLOCK4_50}
+#set_dont_touch_network [[find port CLOCK_50] [find port CLOCK2_50] [find port CLOCK3_50] [find port CLOCK4_50]]
+set_dont_touch_network [all_clocks]
+
+#Set input timings
+set prim_inputs [remove_from_collection [all_inputs] [all_clocks]]
+set_input_delay -clock CLOCK_50 0.25 $prim_inputs
+
+# Set input drives
+set_driving_cell -lib_cell ND2D2BWP -from_pin A1 -library tcbn40lpbwptc $prim_inputs
+set_drive 0.1 KEY
+
+# Set outpt delays
+set_output_delay -clock CLOCK_50 0.5 [all_outputs]
+set_load 0.1 [all_outputs]
+
+link
+
+#initial compile
+compile -map_effort medium
+
+check_design
+exit
