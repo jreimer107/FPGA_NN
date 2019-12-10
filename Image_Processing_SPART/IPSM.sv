@@ -48,14 +48,16 @@ module IPSM(
     // CPU interface
 	input enable,
 	output reg ccd_done,
-	output ccd_start,
+	output frame_val,
+	output dval,
 
 	// DMEM interface
 	output dmem_wren,
 	output [6:0] dmem_wraddr,
 	output [255:0] dmem_wrdata,
 
-	output state,
+	output [1:0] state,
+	output [23:0] Frame_Cont,
 
 	//////////// GPIO_1, GPIO_1 connect to D5M - 5M Pixel Camera //////////
 	input 		    [11:0]		D5M_D,
@@ -87,7 +89,7 @@ wire		    [11:0]			mCCD_DATA;
 wire							mCCD_DVAL;
 wire	        [15:0]			X_Cont;
 wire	        [15:0]			Y_Cont;
-wire	        [31:0]			Frame_Cont;
+//wire	        [31:0]			Frame_Cont;
 
 wire	        [11:0]			dCCD_DATA;
 wire							dCCD_DVAL;
@@ -116,7 +118,7 @@ end
 
 
 //auto start when power on
-assign auto_start = ((rst_n)&&(DLY_RST_3)&&(!DLY_RST_4))? 1'b1:1'b0;
+assign auto_start = start_key | (((rst_n)&&(DLY_RST_3)&&(!DLY_RST_4))? 1'b1:1'b0);
 
 //Reset module
 Reset_Delay u2 (	
@@ -136,7 +138,7 @@ CCD_Capture	u3 (
     .iCLK(~D5M_PIXLCLK),
     .iRST(DLY_RST_2),
 
-    .iSTART(start_key|auto_start),
+    .iSTART(auto_start),
     .iEND(1'b0),
     .iFVAL(rCCD_FVAL),
     .iLVAL(rCCD_LVAL),
@@ -178,6 +180,9 @@ CropDown u5 (
 	.oDATA(sCCD_DATA),
 	.oDVAL(sCCD_DVAL)
 );
+
+assign dval = dCCD_DVAL;
+
 /// End Image Capture Pipeline ///
 
 // Control image capture and storage	
@@ -201,8 +206,8 @@ Img_Proc_FSM FSM (
 	.oDmem_wren(dmem_wren),
 	.oDmem_addr(dmem_wraddr),
 	.oDmem_data(dmem_wrdata),
-	.state_flag(state),
-	.ccd_start(ccd_start)
+	.state(state),
+	.frame_val(frame_val)
 );
 
 //D5M I2C control

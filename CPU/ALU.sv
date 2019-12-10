@@ -28,8 +28,8 @@ always_comb begin
 		5'h4: out_temp = a ^ b;
 		5'h5: out_temp = a << b[3:0];
 		5'h6: out_temp = a >>> b[3:0];
-		5'h8: out_temp = {a[15:8], b[7:0]};
-		5'h9: out_temp = {b[7:0], a[7:0]};
+		5'h8: out_temp = {a[15:8], b[7:0]}; // IMML
+		5'h9: out_temp = {b[7:0], a[7:0]};  // IMMH
 		default: out_temp = 16'b0;
 	endcase
 end

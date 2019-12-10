@@ -97,7 +97,7 @@ wire branch = conditionResult;
 CCodeEval cce(.opcode(opcode), .C(condition), .NVZ(iNVZ), .cond_true(conditionResult));
 
 // Instruction memory
-wire [15:0] branchAddr = PC + {{8{instr[10]}}, instr[10:3]} + 1;
+wire [15:0] branchAddr = PC + {{8{instr[10]}}, instr[10:3]};
 wire [15:0] next_PC;
 
 rom imem(.address(next_PC[7:0]), .clock(clk), .q(instr_temp), .rden(rst_n));
@@ -134,7 +134,7 @@ always_ff @(posedge clk, negedge rst_n) begin
 		oSr2 <= 0;
 	end
 	else begin
-		oImm <= (opcode == ImmL) ? {{8{1'b0}}, instr[10:3]} : ((opcode == ImmH) ? {instr[10:3], {8{1'b0}}} : 16'h0);
+		oImm <= (opcode == ImmL | opcode == ImmH) ? {{8{1'b0}}, instr[10:3]} : 16'h0;
 		oOpcode <= opcode;
 		oSr1 <= sr1;
 		oSr2 <= (opcode == Store) ? dest :  sr2;
@@ -193,7 +193,7 @@ end
 
 assign oCCD_en = registers[15][1];
 assign oACC_en = registers[15][3];
-assign oACC_start = registers[15][4];
+// assign oACC_start = registers[15][4];
 
 // Testing/demoing
 assign oReg_Out = registers[iRegIndex];
