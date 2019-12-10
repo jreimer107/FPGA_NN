@@ -1,4 +1,4 @@
-module cpu_dmem_wrapper(
+module cpu_dmem_acc_wrapper(
     input clk, rst_n,
     input pc_advance,
     input [3:0] reg_index,
@@ -11,20 +11,31 @@ wire [15:0] data_to_mem, data_to_cpu;
 wire [15:0] data_addr;
 wire dmem_ren, dmem_wren;
 
-//Accel mock
-wire [1:0] bus_rdwr;
-tri [15:0] databus = bus_rdwr[1] ? 16'h1234 : 16'hz;
-wire bus_en;
-wire bus_start;
-wire [2:0] bus_regaddr;
-wire bus_done = bus_en & bus_start;
-
+//Accel
+wire [15:0] acc_data;
+wire bus_wr;
+tri [15:0] databus = bus_wr ? acc_data : 16'hz;
+wire acc_en;
+// wire acc_start;
+wire [2:0] acc_regaddr;
+wire acc_done = 1'b0;
 
 //CCD mock
 wire ccd_en;
-wire ccd_done = ccd_en;
+wire ccd_done = 1'b0;
 
 // wire halt;
+
+// DMEM
+wire cpu_dmem_ren;
+wire cpu_dmem_wren;
+wire [10:0] cpu_dmem_addr;
+wire [15:0] cpu_dmem_data;
+wire [15:0] dmem_cpu_data;
+
+wire [6:0] ccd_dmem_addr;
+wire [255:0] ccd_dmem_data;
+wire ccd_dmem_wren;
 
 cpu CPU(
     .clk(clk),
@@ -38,12 +49,12 @@ cpu CPU(
     .dmem_data_from(dmem_cpu_data),
 
 	// Accel interface
-    .bus_accel_done(bus_done),
-    .bus_accel_start(bus_start),
-    .bus_accel_en(bus_en),
-    .bus_rdwr(bus_rdwr),
-    .bus_data(databus),
-    .bus_accregaddr(bus_regaddr),
+    .accel_done(acc_done),
+    //.accel_start(acc_start),
+    .accel_en(acc_en),
+    .bus_wr(bus_wr),
+    .bus_data(acc_data),
+    //.bus_accregaddr(acc_regaddr),
 
 	// CCD interface
     .ccd_done(ccd_done),
@@ -62,7 +73,7 @@ ram DMEM(
     .clock(clk),
 
 	// CPU interface
-    .address_a(cpu_dmem_addr[10:0]),
+    .address_a(cpu_dmem_addr),
     .data_a(cpu_dmem_data),
     .rden_a(cpu_dmem_ren),
     .wren_a(cpu_dmem_wren & ~halt),

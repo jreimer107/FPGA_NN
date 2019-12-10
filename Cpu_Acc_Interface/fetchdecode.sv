@@ -187,7 +187,7 @@ always_ff @(negedge clk, negedge rst_n) begin
 
 		// Status register inputs
 		registers[15][0] <= iCCD_done;
-		registers[15][2] <= iACC_done ? 1'b1 : registers[15][2];
+		registers[15][2] <= iACC_done;
 	end
 end
 

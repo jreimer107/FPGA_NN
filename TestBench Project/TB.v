@@ -49,12 +49,53 @@ module TB(
 //=======================================================
 
 
+wire [15:0] pc_out, reg_out;
+wire halt;
+wire [23:0] instr_out;
+reg [23:0] seg7_output;
+reg pc_advance;
+reg key_last;
 
+always @(posedge CLOCK_50) begin
+	// PC Advance
+	key_last <= KEY[1];
+	if (SW[9])
+		pc_advance <= key_last & !KEY[1];
+	else
+		pc_advance <= 1'b1;
+
+	// Seg7 output
+	if (SW[8])
+		seg7_output <= instr_out;
+	else
+		seg7_output <= {8'h0, reg_out};
+end
 
 //=======================================================
 //  Structural coding
 //=======================================================
 
+assign	LEDR = {pc_out[7:0], pc_advance, halt};
 
+
+//Frame count display
+SEG7_LUT_6 u5 (	
+	.oSEG0(HEX0),.oSEG1(HEX1),
+	.oSEG2(HEX2),.oSEG3(HEX3),
+	.oSEG4(HEX4),.oSEG5(HEX5),
+	.iDIG(seg7_output)
+);
+
+
+cpu_dmem_wrapper u_CPU(
+	.clk(CLOCK4_50), 
+	.rst_n(KEY[0]),
+	.pc_out(pc_out),
+	.halt(halt),
+	.reg_out(reg_out),
+	.reg_index(SW[3:0]),
+	.pc_advance(pc_advance),
+	.instr_out(instr_out)
+);
 
 endmodule

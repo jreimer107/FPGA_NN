@@ -32,9 +32,6 @@ reg clk; /* Clock input */
 reg rst_n; /* (Active low) Reset input */
 
 wire mem_data_en = MemRead | MemWrite;
-<<<<<<< Updated upstream
-cpu_dmem_wrapper DUT(.clk(clk), .rst_n(rst_n));
-=======
 
 reg pc_advance;
 reg [3:0] reg_index;
@@ -49,7 +46,6 @@ cpu_dmem_acc_wrapper DUT (
 	.instr_out(Inst),
 	.halt(Halt)
 );
->>>>>>> Stashed changes
 
 // cpu DUT(.clk(clk), .rst_n(rst_n), .mem_data_in(MemDataOut), .bus_data_in(16'h0),
 // 	.bus_data_out(), .mem_data_en(mem_data_en), .mem_data_wr(MemWrite),
@@ -78,7 +74,14 @@ initial begin
 	cycle_count = 0;
 	rst_n = 0; /* Intial reset state */
 	clk = 1;
+	reg_index = 4'h1;
+	pc_advance = 1'b0;
 	#201 rst_n = 1; // delay until slightly after two clock periods
+	repeat(12) begin
+		@(posedge clk) pc_advance = 1'b1;
+		@( posedge clk) pc_advance = 1'b0;
+		repeat(3) @( posedge clk);
+	end
 end
 
 always #50 begin   // delay 1/2 clock period each time thru loop
@@ -163,13 +166,13 @@ end
 // Edit the example below. You must change the signal
 // names on the right hand side
 
-assign PC = DUT.CPU.U_IFID.PC; //You won't need this because it's part of the main cpu interface
+// assign PC = DUT.CPU.U_IFID.PC; //You won't need this because it's part of the main cpu interface
 
-assign Halt = 0;
+// assign Halt = 0;
 // assign Halt = DUT.memory0.halt; //You won't need this because it's part of the main cpu interface
 // Is processor halted (1 bit signal)
 
-assign Inst = DUT.CPU.U_IFID.instr;
+// assign Inst = DUT.CPU.U_IFID.instr;
 //Instruction fetched in the current cycle
 
 assign RegWrite = DUT.CPU.wb_en;
