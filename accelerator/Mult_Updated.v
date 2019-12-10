@@ -9,7 +9,7 @@ localparam Integer_width = 5;
 localparam Fraction_width = 10;
 
 reg [31:0] partial_out, partial_out_dummy;
-reg [4:0] counter;
+reg [4:0] counter, c;
 reg [3:0] count_zeros;
 reg [15:0] output_reg;
 reg [4:0] integer_rounding;
@@ -17,35 +17,39 @@ reg enable_delay , sign;
 reg [9:0] fraction_rounding;
 
 
-
-
-
-
-
-
-
 always @ (posedge clk, negedge reset)
 begin
 if (!reset)
 begin
 			partial_out =0;
-			counter =0;
-        	output_reg =0;
+			counter = 0;
+        	output_reg = 0;
 			enable_delay <=0;
 			sign = 0;
 end
 
 else if (enable)
 begin
+	if (counter ==0)
+		begin
+			partial_out_dummy = 0;
+			partial_out = (input_neuron[14:0] * Weight_bit);
+			counter = counter +1'b1;
+			sign = 0;
+			//output_reg[15] = 1'b0;
+		end
+			
 
-	if (counter < 15) begin
-		partial_out_dummy = 0;
-		partial_out = ((input_neuron[14:0] * Weight_bit) << counter)+ partial_out;
+	else if (counter < 15) begin
+		//partial_out_dummy = 0;
+		//c = counter -1;
+		partial_out = ((input_neuron[14:0] * Weight_bit) << counter) + partial_out;
 		counter = counter +1;
 	end
-	else begin
+	else 
+	begin
 	sign = input_neuron[15] ^ Weight_bit;
-	partial_out_dummay = partial_out <<1;
+	partial_out_dummy= partial_out; //<<1;
 	
 	if(partial_out_dummy[26]) 
 	begin
@@ -133,3 +137,4 @@ end
 assign out = output_reg; // {partial_out[31], integer_rounding[4:0], partial_out [19:10]};
 
 endmodule
+*/

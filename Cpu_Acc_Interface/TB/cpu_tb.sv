@@ -1,7 +1,4 @@
-/*
- * This is the testbench from 552 with minor modifications to fit our ISA.
- * Also it's cleaned up, it had spaces and tabs everywhere and looked like trash.
-*/
+
 `timescale 1ps/1ps
 module cpu_tb();
 
@@ -40,11 +37,11 @@ wire [15:0] reg_out;
 cpu_dmem_acc_wrapper DUT (
 	.clk(clk),
 	.rst_n(rst_n),
-	.pc_advance(pc_advance),
+	//.pc_advance(pc_advance),
 	.pc_out(PC),
-	.reg_index(reg_index),
-	.reg_out(reg_out),
-	.instr_out(Inst),
+	//.reg_index(reg_index),
+	//.reg_out(reg_out),
+	//.instr_out(Inst),
 	.halt(Halt)
 );
 

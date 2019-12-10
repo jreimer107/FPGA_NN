@@ -201,8 +201,13 @@ begin
 	if (counter_SRAM_read_req <17)
 	begin
 		FIFO_read_req <=1;
-		FIFO_read_index <= counter_SRAM_read_req -1;
-		Weight_data <= 16'h000 + counter_SRAM_read_req; //SDRAM_FIFO[FIFO_read_index];
+		FIFO_read_index = counter_SRAM_read_req -1;
+		
+		if (counter_SRAM_read_req == 5'd10)
+			Weight_data <=16'hffff;
+		else
+			Weight_data <= 16'h0000;
+		//Weight_data <= 16'h0000010000000000; //SDRAM_FIFO[FIFO_read_index];
 		state <= Multiplication;
 		neuron_done_reg <= 0;
 		if (counter_SRAM_read_req ==16)

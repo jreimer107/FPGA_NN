@@ -1,9 +1,11 @@
 module cpu_dmem_acc_wrapper(
     input clk, rst_n,
-    input pc_advance,
-    input [3:0] reg_index,
-    output [15:0] pc_out, reg_out,
-    output [23:0] instr_out,
+    //input pc_advance,
+    //input [3:0] reg_index,
+    output [15:0] pc_out,
+	 //output [15:0] reg_out,
+    //output [23:0] instr_out,
+	 //output [15:0] output_neuron,
     output halt
 );
 
@@ -34,10 +36,12 @@ wire [6:0] ccd_dmem_addr;
 wire [255:0] ccd_dmem_data;
 wire ccd_dmem_wren;
 wire [15:0][15:0] DRAM_weight;
-wire [15:0]BRAM_Addr_In, BRAM_Addr_out, output_neuron;
+wire [15:0]BRAM_Addr_In, BRAM_Addr_out;
 wire [15:0] [15:0] BRAM_input;
 wire [6:0] bram_addr_b;
 wire Rd_BRAM, Wr_BRAM;
+
+wire [15:0] output_neuron;
 
 tri [15:0] databus = bus_wr ? acc_data : (acc_done ? output_neuron : 16'hz);
 
@@ -67,11 +71,11 @@ cpu CPU(
 
 	// Debug signals
     .halt(halt),
-    .pc_out(pc_out),
-    .reg_index(reg_index),
-    .reg_out(reg_out),
-    .pc_advance(pc_advance),
-    .instr_out(instr_out)
+    .pc_out(pc_out)
+    //.reg_index(reg_index),
+    //.reg_out(reg_out),
+    //.pc_advance(pc_advance),
+    //.instr_out(instr_out)
 );
 
 assign bram_addr_b = Rd_BRAM ? BRAM_Addr_In[10:4] : ccd_dmem_wren ? ccd_dmem_addr : 7'h0;

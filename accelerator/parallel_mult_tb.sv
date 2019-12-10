@@ -21,10 +21,10 @@ rst = 0;
 en =1;
 for(i=0;i<=15;i=i+1)
 begin
-    input_neuron[i][15:0] <= 16'h1001;
+    input_neuron[i][15:0] <= 16'hA800;
 end
 
-overal_weight = 16'b000001100000000;
+overal_weight = 16'h0400;//b0000010000000000;
 
 
 for(i=0;i<=15;i=i+1)

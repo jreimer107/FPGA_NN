@@ -19,13 +19,13 @@ rst = 0;
 
 #10 rst = 1;
 enable=1;
-input_sample =16'h0801;
-overal_weight = 16'b0101010101010101;
+input_sample =16'h8800;
+overal_weight = 16'h0400;//b0000010000000000;
 weight_sample = overal_weight[0];
 #10 weight_sample = overal_weight[1];
 #10 weight_sample = overal_weight[2];
 #10 weight_sample = overal_weight[3];
-#5 weight_sample = overal_weight[4];
+#10 weight_sample = overal_weight[4];
 #10 weight_sample = overal_weight[5];
 #10 weight_sample = overal_weight[6];
 #10 weight_sample = overal_weight[7] ;

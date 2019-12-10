@@ -5,7 +5,7 @@ ADDRESS_RADIX=UNS;
 DATA_RADIX=HEX;
 
 CONTENT BEGIN
-	[0..15]  :   0401;
+	[0..15]  :   0400;
 	[16..31]  :   0801;
 	[32..2046]  :   1111;
 	2047  :   2047;

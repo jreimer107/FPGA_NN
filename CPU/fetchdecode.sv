@@ -96,23 +96,10 @@ wire [15:0] next_PC;
 rom imem(.address(next_PC[7:0]), .clock(clk), .q(instr_temp), .rden(rst_n));
 
 // Branching vs PC advancement
-<<<<<<< Updated upstream
+
 assign instr = (oOpcode == Load | iHalt == 1'b1) ? 24'h280000 : instr_temp;
 
 assign next_PC = (branch == 1'b1) ? branchAddr : (opcode == Load) ? PC : PC + 1; 
-=======
-//assign instr = (oOpcode == Load | iHalt | !iPC_advance) ? 24'h280000 : instr_temp;
-
-assign instr = (oOpcode == Load | iHalt) ? 24'h280000 : instr_temp;
-
-// assign next_PC = (branch == 1'b1) ? branchAddr :
-// 				 (opcode == Load | !iPC_advance) ? PC :
-// 				 PC + 1;
-
-assign next_PC = (branch == 1'b1) ? branchAddr :
-				 (opcode == Load) ? PC :
-				 PC + 1;  
->>>>>>> Stashed changes
 
 // PC register
 always_ff @(posedge clk, negedge rst_n)
