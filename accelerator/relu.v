@@ -16,9 +16,11 @@ always@(posedge clk)
 	end
 	else if(neuron_done)
 	begin
-		out_reg <= neuron[15]? 0 : neuron;
+		out_reg <= neuron[15]? 0:neuron;
 		cpu_sig <= 1'b1;
 	end
+	else if(!neuron_done)
+		cpu_sig <=0;
 
 assign out = out_reg;
 assign cpu_neuron_done = cpu_sig;

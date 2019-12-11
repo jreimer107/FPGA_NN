@@ -1,7 +1,3 @@
-/*
- * This is the testbench from 552 with minor modifications to fit our ISA.
- * Also it's cleaned up, it had spaces and tabs everywhere and looked like trash.
-*/
 `timescale 1ps/1ps
 module cpu_tb();
 
@@ -36,14 +32,15 @@ wire mem_data_en = MemRead | MemWrite;
 reg pc_advance;
 reg [3:0] reg_index;
 wire [15:0] reg_out;
+
 cpu_dmem_acc_wrapper DUT (
 	.clk(clk),
 	.rst_n(rst_n),
-	.pc_advance(pc_advance),
+	//.pc_advance(pc_advance),
 	.pc_out(PC),
-	.reg_index(reg_index),
-	.reg_out(reg_out),
-	.instr_out(Inst),
+	//.reg_index(reg_index),
+	//.reg_out(reg_out),
+	//.instr_out(Inst),
 	.halt(Halt)
 );
 
@@ -74,14 +71,7 @@ initial begin
 	cycle_count = 0;
 	rst_n = 0; /* Intial reset state */
 	clk = 1;
-	reg_index = 4'h1;
-	pc_advance = 1'b0;
 	#201 rst_n = 1; // delay until slightly after two clock periods
-	repeat(12) begin
-		@(posedge clk) pc_advance = 1'b1;
-		@( posedge clk) pc_advance = 1'b0;
-		repeat(3) @( posedge clk);
-	end
 end
 
 always #50 begin   // delay 1/2 clock period each time thru loop
@@ -166,7 +156,7 @@ end
 // Edit the example below. You must change the signal
 // names on the right hand side
 
-// assign PC = DUT.CPU.U_IFID.PC; //You won't need this because it's part of the main cpu interface
+assign PC = DUT.CPU.U_IFID.PC; //You won't need this because it's part of the main cpu interface
 
 // assign Halt = 0;
 // assign Halt = DUT.memory0.halt; //You won't need this because it's part of the main cpu interface

@@ -1,7 +1,7 @@
 Info: Start Nativelink Simulation process
 executing command line: ip-make-simscript --nativelink-mode --output-directory=DE1_SoC_CAMERA_iputf_input --spd=C:/Users/ECE_STUDENT/Documents/FPGA_NN/Quartus project/v/sdram_pll.spd 
-Internal error: Failed to run ip-make-simscript: 2019.11.05.18:35:14 Error: Unrecognized switch <b>1</b>
-Internal error: Failed to run ip-make-simscript: 2019.11.05.18:35:14 Error: Unrecognized switch <b>1</b>
+Internal error: Failed to run ip-make-simscript: 2019.11.05.18:34:20 Error: Unrecognized switch <b>1</b>
+Internal error: Failed to run ip-make-simscript: 2019.11.05.18:34:20 Error: Unrecognized switch <b>1</b>
 Error: NativeLink simulation flow was NOT successful
 
 

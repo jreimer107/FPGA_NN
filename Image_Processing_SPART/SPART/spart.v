@@ -17,7 +17,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module spart(
+module spart_old(
     input clk,
     input rst,
     input iocs,
@@ -62,7 +62,7 @@ baud_rate_gen our_baud_gen(
 	.DB(DB)
 	);
 
-spart_tx our_tx(
+spart_tx_old our_tx(
 	.clk(clk),
 	.rst(rst),
 	.enable(enable),
@@ -74,7 +74,7 @@ spart_tx our_tx(
 	.tx_capture(tx_capture)
 );
 
-spart_rx our_rx(
+spart_rx_old our_rx(
 	.clk(clk),
 	.rst(rst),
 	.enable(enable),

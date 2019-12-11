@@ -17,11 +17,10 @@ module Accelerator_FSM(
 	output neuron_done,
 	output add_done,
 	output Rd_BRAM_current,
-	output Wr_BRAM_current,
+	//output Wr_BRAM_current,
 	output [15:0] out_addr_current,
 	output PE_enable,
-	output SRAM_read_req_current,
-	output FIFO_read_req_current
+	output SRAM_read_req_current
     );
 
 
@@ -76,7 +75,7 @@ IDLE:
 begin
 if (Enable)
 begin
-    	state = ReadDataBus;
+    state <= ReadDataBus;
 	//state <= WAIT ;
 	neuron_done_reg <=0;
 	count_databus <=0;
@@ -141,7 +140,7 @@ if(busrdwr)
 else
 begin
 	if(count_databus < 3'b101)
-		state = ReadDataBus;
+		state <= ReadDataBus;
 end
 end
 
@@ -177,6 +176,7 @@ begin
 		state <= Multiplication;
 		Rd_BRAM <= 1;
 		SRAM_read_req <= 0;
+		PE_enable_reg <=0;
 
 	end
 	else
@@ -185,6 +185,7 @@ begin
 		Rd_BRAM <= 0;
 		SRAM_read_req <= 0;
 		neuron_done_reg <= 0;
+		PE_enable_reg <= 0;
 	end
 end
 
@@ -200,11 +201,19 @@ begin
 	if (counter_SRAM_read_req <17)
 	begin
 		FIFO_read_req <=1;
-		FIFO_read_index <= counter_SRAM_read_req -1;
-		Weight_data <= 16'h000 + counter_SRAM_read_req; //SDRAM_FIFO[FIFO_read_index];
+		FIFO_read_index = counter_SRAM_read_req -1;
+		
+		if (counter_SRAM_read_req == 5'd10)
+			Weight_data <=16'hffff;
+		else
+			Weight_data <= 16'h0000;
+		//Weight_data <= 16'h0000010000000000; //SDRAM_FIFO[FIFO_read_index];
 		state <= Multiplication;
 		neuron_done_reg <= 0;
-		PE_enable_reg <= 1;
+		if (counter_SRAM_read_req ==16)
+			PE_enable_reg <= 0;
+		else
+			PE_enable_reg <= 1;
 	end
 	else
 	begin 
@@ -215,7 +224,7 @@ begin
 		state <= Addition;
 		InAddress <= InAddress + 16;	
 		neuron_done_reg <= 0;
-		PE_enable_reg <= 1;
+		PE_enable_reg <= 0;
 	end
 end
 
@@ -268,16 +277,15 @@ begin
 		begin
 			state <= WAITFORDVAL;
 			Wr_BRAM <= 0;
+			SRAM_read_req <= 1;
 		end
 	end
 	else
-		begin
+	begin
 		state <= WAITFORDVAL;
-		SRAM_read_req <= 0;
-
+		SRAM_read_req <= 1;
 	end
 end
-
 endcase
 end
 
@@ -287,7 +295,7 @@ assign Inaddress_current= InAddress;
 assign Weight_data_current = Weight_data;
 assign PE_enable = PE_enable_reg;//(state == Addition | Multiplication);
 assign SRAM_read_req_current = SRAM_read_req;
-assign FIFO_read_req_current = FIFO_read_req;
+//assign FIFO_read_req_current = FIFO_read_req;
 assign Rd_BRAM_current = Rd_BRAM;
 assign Wr_BRAM_current = Wr_BRAM;
 assign out_addr_current = OutputAddress;

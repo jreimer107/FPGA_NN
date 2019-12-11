@@ -3,7 +3,7 @@ Transmitter
 Outputs a "1" until a data byte is loaded then outputs a start bit, the data byte,
 and stop bit one bit at a time. Each bit is held for 16 enable signals.
 */
-module spart_tx(
+module spart_tx_old(
 	input clk,
 	input rst,
 	input enable,
