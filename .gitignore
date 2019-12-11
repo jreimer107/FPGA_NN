@@ -1,0 +1,6 @@
+db/
+demo_batch/
+greybox_tmp/
+hc_output/
+incremental_db/
+*.bak
