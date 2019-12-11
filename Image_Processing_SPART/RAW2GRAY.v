@@ -47,10 +47,10 @@ module RAW2GRAY(
 	input [10:0] iY_Cont,
 	input [11:0] iDATA,
 	input iDVAL,
-	output [7:0] oDATA,
+	output [11:0] oDATA,
 	output oDVAL,
-	output reg [15:0] oX,
-	output reg [15:0] oY
+	output reg [10:0] oX,
+	output reg [10:0] oY
 );
 
 wire	[11:0]	mDATA_0;
