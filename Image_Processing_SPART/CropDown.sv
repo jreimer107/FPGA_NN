@@ -7,9 +7,7 @@ module CropDown(
 	input [9:0] iY,
 	input [11:0] iDATA,
 	output reg [7:0] oDATA,
-	output reg oDVAL,
-	output reg oX,
-	output reg oY
+	output reg oDVAL
 );
 
 localparam X_init = 27, Y_init = 17, X_max = 614, Y_max = 464, Sx = 21, Sy = 16;
@@ -24,20 +22,14 @@ always_ff @(posedge iCLK, negedge iRST) begin
 	if(!iRST) begin
 		oDATA <= 8'b0;
 		oDVAL <= 1'b0;
-		oX <= 10'b0;
-		oY <= 10'b0;
 	end
 	else if(sample_pxl & iDVAL) begin
 		oDATA <= iDATA[11:4];
 		oDVAL <= 1'b1;
-		oX <= iX;
-		oY <= iY;
 	end
 	else begin
-		oDATA <= 8'b0;
+		// oDATA <= 8'b0;
 		oDVAL <= 1'b0;
-		oX <= 10'b0;
-		oY <= 10'b0;
 	end
 end
 

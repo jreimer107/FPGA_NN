@@ -91,10 +91,10 @@ wire	        [15:0]			Y_Cont;
 
 wire	        [11:0]			dCCD_DATA;
 wire							dCCD_DVAL;
-wire            [15:0]           X_Gray;
-wire            [15:0]           Y_Gray;
+wire            [10:0]           X_Gray;
+wire            [10:0]           Y_Gray;
 
-wire	        [11:0]			sCCD_DATA;
+wire	        [7:0]			sCCD_DATA;
 wire							sCCD_DVAL;
 
 //power on start
@@ -129,7 +129,7 @@ Reset_Delay			u2	(
 //auto start when power on
 assign auto_start = start_key | (((rst_n)&&(DLY_RST_3)&&(!DLY_RST_4))? 1'b1:1'b0);
 
-assign midpipeline = mCCD_DATA;
+assign midpipeline = {4'h0, sCCD_DATA};
 
 /// Image Capture Pipeline ///
 //D5M image capture
@@ -197,7 +197,7 @@ Img_Proc_FSM FSM (
 	// Pipeline interface
 	.iFVAL(rCCD_FVAL),
 	.iDVAL(sCCD_DVAL),
-	.iDATA(sCCD_DATA),
+	.iDATA({8'h0, sCCD_DATA}),
 
 	// Bmem 256-bit write port
 	.oDmem_wren(dmem_wren),
