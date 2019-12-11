@@ -51,7 +51,7 @@ module fetchdecode(
 
 	// Accelerator Interface
 	input iACC_done,
-	// output oACC_en,   //These two go directly to accelerator
+	output oACC_en,   //These two go directly to accelerator
 	// output oACC_start,
 
 	// Control Signals for later stages
@@ -192,8 +192,8 @@ always_ff @(negedge clk, negedge rst_n) begin
 end
 
 assign oCCD_en = registers[15][1];
-// assign oACC_en = registers[15][3];
-assign oACC_start = registers[15][4];
+assign oACC_en = registers[15][3];
+// assign oACC_start = registers[15][4];
 
 // Testing/demoing
 assign oReg_Out = registers[iRegIndex];
