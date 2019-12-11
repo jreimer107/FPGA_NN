@@ -65,7 +65,8 @@ module fetchdecode(
 	input [3:0] iRegIndex,
 	output reg [15:0] PC,
 	output [15:0] oReg_Out,
-	output [23:0] oInstr_out
+	output [23:0] oInstr_out,
+	output ccd_done_reg
 );
 
 localparam Branch = 5'b00111;
@@ -136,7 +137,7 @@ always_ff @(posedge clk, negedge rst_n) begin
 	else begin
 		oImm <= (opcode == ImmL | opcode == ImmH) ? {{8{1'b0}}, instr[10:3]} : 16'h0;
 		oOpcode <= opcode;
-		oSr1 <= sr1;
+		oSr1 <= (opcode == ImmL | opcode == ImmH) ? dest:sr1;
 		oSr2 <= (opcode == Store) ? dest :  sr2;
 		
 		oData1 <= registers[sr1];
@@ -186,11 +187,11 @@ always_ff @(negedge clk, negedge rst_n) begin
 		registers[0] <= 16'h0;
 
 		// Status register inputs
-		registers[15][0] <= iCCD_done;
+		registers[15][0] <= iCCD_done? 1'b1 : registers[15][0];
 		registers[15][2] <= iACC_done;
 	end
 end
-
+assign ccd_done_reg = registers[15][0];
 assign oCCD_en = registers[15][1];
 assign oACC_en = registers[15][3];
 // assign oACC_start = registers[15][4];

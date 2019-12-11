@@ -31,9 +31,6 @@
 //Date:  Thu Jul 11 11:26:45 2013
 // ============================================================================
 
-//`define ENABLE_HPS
-//`define ENABLE_USB
-
 module IPSM(
 
 	//////////// CLOCK //////////
@@ -47,9 +44,8 @@ module IPSM(
 
     // CPU interface
 	input enable,
-	output reg ccd_done,
+	output ccd_done,
 	output frame_val,
-	output dval,
 
 	// DMEM interface
 	output dmem_wren,
@@ -67,7 +63,9 @@ module IPSM(
 	output		          		D5M_RESET_N,
 	output		          		D5M_SCLK,
 	inout 		          		D5M_SDATA,
-	output		          		D5M_TRIGGER
+	output		          		D5M_TRIGGER,
+
+	output [11:0] midpipeline
 );
 
 
@@ -117,20 +115,21 @@ begin
 end
 
 
+//Reset module
+Reset_Delay			u2	(	
+							.iCLK(CLOCK_50),
+							.iRST(rst_n),
+							.oRST_0(DLY_RST_0),
+							.oRST_1(DLY_RST_1),
+							.oRST_2(DLY_RST_2),
+							.oRST_3(DLY_RST_3),
+							.oRST_4(DLY_RST_4)
+						   );
+
 //auto start when power on
 assign auto_start = start_key | (((rst_n)&&(DLY_RST_3)&&(!DLY_RST_4))? 1'b1:1'b0);
 
-//Reset module
-Reset_Delay u2 (	
-    .iCLK(CLOCK_50),
-    .iRST(rst_n),
-
-    .oRST_0(DLY_RST_0),
-    .oRST_1(DLY_RST_1),
-    .oRST_2(DLY_RST_2),
-    .oRST_3(DLY_RST_3),
-    .oRST_4(DLY_RST_4)
-);
+assign midpipeline = mCCD_DATA;
 
 /// Image Capture Pipeline ///
 //D5M image capture
@@ -181,8 +180,6 @@ CropDown u5 (
 	.oDVAL(sCCD_DVAL)
 );
 
-assign dval = dCCD_DVAL;
-
 /// End Image Capture Pipeline ///
 
 // Control image capture and storage	
@@ -198,7 +195,7 @@ Img_Proc_FSM FSM (
 	.iCCD_start(start_key),
 	
 	// Pipeline interface
-	.iFVAL(D5M_FVAL),
+	.iFVAL(rCCD_FVAL),
 	.iDVAL(sCCD_DVAL),
 	.iDATA(sCCD_DATA),
 

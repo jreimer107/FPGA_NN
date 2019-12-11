@@ -36,6 +36,12 @@
 
 module DE1_SoC_CAMERA(
 
+      ///////// ADC /////////
+      inout              ADC_CS_N,
+      output             ADC_DIN,
+      input              ADC_DOUT,
+      output             ADC_SCLK,
+
       ///////// CLOCK2 /////////
       input              CLOCK2_50,
 
@@ -47,6 +53,19 @@ module DE1_SoC_CAMERA(
 
       ///////// CLOCK /////////
       input              CLOCK_50,
+
+      ///////// DRAM /////////
+      output      [12:0] DRAM_ADDR,
+      output      [1:0]  DRAM_BA,
+      output             DRAM_CAS_N,
+      output             DRAM_CKE,
+      output             DRAM_CLK,
+      output             DRAM_CS_N,
+      inout       [15:0] DRAM_DQ,
+      output             DRAM_LDQM,
+      output             DRAM_RAS_N,
+      output             DRAM_UDQM,
+      output             DRAM_WE_N,
 
       ///////// GPIO /////////
       inout     [35:0]   GPIO_0,
@@ -77,12 +96,6 @@ module DE1_SoC_CAMERA(
 
       ///////// SW /////////
       input       [9:0]  SW,
-
-      ///////// ADC /////////
-      inout              ADC_CS_N,
-      output             ADC_DIN,
-      input              ADC_DOUT,
-      output             ADC_SCLK,
 		
 		//////////// GPIO1, GPIO1 connect to D5M - 5M Pixel Camera //////////
 	   input		   [11:0] D5M_D,
@@ -101,6 +114,9 @@ module DE1_SoC_CAMERA(
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
+wire			 [15:0]			Read_DATA1;
+wire	       [15:0]			Read_DATA2;
+
 wire			 [11:0]			mCCD_DATA;
 wire								mCCD_DVAL;
 wire								mCCD_DVAL_d;
@@ -113,7 +129,7 @@ wire								DLY_RST_1;
 wire								DLY_RST_2;
 wire								DLY_RST_3;
 wire								DLY_RST_4;
-
+wire								Read;
 reg		    [11:0]			rCCD_DATA;
 reg								rCCD_LVAL;
 reg								rCCD_FVAL;
@@ -124,102 +140,98 @@ wire								sCCD_DVAL;
 
 wire								sdram_ctrl_clk;
 
+wire ccd_enable;
+wire ccd_done;
+wire ccd_dmem_wren;
+wire [6:0] ccd_dmem_wraddr;
+wire [255:0] ccd_dmem_wrdata;
+wire [1:0] state;
+
+wire bram_ren;
+wire bram_wren;
+wire [10:0] bram_addr;
+wire [15:0] bram_data_in;
+wire [15:0] bram_data_out;
+wire acc_done;
+wire acc_en;
+wire bus_wr;
+wire [15:0] bus_data;
+wire pc_advance;
+wire [3:0] reg_index = SW[3:0];
+wire halt;
+wire [23:0] instr_out;
+wire [15:0] pc_out;
+wire [15:0] reg_out;
+wire ccd_done_reg;
+
 //=======================================================
 //  Structural coding
 //=======================================================
+
+assign	LEDR	=	{2'b0, ccd_enable, ccd_done, state[1:0], pc_out[3:0]};
 
 wire clk, rst_n;
 assign clk = CLOCK_50;
 assign rst_n = KEY[0];
 
-
-// CPU debug
-wire [15:0] pc_out, reg_out;
-wire halt;
-wire [23:0] instr_out;
 reg [23:0] seg7_output;
-reg pc_advance;
-reg key_last;
-always @(posedge CLOCK_50) begin
-	// PC Advance
-	key_last <= KEY[1];
-	if (SW[9])
-		pc_advance <= key_last & !KEY[1];
-	else
-		pc_advance <= 1'b1;
+reg [6:0] ccd_dmem_wren_cnt;
+reg		 ccd_dmem_wren_buf;
+reg [6:0] ccd_dmem_wraddr_buf;
 
-	// Seg7 output
-	if (SW[8])
-		seg7_output <= instr_out;
-	else
-		seg7_output <= {8'h0, reg_out};
+always @(posedge CLOCK_50) begin
+	if (SW[9])
+		seg7_output <= {18'h0, ccd_dmem_wren_cnt};
+   else if(SW[4])
+      seg7_output <= {18'h0, ccd_dmem_wraddr_buf};
+	else begin
+	   if (SW[8])
+		   seg7_output <= instr_out;
+	   else
+		   seg7_output <= {8'h0, reg_out};
+   end
 end
 
 
-assign	LEDR = {
-    ccd_done,
-    ccd_dmem_wren,
-	ccd_en,
-	state[1:0],
-	halt,
-    pc_out[3:0]
-};
+always @(posedge CLOCK_50) begin
+   if(!KEY[0]) begin
+      ccd_dmem_wren_cnt <= 7'h0;
+      ccd_dmem_wren_buf <= 1'b0;
+      ccd_dmem_wraddr_buf <= 7'h0;
+   end
+   else begin
+      ccd_dmem_wren_cnt <= ccd_dmem_wren_buf ? ccd_dmem_wren_cnt + 1 : ccd_dmem_wren_cnt;
+      ccd_dmem_wraddr_buf <= ccd_dmem_wren_buf ? ccd_dmem_wraddr : ccd_dmem_wraddr_buf;
+      ccd_dmem_wren_buf <= ccd_dmem_wren;
+   end
+end
 
-//Frame count display
-SEG7_LUT_6 			u1	(	
-							.oSEG0(HEX0),.oSEG1(HEX1),
-							.oSEG2(HEX2),.oSEG3(HEX3),
-							.oSEG4(HEX4),.oSEG5(HEX5),
-							.iDIG(seg7_output)
-						   );
-												
-sdram_pll 			u2	(
-							.refclk(CLOCK_50),
-							.rst(1'b0),
-							.outclk_0(sdram_ctrl_clk),
-							.outclk_1(DRAM_CLK),
-							.outclk_2(D5M_XCLKIN),    //25M
-					        .outclk_3(VGA_CLK)       //25M
+IPSM u1 (
 
-						   );
-
-// CCD
-wire ccd_en;
-wire ccd_done;
-wire ccd_dmem_wren;
-wire [6:0] ccd_dmem_addr;
-wire [255:0] ccd_dmem_data;
-wire [9:0] pxl_cnt;
-wire ccd_start_cap;
-wire captured;
-wire start_key_press;
-wire [1:0] state;
-
-IPSM u3(
-   .CLOCK2_50(CLOCK2_50),
+	//////////// CLOCK //////////
+	.CLOCK2_50(CLOCK2_50),
 	.CLOCK_50(CLOCK_50),
-	.rst_n(rst_n),
+   .rst_n(rst_n),
 
-	// User controls
-	.start_key(!KEY[3]),
-	.exposure_key(!KEY[2]),
+   .start_key(!KEY[3]),
+   .exposure_key(!KEY[2]),
 	.exposure_sw(SW[7]),
-	.zoom_sw(SW[6]),
+   .zoom_sw(SW[6]),
 
-	// CPU interface
-	.enable(ccd_en),
-	// .cpu_done(cpu_done),
-	//.ccd_start(ccd_start),
+    // CPU interface
+	.enable(ccd_enable),
 	.ccd_done(ccd_done),
 
 	// DMEM interface
 	.dmem_wren(ccd_dmem_wren),
-	.dmem_wraddr(ccd_dmem_addr),
-	.dmem_wrdata(ccd_dmem_data),
-	.state(state),
+	.dmem_wraddr(ccd_dmem_wraddr),
+	.dmem_wrdata(ccd_dmem_wrdata),
 
-	//GPIO1
-	.D5M_D(D5M_D),
+	.state(state),
+	.Frame_Cont(Frame_Cont),
+
+	//////////// GPIO_1, GPIO_1 connect to D5M - 5M Pixel Camera //////////
+   .D5M_D(D5M_D),
 	.D5M_FVAL(D5M_FVAL),
 	.D5M_LVAL(D5M_LVAL),
 	.D5M_PIXLCLK(D5M_PIXLCLK),
@@ -229,61 +241,70 @@ IPSM u3(
 	.D5M_TRIGGER(D5M_TRIGGER)
 );
 
-//CPU dmem wires
-wire [15:0] cpu_dmem_data, dmem_cpu_data;
-wire [15:0] cpu_dmem_addr;
-wire cpu_dmem_ren, cpu_dmem_wren;
 
+cpu  u3(
+	.clk(clk),                   // Clock
+	.rst_n(rst_n),                 // Asynchronous reset active low
 
+	// DMEM interface
+	.dmem_data_from(bram_data_in),    // load data from data BRAM
+	.dmem_ren(bram_ren),          // enable BRAM for read
+	.dmem_wren(bram_wren),          // write enable to BRAM
+	.dmem_addr(bram_addr), // read/write address to BRAM
+	.dmem_data_to(bram_data_out),  // store data to BRAM
 
-cpu u4(
-    .clk(clk),
-    .rst_n(rst_n),
+	// Accelerator interface
+	.accel_done(acc_done),
+	// output accel_start,
+	.accel_en(acc_en),
+	.bus_wr(bus_wr),
+	// output [2:0] bus_accregaddr,
+	.bus_data(bus_data),
 
-	//DMEM interface
-    .dmem_ren(cpu_dmem_ren), 
-    .dmem_wren(cpu_dmem_wren),
-	 .dmem_addr(cpu_dmem_addr),  
-    .dmem_data_to(cpu_dmem_data),
-    .dmem_data_from(dmem_cpu_data),
+	//IPU interface
+	.ccd_done(ccd_done),
+	.ccd_en(ccd_enable),
 
-	// Accel interface
-    .accel_done(bus_done),
-    // .accel_start(bus_start),
-    .accel_en(bus_en),
-    .bus_wr(bus_wr),
-    .bus_data(databus),
-    // .bus_accregaddr(bus_regaddr),
-
-	// CCD interface
-    .ccd_done(ccd_done),
-    .ccd_en(ccd_en),
-
-	// Debug signals
-    .halt(halt),
-    .pc_out(pc_out),
-    .reg_index(SW[3:0]),
-    .reg_out(reg_out),
-    .pc_advance(pc_advance),
-    .instr_out(instr_out)
+	// Testing/Demo signals
+	.pc_advance(pc_advance),
+	.reg_index(reg_index),
+	.halt(halt),
+	.instr_out(instr_out),
+	.pc_out(pc_out),
+	.reg_out(reg_out),
+	.ccd_done_reg(ccd_done_reg)
 );
 
-ram u5(
-    .clock(clk),
+ram u4 (
+	.address_a(bram_addr),
+	.address_b(ccd_dmem_wraddr),
+	.clock(clk),
+	.data_a(bram_data_out),
+	.data_b(ccd_dmem_wrdata),
+	.rden_a(bram_ren),
+	.rden_b(1'b0),
+	.wren_a(bram_wren),
+	.wren_b(ccd_dmem_wren),
+	.q_a(bram_data_in),
+	.q_b());
 
-	// CPU interface
-    .address_a(cpu_dmem_addr[10:0]),
-    .data_a(cpu_dmem_data),
-    .rden_a(cpu_dmem_ren),
-    .wren_a(cpu_dmem_wren & ~halt),
-    .q_a(dmem_cpu_data),
 
-    // Shared Accel/CCD interface
-	.address_b(ccd_dmem_addr),  //Need to mux this when implementing Accel
-    .data_b(ccd_dmem_data),
-    .rden_b(1'b0), 		//For accel
-    .wren_b(ccd_dmem_wren),
-    .q_b()		//For accel
-);
+//Frame count display
+SEG7_LUT_6 			u5	(	
+							.oSEG0(HEX0),.oSEG1(HEX1),
+							.oSEG2(HEX2),.oSEG3(HEX3),
+							.oSEG4(HEX4),.oSEG5(HEX5),
+							.iDIG(seg7_output)
+						   );
+												
+sdram_pll 			u6	(
+							.refclk(CLOCK_50),
+							.rst(1'b0),
+							.outclk_0(sdram_ctrl_clk),
+							.outclk_1(DRAM_CLK),
+							.outclk_2(D5M_XCLKIN),    //25M
+					      .outclk_3(VGA_CLK)       //25M
+
+						   );
 
 endmodule

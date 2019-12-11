@@ -25,9 +25,9 @@ wire count;
 wire sample;
 
 // Single cycle signals used as enables to flops
-assign count = en_cnt == 5'd16 && old_en_cnt == 5'd15;
-assign zero = en_cnt == 5'd1 && old_en_cnt == 5'd16;
-assign sample = en_cnt == 5'd8 && old_en_cnt == 5'd7;
+assign count = en_cnt == 5'd16 & old_en_cnt == 5'd15;
+assign zero = en_cnt == 5'd1 & old_en_cnt == 5'd16;
+assign sample = en_cnt == 5'd8 & old_en_cnt == 5'd7;
 
 always @(posedge clk, posedge rst)
   if(rst)

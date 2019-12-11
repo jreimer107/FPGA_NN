@@ -195,7 +195,6 @@ always @(posedge CLOCK_50) begin
 		seg7_output <= instr_out;
 	else
 		seg7_output <= {8'h0, reg_out};
-		// seg7_output <=
 end
 assign	LEDR = {
 	pc_out[3:0],

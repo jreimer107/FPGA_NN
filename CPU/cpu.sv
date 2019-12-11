@@ -27,7 +27,8 @@ module cpu (
 	output reg halt,
 	output [23:0] instr_out,
 	output [15:0] pc_out,
-	output [15:0] reg_out
+	output [15:0] reg_out,
+	output ccd_done_reg
 );
 
 	/// ex ///
@@ -111,7 +112,8 @@ module cpu (
 	.oReg_Out(reg_out),
 	.iRegIndex(reg_index),
 	.iPC_advance(pc_advance),
-	.oInstr_out(instr_out)
+	.oInstr_out(instr_out),
+	.ccd_done_reg(ccd_done_reg)
 	);
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

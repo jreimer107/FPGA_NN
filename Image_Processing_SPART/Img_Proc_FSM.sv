@@ -7,7 +7,7 @@ module Img_Proc_FSM(
 	input [15:0] iDATA,
 
 	output oDmem_wren,
-	output [6:0] oDmem_addr,
+	output reg [6:0] oDmem_addr,
 	output [255:0] oDmem_data,
 	// output [15:0] oDmem_data [15:0],
 	output reg [1:0] state,
@@ -22,7 +22,7 @@ always_ff @(posedge pxlclk, negedge rst_n)
 	if (!rst_n)
 		FVAL_buf <= 0;
 	else
-		FVAL_buf <= iFVAL;
+		FVAL_buf <= iFVAL & !FVAL_buf;
 
 reg DVAL_buf;
 always_ff @(posedge pxlclk, negedge rst_n)
@@ -59,7 +59,6 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 		pixels <= '{default:0};
 		state <= IDLE;
 		dmem_wren <= 1'b0;
-		dmem_addr <= 7'b0;
 		pxl_cnt <= 10'b0;
 	end
 	else begin
@@ -67,8 +66,7 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 			// Wait for button press and enable signal
 			IDLE: begin
 				pixels <= '{default:0};
-				dmem_addr <= 7'b0;
-				dmem_addr <= 1'b0;
+				dmem_wren <= 1'b0;
 				pxl_cnt <= 10'b0;
 				if (iCCD_enable & ccd_start_buf) begin
 					state <= WAIT;
@@ -80,7 +78,6 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 			WAIT: begin
 				state <= WAIT;
 				if (FVAL_buf) begin
-					dmem_addr <= 7'b0;
 					dmem_wren <= 1'b0;
 					pxl_cnt <= 10'b0;
 					state <= CAPTURE;
@@ -95,18 +92,14 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 					dmem_wren <= 1'b0;
 					if (pxl_index == 4'hf) begin
 						dmem_wren <= 1;
-						dmem_addr <= dmem_addr + 1;
 					end
 					if (pxl_cnt == 783) begin
 						dmem_wren <= 1;
-						dmem_addr <= dmem_addr + 1;
 						state <= SEND_LAST;
-						pixels[pxl_index + 1] <= 16'h0;
 					end
 				end
 				else begin
 					pxl_cnt <= pxl_cnt;
-					dmem_addr <= 7'b0;
 					dmem_wren <= 1'b0;
 					ccd_done <= 1'b0;
 				end
@@ -116,7 +109,6 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 			SEND_LAST: begin
 				state <= IDLE;
 				pxl_cnt <= 10'b0;
-				dmem_addr <= 7'b0;
 				dmem_wren <= 1'b0;
 				ccd_done <= 1'b1;
 				pixels <= '{default:0};
@@ -127,9 +119,16 @@ always_ff @(posedge pxlclk, negedge rst_n) begin
 	end
 end
 
+always_ff @(posedge pxlclk, negedge rst_n)
+	if(!rst_n)
+		oDmem_addr <= 7'h0;
+	else if(state == IDLE)
+		oDmem_addr <= 7'h0;
+	else
+		oDmem_addr <= dmem_wren ? oDmem_addr + 7'h1 : oDmem_addr;
+
 assign pxl_index = pxl_cnt & 4'hf;
 assign oDmem_wren = dmem_wren;
-assign oDmem_addr = dmem_addr;
 assign oCCD_done = ccd_done;
 assign oDmem_data = {pixels[15], pixels[14], pixels[13], pixels[12],
 							pixels[11], pixels[10], pixels[9], pixels[8], 

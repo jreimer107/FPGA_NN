@@ -49,7 +49,7 @@ spart spart0(   .clk(clk),
                 .rxd(rxd)
             );
 
-assign br_cfg = 2'b01;
+// assign br_cfg = 2'b01;
 
 /*
 driver driver0( .clk(clk),

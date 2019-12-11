@@ -43,8 +43,8 @@
 module RAW2GRAY(	
 	input iCLK,
 	input iRST,
-	input [15:0] iX_Cont,
-	input [15:0] iY_Cont,
+	input [10:0] iX_Cont,
+	input [10:0] iY_Cont,
 	input [11:0] iDATA,
 	input iDVAL,
 	output [7:0] oDATA,
@@ -64,7 +64,7 @@ reg				mDVAL;
 
 
 // Grayscale value is average of four RGB values
-assign oDATA = (mCCD_R[11:0] + mCCD_G[12:0] + mCCD_B[11:0]) / 4;
+assign oDATA = (mCCD_R + mCCD_G + mCCD_B) / 4;
 assign oDVAL = mDVAL;
 
 Line_Buffer1 u0 (	

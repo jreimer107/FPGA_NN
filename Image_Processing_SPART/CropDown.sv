@@ -22,7 +22,7 @@ assign sample_pxl = in_range && ((iX - X_init) % Sx == 0) && ((iY - Y_init) % Sy
 
 always_ff @(posedge iCLK, negedge iRST) begin
 	if(!iRST) begin
-		oDATA <= 1'b0;
+		oDATA <= 8'b0;
 		oDVAL <= 1'b0;
 		oX <= 10'b0;
 		oY <= 10'b0;
@@ -34,7 +34,7 @@ always_ff @(posedge iCLK, negedge iRST) begin
 		oY <= iY;
 	end
 	else begin
-		oDATA <= 1'b0;
+		oDATA <= 8'b0;
 		oDVAL <= 1'b0;
 		oX <= 10'b0;
 		oY <= 10'b0;

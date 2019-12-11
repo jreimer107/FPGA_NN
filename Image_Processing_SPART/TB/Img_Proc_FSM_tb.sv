@@ -12,7 +12,7 @@ wire [15:0] dmem_data [15:0];
 wire done;
 
 Img_Proc_FSM DUT(
-    .clk(clk),
+    // .clk(clk),
     .pxlclk(pxlclk),
     .rst_n(rst_n),
 
@@ -26,6 +26,9 @@ Img_Proc_FSM DUT(
     .oDmem_wren(dmem_wren),
     .oDmem_addr(dmem_addr),
     .oDmem_data(dmem_data),
+
+    .state(),
+    .frame_val(),
     
     .oCCD_done(done)
 );
