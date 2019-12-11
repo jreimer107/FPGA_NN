@@ -184,7 +184,7 @@ CropDown u5 (
 
 // Control image capture and storage	
 Img_Proc_FSM FSM (
-	.pxlclk(CLOCK_50),
+	.pxlclk(D5M_PIXLCLK),
 	.rst_n(rst_n),
 
 	// CPU interface
