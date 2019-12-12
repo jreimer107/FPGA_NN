@@ -45,15 +45,10 @@ module IPSM(
     // CPU interface
 	input enable,
 	output ccd_done,
-	output frame_val,
-
 	// DMEM interface
 	output dmem_wren,
 	output [6:0] dmem_wraddr,
 	output [255:0] dmem_wrdata,
-
-	output [1:0] state,
-	output [23:0] Frame_Cont,
 
 	//////////// GPIO_1, GPIO_1 connect to D5M - 5M Pixel Camera //////////
 	input 		    [11:0]		D5M_D,
@@ -63,9 +58,7 @@ module IPSM(
 	output		          		D5M_RESET_N,
 	output		          		D5M_SCLK,
 	inout 		          		D5M_SDATA,
-	output		          		D5M_TRIGGER,
-
-	output [11:0] midpipeline
+	output		          		D5M_TRIGGER
 );
 
 
@@ -87,10 +80,10 @@ wire		    [11:0]			mCCD_DATA;
 wire							mCCD_DVAL;
 wire	        [15:0]			X_Cont;
 wire	        [15:0]			Y_Cont;
-//wire	        [31:0]			Frame_Cont;
+wire	        [31:0]			Frame_Cont;
 
-wire	        [11:0]			dCCD_DATA;
-wire							dCCD_DVAL;
+wire	        [11:0]			gCCD_DATA;
+wire							gCCD_DVAL;
 wire            [10:0]           X_Gray;
 wire            [10:0]           Y_Gray;
 
@@ -115,6 +108,9 @@ begin
 end
 
 
+//auto start when power on
+assign auto_start = ((rst_n)&&(DLY_RST_3)&&(!DLY_RST_4))? 1'b1:1'b0;
+
 //Reset module
 Reset_Delay			u2	(	
 							.iCLK(CLOCK_50),
@@ -126,18 +122,13 @@ Reset_Delay			u2	(
 							.oRST_4(DLY_RST_4)
 						   );
 
-//auto start when power on
-assign auto_start = start_key | (((rst_n)&&(DLY_RST_3)&&(!DLY_RST_4))? 1'b1:1'b0);
-
-assign midpipeline = {4'h0, sCCD_DATA};
-
 /// Image Capture Pipeline ///
 //D5M image capture
 CCD_Capture	u3 (
     .iCLK(~D5M_PIXLCLK),
     .iRST(DLY_RST_2),
 
-    .iSTART(auto_start),
+    .iSTART(auto_start|start_key),
     .iEND(1'b0),
     .iFVAL(rCCD_FVAL),
     .iLVAL(rCCD_LVAL),
@@ -160,8 +151,8 @@ RAW2GRAY u4 (
     .iX_Cont(X_Cont),
     .iY_Cont(Y_Cont),
 
-    .oDATA(dCCD_DATA),
-    .oDVAL(dCCD_DVAL),
+    .oDATA(gCCD_DATA),
+    .oDVAL(gCCD_DVAL),
     .oX(X_Gray),
     .oY(Y_Gray)
 );
@@ -171,8 +162,8 @@ CropDown u5 (
 	.iCLK(D5M_PIXLCLK), 
 	.iRST(DLY_RST_1),
 
-	.iDVAL(dCCD_DVAL), 
-	.iDATA(dCCD_DATA), 
+	.iDVAL(gCCD_DVAL), 
+	.iDATA(gCCD_DATA), 
 	.iX(X_Gray[10:1]),
 	.iY(Y_Gray[10:1]),
     
@@ -185,7 +176,7 @@ CropDown u5 (
 // Control image capture and storage	
 Img_Proc_FSM FSM (
 	.pxlclk(D5M_PIXLCLK),
-	.rst_n(rst_n),
+	.rst_n(DLY_RST_1),
 
 	// CPU interface
 	.iCCD_enable(enable),
@@ -203,8 +194,8 @@ Img_Proc_FSM FSM (
 	.oDmem_wren(dmem_wren),
 	.oDmem_addr(dmem_wraddr),
 	.oDmem_data(dmem_wrdata),
-	.state(state),
-	.frame_val(frame_val)
+	.state(),
+	.frame_val()
 );
 
 //D5M I2C control
