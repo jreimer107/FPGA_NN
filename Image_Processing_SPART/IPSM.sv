@@ -55,10 +55,8 @@ module IPSM(
 	input 		          		D5M_FVAL,
 	input 		          		D5M_LVAL,
 	input 		          		D5M_PIXLCLK,
-	output		          		D5M_RESET_N,
 	output		          		D5M_SCLK,
-	inout 		          		D5M_SDATA,
-	output		          		D5M_TRIGGER
+	inout 		          		D5M_SDATA
 );
 
 
@@ -95,10 +93,6 @@ wire             				auto_start;
 //=======================================================
 //  Structural coding
 //=======================================================
-// D5M
-assign	D5M_TRIGGER	=	1'b1;  // tRIGGER
-assign	D5M_RESET_N	=	DLY_RST_1;
-
 //D5M read 
 always@(posedge D5M_PIXLCLK)
 begin
