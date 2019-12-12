@@ -17,31 +17,9 @@ module FPGA_NN (
 	output             DRAM_RAS_N,
 	output             DRAM_UDQM,
 	output             DRAM_WE_N,
-
-	///////// VGA /////////
-	output      [7:0]  VGA_B,
-	output             VGA_BLANK_N,
-	output             VGA_CLK,
-	output      [7:0]  VGA_G,
-	output             VGA_HS,
-	output      [7:0]  VGA_R,
-	output             VGA_SYNC_N,
-	output             VGA_VS,
 	
 	///////// GPIO /////////
 	inout     [35:0]   GPIO_0,
-
-	//////////// GPIO1, GPIO1 connect to D5M - 5M Pixel Camera //////////
-	input		[11:0] D5M_D,
-	input		       D5M_FVAL,
-	input		       D5M_LVAL,
-	input		       D5M_PIXLCLK,
-	output		       D5M_RESET_N,
-	output		       D5M_SCLK,
-	inout		       D5M_SDATA,
-	input		       D5M_STROBE,
-	output		       D5M_TRIGGER,
-	output		       D5M_XCLKIN,
 
 	//////////// SEG7 //////////
 	output		     [6:0]		HEX0,
@@ -58,12 +36,62 @@ module FPGA_NN (
 	output		     [9:0]		LEDR,
 
 	//////////// SW //////////
-	input 		     [9:0]		SW
+	input 		     [9:0]		SW,
+
+	///////// VGA /////////
+	output      [7:0]  VGA_B,
+	output             VGA_BLANK_N,
+	output             VGA_CLK,
+	output      [7:0]  VGA_G,
+	output             VGA_HS,
+	output      [7:0]  VGA_R,
+	output             VGA_SYNC_N,
+	output             VGA_VS,
+
+	//////////// GPIO1, GPIO1 connect to D5M - 5M Pixel Camera //////////
+	input		[11:0] D5M_D,
+	input		       D5M_FVAL,
+	input		       D5M_LVAL,
+	input		       D5M_PIXLCLK,
+	output		       D5M_RESET_N,
+	output		       D5M_SCLK,
+	inout		       D5M_SDATA,
+	input		       D5M_STROBE,
+	output		       D5M_TRIGGER,
+	output		       D5M_XCLKIN
 );
 
+//=======================================================
+//  REG/WIRE declarations
+//=======================================================
 wire clk, rst_n;
 assign clk = CLOCK_50;
 assign rst_n = KEY[0];
+
+
+//=======================================================
+//  Structural coding
+//=======================================================
+
+
+//Reset module
+wire						    DLY_RST_0;
+wire						    DLY_RST_1;
+wire						    DLY_RST_2;
+wire						    DLY_RST_3;
+wire						    DLY_RST_4;
+Reset_Delay			u2	(	
+	.iCLK(CLOCK_50),
+	.iRST(rst_n),
+	.oRST_0(DLY_RST_0),
+	.oRST_1(DLY_RST_1),
+	.oRST_2(DLY_RST_2),
+	.oRST_3(DLY_RST_3),
+	.oRST_4(DLY_RST_4)
+);
+
+assign	D5M_TRIGGER	=	1'b1;  // tRIGGER
+assign	D5M_RESET_N	=	DLY_RST_1;
 
 //////// SPART wires/reg ////////
 wire [2:0] spart_ctrl;
@@ -74,21 +102,21 @@ wire rx_VAL, tbr;
 wire [11:0] rd_cnt, wr_cnt;
 wire [7:0] spart_cap;
 
-SPART_Control spart(
-	.clk(clk),
-	.rst(rst_n),
-	.ctrl(spart_ctrl),
-	.rxd(GPIO_0[5]),
-	.txd(GPIO_0[3]),
-	.sdram_rd_req(spart_req),
-	.oWord(rx_data),
-	.owordVAL(rx_VAL),
-	.iWord(spart_iWord),
-	.rd_req_cnt(rd_cnt),
-	.wr_req_cnt(wr_cnt),
-	.SPART_capture(spart_cap),
-	.otbr(tbr)
-);
+// SPART_Control spart(
+// 	.clk(clk),
+// 	.rst(rst_n),
+// 	.ctrl(spart_ctrl),
+// 	.rxd(GPIO_0[5]),
+// 	.txd(GPIO_0[3]),
+// 	.sdram_rd_req(spart_req),
+// 	.oWord(rx_data),
+// 	.owordVAL(rx_VAL),
+// 	.iWord(spart_iWord),
+// 	.rd_req_cnt(rd_cnt),
+// 	.wr_req_cnt(wr_cnt),
+// 	.SPART_capture(spart_cap),
+// 	.otbr(tbr)
+// );
 
 // CCD
 wire ccd_en;
@@ -96,70 +124,29 @@ wire ccd_done;
 wire ccd_dmem_wren;
 wire [6:0] ccd_dmem_addr;
 wire [255:0] ccd_dmem_data;
-wire DLY_RST_0;
-wire [9:0] pxl_cnt;
-wire ccd_start_cap;
-wire captured;
-wire start_key_press;
-wire ccd_start;
-wire state;
-// wire [31:0] Frame_Count;
-
-// wire cpu_done = 1;
-
-IPSM image_proc(
+IPSM Image_Proc(
 	.CLOCK2_50(CLOCK2_50),
 	.CLOCK_50(CLOCK_50),
-	.rst_n(rst_n),
+	.rst_n(KEY[0]),
 
-	// User controls
 	.start_key(!KEY[3]),
-	.exposure_key(!KEY[2]),
-	.exposure_sw(SW[7]),
-	.zoom_sw(SW[6]),
+	.exposure_key(KEY[1]),
+	.exposure_sw(SW[0]),
+	.zoom_sw(SW[9]),
 
-	// CPU interface
-	.enable(ccd_en),
-	// .cpu_done(cpu_done),
-	.ccd_start(ccd_start),
+	.enable(1'b1),
 	.ccd_done(ccd_done),
 
-	// DMEM interface
 	.dmem_wren(ccd_dmem_wren),
 	.dmem_wraddr(ccd_dmem_addr),
 	.dmem_wrdata(ccd_dmem_data),
-	.state(state),
-
-	// //VGA
-	// .VGA_B(VGA_B),
-	// .VGA_BLANK_N(VGA_BLANK_N),
-	// .VGA_CLK(VGA_CLK),
-	// .VGA_G(VGA_G),
-	// .VGA_HS(VGA_HS),
-	// .VGA_R(VGA_R),
-	// .VGA_SYNC_N(VGA_SYNC_N),
-	// .VGA_VS(VGA_VS),
-
-	//GPIO1
+	
 	.D5M_D(D5M_D),
 	.D5M_FVAL(D5M_FVAL),
 	.D5M_LVAL(D5M_LVAL),
 	.D5M_PIXLCLK(D5M_PIXLCLK),
-	.D5M_RESET_N(D5M_RESET_N),
 	.D5M_SCLK(D5M_SCLK),
-	.D5M_SDATA(D5M_SDATA),
-	.D5M_TRIGGER(D5M_TRIGGER),
-	// .D5M_XCLKIN(D5M_XCLKIN),
-
-	//Stupid sdram reset
-	//.oDLY_RST_0(DLY_RST_0),
-
-	//.pxl_cnt(pxl_cnt),
-	//.start_cap(ccd_start_cap),
-	//.captured(captured),
-	//.start_key_press(start_key_press),
-	//.start(ccd_start)
-	// .Frame_Cont(Frame_Count)
+	.D5M_SDATA(D5M_SDATA)
 );
 
 //CPU dmem wires
@@ -199,7 +186,6 @@ end
 assign	LEDR = {
 	pc_out[3:0],
 	ccd_done,
-	ccd_start,
 	ccd_en,
 	D5M_PIXLCLK,
 	pc_advance,
@@ -214,13 +200,13 @@ SEG7_LUT_6 u5 (
 );
 
 cpu CPU(
-    .clk(clk),
+    .clk(CLOCK_50),
     .rst_n(rst_n),
 
 	//DMEM interface
     .dmem_ren(cpu_dmem_ren), 
     .dmem_wren(cpu_dmem_wren),
-	 .dmem_addr(cpu_dmem_addr),  
+	.dmem_addr(cpu_dmem_addr),  
     .dmem_data_to(cpu_dmem_data),
     .dmem_data_from(dmem_cpu_data),
 
@@ -245,91 +231,155 @@ cpu CPU(
     .instr_out(instr_out)
 );
 
-ram DMEM(
-    .clock(clk),
+// ram DMEM(
+//     .clock(CLOCK_50),
 
-	// CPU interface
-    .address_a(cpu_dmem_addr[10:0]),
-    .data_a(cpu_dmem_data),
-    .rden_a(cpu_dmem_ren),
-    .wren_a(cpu_dmem_wren & ~halt),
-    .q_a(dmem_cpu_data),
+// 	// CPU interface
+//     .address_a(cpu_dmem_addr[10:0]),
+//     .data_a(cpu_dmem_data),
+//     .rden_a(cpu_dmem_ren),
+//     .wren_a(cpu_dmem_wren & ~halt),
+//     .q_a(dmem_cpu_data),
 
-    // Shared Accel/CCD interface
-	.address_b(ccd_dmem_addr),  //Need to mux this when implementing Accel
-    .data_b(ccd_dmem_data),
-    .rden_b(1'b0), 		//For accel
-    .wren_b(ccd_dmem_wren),
-    .q_b()		//For accel
+//     // Shared Accel/CCD interface
+// 	.address_b(ccd_dmem_addr),  //Need to mux this when implementing Accel
+//     .data_b(ccd_dmem_data),
+//     .rden_b(1'b0), 		//For accel
+//     .wren_b(ccd_dmem_wren),
+//     .q_b()		//For accel
+// );
+
+wire [11:0] bCCD_DATA;
+wire [10:0] bCCD_ADDR;
+wire bCCD_ren;
+ram bmem (
+	.address_a(bCCD_ADDR),
+	.address_b(ccd_dmem_addr),
+	.clock(CLOCK_50),
+	.data_a(16'b0),
+	.data_b(ccd_dmem_data),
+	.rden_a(bCCD_ren),
+	.rden_b(1'b0),
+	.wren_a(1'b0),
+	.q_a(bCCD_DATA),
+	.wren_b(ccd_dmem_wren),
+	.q_b()
 );
 
 
 wire sdram_ctrl_clk;
 sdram_pll u6	(
 	.refclk(CLOCK_50),
-	.rst(rst_n),
+	.rst(1'b0),
 	.outclk_0(sdram_ctrl_clk),
 	.outclk_1(DRAM_CLK),
 	.outclk_2(D5M_XCLKIN),    //25M
 	.outclk_3(VGA_CLK)       //25M
 );
 
-// // SDRAM Controller for Weights
-// // SDRam Read and Write as Frame Buffer
-// Sdram_Control u7 (
-// 	//	HOST Side						
-// 	.RESET_N(rst_n),
-// 	.CLK(sdram_ctrl_clk),
+// Bmem to VGA debugging
+wire [11:0] sCCD_DATA;
+wire sCCD_DVAL;
+BMEM2VGA u4c (
+	.iCLK(D5M_PIXLCLK),
+	.iRST(DLY_RST_1),
 
-// 	//	FIFO Write Side 1
-// 	.WR1_DATA(rx_data),
-// 	.WR1(rx_VAL),
-// 	.WR1_ADDR(0),
-// 	.WR1_MAX_ADDR(23'd8),
-// 	.WR1_LENGTH(8'h01),
-// 	.WR1_LOAD(!DLY_RST_0),
-// 	.WR1_CLK(~CLOCK_50),
+	.iDATA(bCCD_DATA),
+	.iDONE(ccd_done),
 
-// 	//	FIFO Read Side 1
-// 	.RD1_DATA(Read_txDATA),
-// 	.RD1(sdram_rd_req),
-// 	.RD1_ADDR(0),
-// 	.RD1_MAX_ADDR(23'd8),
-// 	.RD1_LENGTH(8'h01),
-// 	.RD1_LOAD(!DLY_RST_0),
-// 	.RD1_CLK(~CLOCK_50),
+	.oREN(bCCD_ren),
+	.oADDR(bCCD_ADDR),
+	.ovgaDATA(sCCD_DATA),
+	.ovgaDVAL(sCCD_DVAL)
+);
+wire [11:0] sCCD_R = sCCD_DATA;
+wire [11:0] sCCD_G = sCCD_DATA;
+wire [11:0] sCCD_B = sCCD_DATA;
 
-// 	.DATA_VAL(),
-// 	.DQ_Sample(dq),
-// 	.led_out(sdram_leds),
+//SDRam Read and Write as Frame Buffer
+wire [15:0] Read_DATA1;
+wire [15:0] Read_DATA2;
+wire Read;
+Sdram_Control	   u7	(	//	HOST Side						
+	.RESET_N(KEY[0]),
+	.CLK(sdram_ctrl_clk),
 
-// 	//	FIFO Write Side 2
-// 	.WR2_DATA(),
-// 	.WR2(),
-// 	.WR2_ADDR(23'h100000),
-// 	.WR2_MAX_ADDR(23'h100000),
-// 	.WR2_LENGTH(8'h00),
-// 	.WR2_LOAD(!DLY_RST_0),
-// 	.WR2_CLK(~sdram_ctrl_clk),
+	//	FIFO Write Side 1
+	.WR1_DATA({1'b0,sCCD_G[11:7],sCCD_B[11:2]}),
+	.WR1(sCCD_DVAL),
+	.WR1_ADDR(0),
+	.WR1_MAX_ADDR(640*480),
+	.WR1_LENGTH(8'h50),
+	.WR1_LOAD(!DLY_RST_0),
+	.WR1_CLK(~D5M_PIXLCLK),
 
-// 	//	FIFO Read Side 2
-// 	.RD2_DATA(),
-// 	.RD2(),
-// 	.RD2_ADDR(23'h100000),
-// 	.RD2_MAX_ADDR(23'h100000),
-// 	.RD2_LENGTH(8'h00),
-// 	.RD2_LOAD(!DLY_RST_0),
-// 	.RD2_CLK(~sdram_ctrl_clk),
+	//	FIFO Write Side 2
+	.WR2_DATA({1'b0,sCCD_G[6:2],sCCD_R[11:2]}),
+	.WR2(sCCD_DVAL),
+	.WR2_ADDR(23'h100000),
+	.WR2_MAX_ADDR(23'h100000+640*480),
+	.WR2_LENGTH(8'h50),
+	.WR2_LOAD(!DLY_RST_0),				
+	.WR2_CLK(~D5M_PIXLCLK),
 
-// 	//	SDRAM Side
-// 	.SA(DRAM_ADDR),
-// 	.BA(DRAM_BA),
-// 	.CS_N(DRAM_CS_N),
-// 	.CKE(DRAM_CKE),
-// 	.RAS_N(DRAM_RAS_N),
-// 	.CAS_N(DRAM_CAS_N),
-// 	.WE_N(DRAM_WE_N),
-// 	.DQ(DRAM_DQ),
-// 	.DQM({DRAM_UDQM,DRAM_LDQM})
-// );
+	//	FIFO Read Side 1
+	.RD1_DATA(Read_DATA1),
+	.RD1(Read),
+	.RD1_ADDR(0),
+	.RD1_MAX_ADDR(640*480),
+	.RD1_LENGTH(8'h50),
+	.RD1_LOAD(!DLY_RST_0),
+	.RD1_CLK(~VGA_CTRL_CLK),
+	
+	//	FIFO Read Side 2
+	.RD2_DATA(Read_DATA2),
+	.RD2(Read),
+	.RD2_ADDR(23'h100000),
+	.RD2_MAX_ADDR(23'h100000+640*480),
+	.RD2_LENGTH(8'h50),
+	.RD2_LOAD(!DLY_RST_0),
+	.RD2_CLK(~VGA_CTRL_CLK),
+				
+	//	SDRAM Side
+	.SA(DRAM_ADDR),
+	.BA(DRAM_BA),
+	.CS_N(DRAM_CS_N),
+	.CKE(DRAM_CKE),
+	.RAS_N(DRAM_RAS_N),
+	.CAS_N(DRAM_CAS_N),
+	.WE_N(DRAM_WE_N),
+	.DQ(DRAM_DQ),
+	.DQM({DRAM_UDQM,DRAM_LDQM})
+);
+
+//VGA DISPLAY
+wire [9:0] oVGA_R;
+wire [9:0] oVGA_G;
+wire [9:0] oVGA_B;
+//fetch the high 8 bits
+assign  VGA_R = oVGA_R[9:2];
+assign  VGA_G = oVGA_G[9:2];
+assign  VGA_B = oVGA_B[9:2];
+VGA_Controller vga (	
+	//	Host Side
+	.oRequest(Read),
+	.iRed(Read_DATA2[9:0]),
+	.iGreen({Read_DATA1[14:10],Read_DATA2[14:10]}),
+	.iBlue(Read_DATA1[9:0]),
+
+	//	VGA Side
+	.oVGA_R(oVGA_R),
+	.oVGA_G(oVGA_G),
+	.oVGA_B(oVGA_B),
+	.oVGA_H_SYNC(VGA_HS),
+	.oVGA_V_SYNC(VGA_VS),
+	.oVGA_SYNC(VGA_SYNC_N),
+	.oVGA_BLANK(VGA_BLANK_N),
+	//	Control Signal
+	.iCLK(VGA_CTRL_CLK),
+	.iRST_N(DLY_RST_2),
+	.iZOOM_MODE_SW(SW[9])
+);
+
+
 endmodule

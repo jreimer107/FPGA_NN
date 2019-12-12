@@ -157,7 +157,7 @@ CropDown u5 (
 	.iRST(DLY_RST_1),
 
 	.iDVAL(gCCD_DVAL), 
-	.iDATA(gCCD_DATA), 
+	.iDATA(~gCCD_DATA), 
 	.iX(X_Gray[10:1]),
 	.iY(Y_Gray[10:1]),
     
