@@ -5,7 +5,7 @@ module BMEM2VGA(
     input           iDONE,
 
     output          oREN,
-    output  [10:0]        oADDR,
+    output  [10:0]  oADDR,
 
     output  [11:0]  ovgaDATA,
     output          ovgaDVAL
@@ -14,6 +14,7 @@ module BMEM2VGA(
  reg [10:0] sample_cnt;
  reg [19:0] TARG_cnt;
  reg iDVAL;
+
 
  assign oREN = iDONE && sample_cnt < 784;
  assign oADDR = sample_cnt;
@@ -51,7 +52,7 @@ module BMEM2VGA(
      sample_cnt <= '{default:0};
    else if(TARG_cnt == 307200)
      sample_cnt <= '{default:0};
-   else if(oREN)
+   else if(oREN && old_oREN && old_old_oREN)
      sample_cnt <= sample_cnt + 1;
 
  // assign oSC = {cropdown[783],cropdown[0]};
