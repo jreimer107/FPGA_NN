@@ -12,10 +12,11 @@ module cpu (
 	// Accelerator interface
 	input  accel_done,
 	// output accel_start,
-	output reg accel_en,
+	input  [15:0] bus_data_in,
+	output accel_en,
 	output bus_wr,
 	// output [2:0] bus_accregaddr,
-	output [15:0] bus_data,
+	output [15:0] bus_data_out,
 
 	//IPU interface
 	input ccd_done,
@@ -27,8 +28,7 @@ module cpu (
 	output reg halt,
 	output [23:0] instr_out,
 	output [15:0] pc_out,
-	output [15:0] reg_out,
-	output ccd_done_reg
+	output [15:0] reg_out
 );
 
 	/// ex ///
@@ -112,8 +112,7 @@ module cpu (
 	.oReg_Out(reg_out),
 	.iRegIndex(reg_index),
 	.iPC_advance(pc_advance),
-	.oInstr_out(instr_out),
-	.ccd_done_reg(ccd_done_reg)
+	.oInstr_out(instr_out)
 	);
 
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -172,15 +171,18 @@ module cpu (
 
 	reg mem_memtoreg_delay;
 	reg [3:0] wb_dest_delay;
+	reg [15:0] acc_neuron;
 
 	always_ff @(posedge clk, negedge rst_n) begin
 		if(!rst_n) begin
 			mem_memtoreg_delay <= 1'b0;
 			wb_dest_delay <= 4'b0;
+			acc_neuron <= 16'h0;
 		end
 		else begin
 			mem_memtoreg_delay <= mem_memtoreg;
 			wb_dest_delay <= wb_dest;
+			acc_neuron <= accel_done ? bus_data_in : acc_neuron;
 		end
 	end
 
@@ -195,11 +197,11 @@ module cpu (
 	// Writeback control
 	assign wb_en = (halt == 1'b1) ? 1'b0 : (mem_alutoreg | mem_memtoreg_delay | mem_bustoreg);
 	assign wb_data = mem_memtoreg_delay ? dmem_data_from :
-	// 				 mem_bustoreg ? bus_data :
-	                 mem_alutoreg ? mem_alu_in :
+	 				 mem_bustoreg ? acc_neuron :
+					 mem_alutoreg ? mem_alu_in :
 					 16'h0;
 	
-	// HALT regsiter
+	// HALT register
 	always_ff @(posedge clk, negedge rst_n)
 		if(!rst_n)
 			halt <= 1'b0;
@@ -211,15 +213,12 @@ module cpu (
 	// accelerator interface
 	//
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	assign bus_data = bus_wr ? mem_alu_src2 : 16'h0;
+	assign bus_data_out = bus_wr ? mem_alu_src2 : 16'h0;
 	assign bus_wr = (halt == 1'b1) ? 1'b0 : mem_buswrite;
 	// assign bus_accregaddr = mem_bustoreg ? bus_addr :
 	//						mem_buswrite ? bus_addr : 3'hz;  
 
-	always_ff @(posedge clk, negedge rst_n)
-		if(!rst_n)
-			accel_en <= 1'b0;
-		else
-			accel_en <= ~ccd_done;
+
+	// assign accel_en = ~ccd_done;
 
 endmodule

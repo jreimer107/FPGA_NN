@@ -6,3 +6,5 @@ incremental_db/
 *.bak
 simulation/
 work/
+*.ver
+.vscode/

@@ -36,7 +36,8 @@ module IPSM(
 	//////////// CLOCK //////////
 	input 		          		CLOCK2_50,
 	input 		          		CLOCK_50,
-    input rst_n,
+    input DLY_RST_1, DLY_RST_2,
+	input auto_start,
 
     //User inputs
     input start_key, exposure_key,
@@ -62,12 +63,12 @@ module IPSM(
 
 //=======================================================
 //  REG/WIRE declarations
-//=======================================================
-wire						    DLY_RST_0;
-wire						    DLY_RST_1;
-wire						    DLY_RST_2;
-wire						    DLY_RST_3;
-wire						    DLY_RST_4;
+// //=======================================================
+// wire						    DLY_RST_0;
+// wire						    DLY_RST_1;
+// wire						    DLY_RST_2;
+// wire						    DLY_RST_3;
+// wire						    DLY_RST_4;
 
 // Pipeline stages
 reg		        [11:0]			rCCD_DATA;
@@ -87,9 +88,6 @@ wire            [10:0]           Y_Gray;
 
 wire	        [7:0]			sCCD_DATA;
 wire							sCCD_DVAL;
-
-//power on start
-wire             				auto_start;
 //=======================================================
 //  Structural coding
 //=======================================================
@@ -100,21 +98,6 @@ begin
 	rCCD_LVAL	<=	D5M_LVAL;
 	rCCD_FVAL	<=	D5M_FVAL;
 end
-
-
-//auto start when power on
-assign auto_start = ((rst_n)&&(DLY_RST_3)&&(!DLY_RST_4))? 1'b1:1'b0;
-
-//Reset module
-Reset_Delay			u2	(	
-							.iCLK(CLOCK_50),
-							.iRST(rst_n),
-							.oRST_0(DLY_RST_0),
-							.oRST_1(DLY_RST_1),
-							.oRST_2(DLY_RST_2),
-							.oRST_3(DLY_RST_3),
-							.oRST_4(DLY_RST_4)
-						   );
 
 /// Image Capture Pipeline ///
 //D5M image capture
