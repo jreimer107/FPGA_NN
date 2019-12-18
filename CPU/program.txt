@@ -1,20 +1,23 @@
 #Mark	Op	Dest	SR1	SR2/IMM	Cond	#	Description
+MAIN_LOOP:	IMML	R15	0x2			#	CCD_en is STATUS[1]
+	IMML	R13	0x3
+CCD_WAIT:	XOR	R2 R13 R15	#	CCD_done is STATUS[0]
+	IMML	R1		0x1
+	B		CCD_WAIT	NE	#	Check for CCD_done
+	AND		R15 R15 R1		# 	Disable CCD
+	IMML	R12		0x8    
 	IMML	R14		0x2		#	Load Incrementor
-	IMMH	R13		0x80		#	Load Config Base Address
-	LD	R6	R13	0x0		#	Load Layer Count
-MAIN_LOOP:	IMML	R12		0x2		#	CCD_en is STATUS[1]
-	OR	R15	R15	R12		#	Set CCD_en
-CCD_WAIT:	AND	R12	R15	R15		#	CCD_done is STATUS[0]
-	B			CCD_WAIT	NE	#	Check for CCD_done
-INIT:	AND	R1	R0	R0		#	Reset Inputs Address to 0
-	AND	R2	R0	R0		#	Reset Weights Address to 0
-	IMML	R5		0x1		#	Reset Count Address to config base + 1
-	ADD	R5	R5	R13		#	
-	LD	R4	R5	0x0		#	Load Net input count
-	AND	R7	R0	R0		#	Reset Current Layer to 0
-	ADD	R9	R1	R4		#	Initialize Ouput Store Address (inputs base + numinputs)
-	IMML	R12		0x8		#	ACCEL_en is STATUS[3]
-	OR	R15	R15	R12		#	Set ACCEL_en
+	IMML	R6		0x01
+	OR	R15	R15	R12			#	Set ACCEL_en
+#INIT:	AND	R1	R0	R0		#	Reset Inputs Address to 0
+#	AND	R2	R0	R0		#	Reset Weights Address to 0
+#	IMML	R5		0x1		#	Reset Count Address to config base + 1
+#	ADD	R5	R5	R13		#	
+#	LD	R4	R5	0x0		#	Load Net input count
+#	AND	R7	R0	R0		#	Reset Current Layer to 0
+#	ADD	R9	R1	R4		#	Initialize Ouput Store Address (inputs base + numinputs)
+#	IMML	R12		0x8		#	ACCEL_en is STATUS[3]
+#	OR	R15	R15	R12		#	Set ACCEL_en
 PROC_LOOP:	XOR	R12	R6	R7		#	
 	B			PROC_DONE	E	#	While Current Layer != Layer Count
 	AND	R3	R4	R0		#	Set Input count to output count

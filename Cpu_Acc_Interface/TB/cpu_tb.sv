@@ -32,6 +32,7 @@ wire mem_data_en = MemRead | MemWrite;
 reg pc_advance;
 reg [3:0] reg_index;
 wire [15:0] reg_out;
+wire [15:0][15:0] rd_buf;
 
 cpu_dmem_acc_wrapper DUT (
 	.clk(clk),
@@ -41,13 +42,19 @@ cpu_dmem_acc_wrapper DUT (
 	//.reg_index(reg_index),
 	//.reg_out(reg_out),
 	//.instr_out(Inst),
-	.halt(Halt)
+	.halt(Halt), 
+	.sdram_rd_req(sdram_rd_req),
+	.rd_done(rd_done), 
+	.rd_buf(rd_buf)
 );
 
 // cpu DUT(.clk(clk), .rst_n(rst_n), .mem_data_in(MemDataOut), .bus_data_in(16'h0),
 // 	.bus_data_out(), .mem_data_en(mem_data_en), .mem_data_wr(MemWrite),
 // 	.mem_data_addr(MemAddress),  .mem_data_out(MemDataIn)
 // ); /* Instantiate your processor */
+
+
+fakeSDRAM F_SD1(.clk (clk), .rst_n(rst_n), .rd_req(sdram_rd_req), .rd_buf(rd_buf), .rd_done(rd_done));
 
 
 /* Setup */
@@ -86,13 +93,13 @@ always #50 begin   // delay 1/2 clock period each time thru loop
 
 end
 
-always @(posedge clk) begin
+/* always @(posedge clk) begin
 	cycle_count = cycle_count + 1;
-	if (cycle_count > 200) begin
+	if (cycle_count > 2000000000000) begin
 		$display("hmm....more than 100000 cycles of simulation...error?\n");
 		$stop;
 	end
-end
+end */
 
 
 
